@@ -28,8 +28,7 @@ namespace kbd
             digital::setPinMode(input, digital::Mode::inputWithInternalPullUp);
     }
 
-    void KeyboardMatrix::processContact(Contact contact,
-                                        const Contact::State state)
+    void KeyboardMatrix::processContact(Contact contact, const Contact::State state)
     {
         const unsigned long timeFromStartMillis = getTimeFromStartMillis();
         if (contact.currentState != state)
