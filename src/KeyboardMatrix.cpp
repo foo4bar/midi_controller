@@ -38,14 +38,11 @@ namespace kbd
         const unsigned long timeFromStartMillis = getTimeFromStartMillis();
         if (contact.currentState == actualReadContactState)
         {
-            if (contact.isStateChanged() && (contact.lastTimeStateChanged - timeFromStartMillis) > debounceDelayMillis)
+            if (contact.isStateChanged() && (timeFromStartMillis - contact.lastTimeStateChanged) > debounceDelayMillis)
             {
                 contact.previousState = contact.currentState;
                 contact.currentState = actualReadContactState;
-                if (contact.previousState != contact.currentState)
-                {
-                    //TODO
-                }
+                //TODO
             }
         }
         else
