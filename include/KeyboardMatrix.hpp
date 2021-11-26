@@ -10,15 +10,17 @@ namespace kbd
 {
     struct Contact
     {
-        enum class State
+        enum class State : uint8_t
         {
-            open,
-            closed
+            open = 0,
+            closed = 1
         };
 
         State previousState{State::open};
         State currentState{State::open};
         unsigned long lastTimeStateChanged{0};
+
+        const bool isStateChanged() const;
     };
 
     class KeyboardMatrix
@@ -43,12 +45,12 @@ namespace kbd
                        const std::vector<uint8_t> &lastClosedContactsOutputs,
                        const std::vector<uint8_t> &inputs);
 
-        void processContact(Contact contact, const Contact::State state);
+        static void processContact(Contact contact, const Contact::State state);
 
     public:
         void scan();
 
-        uint8_t getNumberOfKeys() const;
+        const uint8_t getNumberOfKeys() const;
 
         template <uint8_t numberOfKeyGroups, uint8_t keysPerGroup = 8>
         class Builder

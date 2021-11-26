@@ -6,6 +6,11 @@ namespace kbd
 {
     using namespace arduino;
 
+    const bool Contact::isStateChanged() const
+    {
+        return this->previousState != this->currentState;
+    }
+
     KeyboardMatrix::KeyboardMatrix(const uint8_t numberOfKeyGroups,
                                    const uint8_t keysPerGroup,
                                    const std::vector<uint8_t> &firstClosedContactsOutputs,
@@ -28,21 +33,25 @@ namespace kbd
             digital::setPinMode(input, digital::Mode::inputWithInternalPullUp);
     }
 
-    void KeyboardMatrix::processContact(Contact contact, const Contact::State state)
+    void KeyboardMatrix::processContact(Contact contact, const Contact::State actualReadContactState)
     {
         const unsigned long timeFromStartMillis = getTimeFromStartMillis();
-        if (contact.currentState != state)
+        if (contact.currentState == actualReadContactState)
+        {
+            if (contact.isStateChanged() && (contact.lastTimeStateChanged - timeFromStartMillis) > debounceDelayMillis)
+            {
+                contact.previousState = contact.currentState;
+                contact.currentState = actualReadContactState;
+                if (contact.previousState != contact.currentState)
+                {
+                    //TODO
+                }
+            }
+        }
+        else
         {
             contact.lastTimeStateChanged = timeFromStartMillis;
-        }
-        if ((contact.lastTimeStateChanged - timeFromStartMillis) > debounceDelayMillis)
-        {
-            contact.previousState = contact.currentState;
-            contact.currentState = state;
-            if (contact.previousState != contact.currentState)
-            {
-                //TODO
-            }
+            contact.currentState = actualReadContactState;
         }
     }
 
@@ -55,17 +64,17 @@ namespace kbd
 
                 for (uint8_t j = 0; j < this->keysPerGroup; j++)
                 {
-                    const auto contactState{digital::getPinState(this->inputs[j]) == digital::State::high
-                                                ? Contact::State::open
-                                                : Contact::State::closed};
-                    this->processContact(this->contacts[i][j], contactState);
+                    const auto actualReadContactState{digital::getPinState(this->inputs[j]) == digital::State::high
+                                                          ? Contact::State::open
+                                                          : Contact::State::closed};
+                    this->processContact(this->contacts[i][j], actualReadContactState);
                 }
 
                 digital::setPinState(outputs[i], digital::State::high);
             }
     }
 
-    uint8_t KeyboardMatrix::getNumberOfKeys() const
+    const uint8_t KeyboardMatrix::getNumberOfKeys() const
     {
         return this->numberOfKeyGroups * this->keysPerGroup;
     }
