@@ -10,22 +10,36 @@ namespace kbd
         return (timeFromStartMillis - this->lastTimeStateChangedMillis) > Contact::maxBouncingTimeMillis;
     }
 
-    void Contact::debounce(const Contact::State instantaneousContactState)
+    const bool Contact::isStateChanged(const Contact::State instantaneousContactState)
     {
         const unsigned long timeFromStartMillis = getTimeFromStartMillis();
+
         if (this->lastDetectedState == instantaneousContactState)
         {
-            if (this->steadyState != this->lastDetectedState && isBounsingFinished(timeFromStartMillis))
+            if (this->steadyState == this->lastDetectedState)
             {
-                this->steadyState = this->lastDetectedState;
-                this->lastDetectedState = instantaneousContactState;
-                //TODO
+                return false;
+            }
+            else
+            {
+                if (isBounsingFinished(timeFromStartMillis))
+                {
+                    this->steadyState = this->lastDetectedState;
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
         else
         {
-            this->lastTimeStateChangedMillis = timeFromStartMillis;
             this->lastDetectedState = instantaneousContactState;
+            this->lastTimeStateChangedMillis = timeFromStartMillis;
+
+            return false;
         }
     }
 }

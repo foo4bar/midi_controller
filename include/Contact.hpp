@@ -14,7 +14,7 @@ namespace kbd
             closed = 1
         };
 
-        void debounce(const Contact::State instantaneousContactState);
+        const bool isStateChanged(const Contact::State instantaneousContactState);
 
     private:
         static const unsigned long maxBouncingTimeMillis{1};

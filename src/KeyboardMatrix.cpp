@@ -39,7 +39,10 @@ namespace kbd
                     const auto instantaneousContactState{digital::getPinState(this->inputs[j]) == digital::State::high
                                                              ? Contact::State::open
                                                              : Contact::State::closed};
-                    this->contacts[i][j].debounce(instantaneousContactState);
+                    if (this->contacts[i][j].isStateChanged(instantaneousContactState))
+                    {
+                        //TODO
+                    }
                 }
 
                 digital::setPinState(outputs[i], digital::State::high);
