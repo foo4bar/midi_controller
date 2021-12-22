@@ -1,15 +1,9 @@
 #include <KeyboardMatrix.hpp>
 #include <DigitalIO.hpp>
-#include <Time.hpp>
 
 namespace kbd
 {
     using namespace arduino;
-
-    const bool Contact::isStateChanged() const
-    {
-        return this->previousState != this->currentState;
-    }
 
     KeyboardMatrix::KeyboardMatrix(const uint8_t numberOfKeyGroups,
                                    const uint8_t keysPerGroup,
@@ -33,25 +27,6 @@ namespace kbd
             digital::setPinMode(input, digital::Mode::inputWithInternalPullUp);
     }
 
-    void KeyboardMatrix::processContact(Contact contact, const Contact::State actualReadContactState)
-    {
-        const unsigned long timeFromStartMillis = getTimeFromStartMillis();
-        if (contact.currentState == actualReadContactState)
-        {
-            if (contact.isStateChanged() && (timeFromStartMillis - contact.lastTimeStateChanged) > debounceDelayMillis)
-            {
-                contact.previousState = contact.currentState;
-                contact.currentState = actualReadContactState;
-                //TODO
-            }
-        }
-        else
-        {
-            contact.lastTimeStateChanged = timeFromStartMillis;
-            contact.currentState = actualReadContactState;
-        }
-    }
-
     void KeyboardMatrix::scan()
     {
         for (const auto &outputs : {this->firstClosedContactsOutputs, this->lastClosedContactsOutputs})
@@ -61,10 +36,10 @@ namespace kbd
 
                 for (uint8_t j = 0; j < this->keysPerGroup; j++)
                 {
-                    const auto actualReadContactState{digital::getPinState(this->inputs[j]) == digital::State::high
-                                                          ? Contact::State::open
-                                                          : Contact::State::closed};
-                    this->processContact(this->contacts[i][j], actualReadContactState);
+                    const auto instantaneousContactState{digital::getPinState(this->inputs[j]) == digital::State::high
+                                                             ? Contact::State::open
+                                                             : Contact::State::closed};
+                    this->contacts[i][j].debounce(instantaneousContactState);
                 }
 
                 digital::setPinState(outputs[i], digital::State::high);

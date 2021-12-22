@@ -2,32 +2,16 @@
 #define KeyboardMatrix_hpp
 
 #include <stdint.h>
+#include <Contact.hpp>
 
 #include <vector>
 #include <array>
 
 namespace kbd
 {
-    struct Contact
-    {
-        enum class State : uint8_t
-        {
-            open = 0,
-            closed = 1
-        };
-
-        State previousState{State::open};
-        State currentState{State::open};
-        unsigned long lastTimeStateChanged{0};
-
-        const bool isStateChanged() const;
-    };
-
     class KeyboardMatrix
     {
     private:
-        static const unsigned long debounceDelayMillis{1};
-
         uint8_t numberOfKeyGroups;
         uint8_t keysPerGroup;
 
@@ -44,8 +28,6 @@ namespace kbd
                        const std::vector<uint8_t> &firstClosedContactsOutputs,
                        const std::vector<uint8_t> &lastClosedContactsOutputs,
                        const std::vector<uint8_t> &inputs);
-
-        static void processContact(Contact contact, const Contact::State state);
 
     public:
         void scan();
