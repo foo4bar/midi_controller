@@ -27,7 +27,7 @@ namespace kbd
             digital::setPinMode(input, digital::Mode::inputWithInternalPullUp);
     }
 
-    void KeyboardMatrix::scan()
+    const std::vector<std::vector<Contact>> &KeyboardMatrix::getContacts() //TODO pass contacts as an argument
     {
         for (const auto &outputs : {this->firstClosedContactsOutputs, this->lastClosedContactsOutputs})
             for (uint8_t i = 0; i < this->numberOfKeyGroups; i++)
@@ -36,17 +36,16 @@ namespace kbd
 
                 for (uint8_t j = 0; j < this->keysPerGroup; j++)
                 {
-                    const auto instantaneousContactState{digital::getPinState(this->inputs[j]) == digital::State::high
-                                                             ? Contact::State::open
-                                                             : Contact::State::closed};
-                    if (this->contacts[i][j].isStateChanged(instantaneousContactState))
-                    {
-                        //TODO
-                    }
+                    const auto actualInstantaneousState{digital::getPinState(this->inputs[j]) == digital::State::high
+                                                            ? Contact::State::open
+                                                            : Contact::State::closed};
+                    this->contacts[i][j].updateStateWithDebouncing(actualInstantaneousState);
                 }
 
                 digital::setPinState(outputs[i], digital::State::high);
             }
+
+        return this->contacts;
     }
 
     const uint8_t KeyboardMatrix::getNumberOfKeys() const

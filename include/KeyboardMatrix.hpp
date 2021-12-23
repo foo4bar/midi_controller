@@ -30,7 +30,7 @@ namespace kbd
                        const std::vector<uint8_t> &inputs);
 
     public:
-        void scan();
+        const std::vector<std::vector<Contact>> &getContacts();
 
         const uint8_t getNumberOfKeys() const;
 

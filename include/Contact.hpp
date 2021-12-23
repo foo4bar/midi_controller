@@ -14,13 +14,14 @@ namespace kbd
             closed = 1
         };
 
-        const bool isStateChanged(const Contact::State instantaneousContactState);
+        void updateStateWithDebouncing(const Contact::State actualInstantaneousState);
 
     private:
         static const unsigned long maxBouncingTimeMillis{1};
 
-        State steadyState{State::open};
-        State lastDetectedState{State::open};
+        State previousSteadyState{State::open};
+        State actualSteadyState{State::open};
+        State lastDetectedInstantaneousState{State::open};
         unsigned long lastTimeStateChangedMillis{0};
 
         const bool isBounsingFinished(const unsigned long timeFromStartMillis) const;
