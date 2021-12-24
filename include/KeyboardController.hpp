@@ -17,11 +17,11 @@ namespace kbd
     class KeyboardController
     {
     private:
-        std::vector<kbd::KeyboardMatrix> matrices;
+        std::vector<kbd::ContactMatrix> matrices;
         uint8_t firstKeyMidiNoteNumber;
 
     public:
-        KeyboardController(const std::vector<kbd::KeyboardMatrix> &matrices, const uint8_t firstKeyMidiNoteNumber);
+        KeyboardController(const std::vector<kbd::ContactMatrix> &matrices, const uint8_t firstKeyMidiNoteNumber);
     };
 
 }

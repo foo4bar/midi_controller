@@ -9,25 +9,25 @@
 
 namespace kbd
 {
-    class KeyboardMatrix
+    class ContactMatrix
     {
     private:
         uint8_t numberOfKeyGroups;
         uint8_t keysPerGroup;
 
-        //It's supposed that both outputs vectors are of the same size, i.e., numberOfKeyGroups. This is enforced by KeyboardMatrix::Builder.
+        //It's supposed that both outputs vectors are of the same size, i.e., numberOfKeyGroups. This is enforced by ContactMatrix::Builder.
         std::vector<uint8_t> firstClosedContactsOutputs;
         std::vector<uint8_t> lastClosedContactsOutputs;
-        //It's supposed that the vectors is of size keysPerGroup. This is enforced by KeyboardMatrix::Builder.
+        //It's supposed that the vectors is of size keysPerGroup. This is enforced by ContactMatrix::Builder.
         std::vector<uint8_t> inputs;
 
         std::vector<std::vector<Contact>> contacts;
 
-        KeyboardMatrix(const uint8_t numberOfKeyGroups,
-                       const uint8_t keysPerGroup,
-                       const std::vector<uint8_t> &firstClosedContactsOutputs,
-                       const std::vector<uint8_t> &lastClosedContactsOutputs,
-                       const std::vector<uint8_t> &inputs);
+        ContactMatrix(const uint8_t numberOfKeyGroups,
+                      const uint8_t keysPerGroup,
+                      const std::vector<uint8_t> &firstClosedContactsOutputs,
+                      const std::vector<uint8_t> &lastClosedContactsOutputs,
+                      const std::vector<uint8_t> &inputs);
 
     public:
         const std::vector<std::vector<Contact>> &getContacts();
@@ -61,13 +61,13 @@ namespace kbd
                 return *this;
             }
 
-            KeyboardMatrix build() const
+            ContactMatrix build() const
             {
-                return KeyboardMatrix{numberOfKeyGroups,
-                                      keysPerGroup,
-                                      this->firstClosedContactsOutputs,
-                                      this->lastClosedContactsOutputs,
-                                      this->inputs};
+                return ContactMatrix{numberOfKeyGroups,
+                                     keysPerGroup,
+                                     this->firstClosedContactsOutputs,
+                                     this->lastClosedContactsOutputs,
+                                     this->inputs};
             }
         };
     };
