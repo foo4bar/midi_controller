@@ -1,20 +1,20 @@
-#include <KeyboardMatrix.hpp>
+#include <ContactMatrix.hpp>
 #include <DigitalIO.hpp>
 
 namespace kbd
 {
     using namespace arduino;
 
-    ContactMatrix::ContactMatrix(const uint8_t numberOfKeyGroups,
-                                 const uint8_t keysPerGroup,
+    ContactMatrix::ContactMatrix(const uint8_t numberOfContactPairGroups,
+                                 const uint8_t contactPairsPerGroup,
                                  const std::vector<uint8_t> &firstClosedContactsOutputs,
                                  const std::vector<uint8_t> &lastClosedContactsOutputs,
-                                 const std::vector<uint8_t> &inputs) : numberOfKeyGroups{numberOfKeyGroups},
-                                                                       keysPerGroup{keysPerGroup},
+                                 const std::vector<uint8_t> &inputs) : numberOfContactPairGroups{numberOfContactPairGroups},
+                                                                       contactPairsPerGroup{contactPairsPerGroup},
                                                                        firstClosedContactsOutputs{firstClosedContactsOutputs},
                                                                        lastClosedContactsOutputs{lastClosedContactsOutputs},
                                                                        inputs{inputs},
-                                                                       contacts{std::vector<std::vector<Contact>>(numberOfKeyGroups, std::vector<Contact>(keysPerGroup))}
+                                                                       contacts{std::vector<std::vector<Contact>>(numberOfContactPairGroups, std::vector<Contact>(contactPairsPerGroup))}
     {
         for (const auto &outputs : {firstClosedContactsOutputs, lastClosedContactsOutputs})
             for (const uint8_t output : outputs)
@@ -30,11 +30,11 @@ namespace kbd
     const std::vector<std::vector<Contact>> &ContactMatrix::getContacts()
     {
         for (const auto &outputs : {this->firstClosedContactsOutputs, this->lastClosedContactsOutputs})
-            for (uint8_t i = 0; i < this->numberOfKeyGroups; i++)
+            for (uint8_t i = 0; i < this->numberOfContactPairGroups; i++)
             {
                 digital::setPinState(outputs[i], digital::State::low);
 
-                for (uint8_t j = 0; j < this->keysPerGroup; j++)
+                for (uint8_t j = 0; j < this->contactPairsPerGroup; j++)
                 {
                     const auto actualInstantaneousState{digital::getPinState(this->inputs[j]) == digital::State::high
                                                             ? Contact::State::open
@@ -50,6 +50,6 @@ namespace kbd
 
     const uint8_t ContactMatrix::getNumberOfKeys() const
     {
-        return this->numberOfKeyGroups * this->keysPerGroup;
+        return this->numberOfContactPairGroups * this->contactPairsPerGroup;
     }
 }

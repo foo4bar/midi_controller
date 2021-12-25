@@ -2,7 +2,7 @@
 #define KeyboardController_hpp
 
 #include <stdint.h>
-#include <KeyboardMatrix.hpp>
+#include <ContactMatrices.hpp>
 
 #include <vector>
 
@@ -17,11 +17,7 @@ namespace kbd
     class KeyboardController
     {
     private:
-        std::vector<kbd::ContactMatrix> matrices;
-        uint8_t firstKeyMidiNoteNumber;
-
-    public:
-        KeyboardController(const std::vector<kbd::ContactMatrix> &matrices, const uint8_t firstKeyMidiNoteNumber);
+        static inline const uint8_t firstKeyMidiNoteNumber{21};
     };
 
 }

@@ -1,5 +1,5 @@
-#include <midi_controller_88.hpp>
 #include <MIDI.h>
+#include <KeyboardController.hpp>
 
 using namespace std;
 
@@ -11,4 +11,5 @@ void setup()
 
 void loop()
 {
+    const kbd::KeyboardController controller;
 }
