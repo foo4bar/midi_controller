@@ -24,7 +24,7 @@ namespace kbd
         State lastDetectedInstantaneousState{State::open};
         unsigned long lastTimeStateChangedMillis{0};
 
-        const bool isBounsingFinished(const unsigned long timeFromStartMillis) const;
+        bool isBounsingFinished(const unsigned long timeFromStartMillis) const;
     };
 }
 

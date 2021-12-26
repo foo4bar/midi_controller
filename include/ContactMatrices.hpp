@@ -4,11 +4,11 @@
 #include <vector>
 #include <array>
 
-#include <ContactMatrix.hpp>
+#include "ContactMatrix.hpp"
 
 namespace kbd
 {
-    class ContactMatrices
+    struct ContactMatrices
     {
     private:
         inline static constexpr uint8_t numberOfContactPairGroupsLeft{6};

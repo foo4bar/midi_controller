@@ -1,15 +1,18 @@
-#include <MIDI.h>
-#include <KeyboardController.hpp>
+#include <MidiEventsGenerator.hpp>
+
+#include "KeyboardController.hpp"
 
 using namespace std;
 
+inline const kbd::KeyboardController controller{};
+inline const midi::MidiEventsGenerator midiGenerator{};
+
 void setup()
 {
-    MIDI_CREATE_DEFAULT_INSTANCE();
-    MIDI.begin(MIDI_CHANNEL_OMNI);
+    //Empty definition.
 }
 
 void loop()
 {
-    const kbd::KeyboardController controller;
+    midiGenerator.generate(controller.getKeys());
 }

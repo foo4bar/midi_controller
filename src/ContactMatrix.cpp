@@ -1,5 +1,5 @@
-#include <ContactMatrix.hpp>
-#include <DigitalIO.hpp>
+#include "DigitalIO.hpp"
+#include "ContactMatrix.hpp"
 
 namespace kbd
 {
@@ -48,7 +48,7 @@ namespace kbd
         return this->contacts;
     }
 
-    const uint8_t ContactMatrix::getNumberOfKeys() const
+    uint8_t ContactMatrix::getNumberOfKeys() const
     {
         return this->numberOfContactPairGroups * this->contactPairsPerGroup;
     }

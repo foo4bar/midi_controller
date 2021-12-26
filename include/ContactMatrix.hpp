@@ -1,11 +1,12 @@
 #ifndef ContactMatrix_hpp
 #define ContactMatrix_hpp
 
-#include <stdint.h>
-#include <Contact.hpp>
-
 #include <vector>
 #include <array>
+
+#include <stdint.h>
+
+#include "Contact.hpp"
 
 namespace kbd
 {
@@ -32,7 +33,7 @@ namespace kbd
     public:
         const std::vector<std::vector<Contact>> &getContacts();
 
-        const uint8_t getNumberOfKeys() const;
+        uint8_t getNumberOfKeys() const;
 
         template <uint8_t numberOfContactPairGroups, uint8_t contactPairsPerGroup = 8>
         class Builder

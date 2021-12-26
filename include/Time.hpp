@@ -4,7 +4,7 @@
 //Serves as a kind of HAL to decouple of C stuff in Arduino.h.
 namespace arduino
 {
-    const unsigned long getTimeFromStartMillis();
+    unsigned long getTimeFromStartMillis();
 }
 
 #endif

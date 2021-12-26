@@ -1,11 +1,11 @@
-#include <Contact.hpp>
-#include <Time.hpp>
+#include "Contact.hpp"
+#include "Time.hpp"
 
 namespace kbd
 {
     using namespace arduino;
 
-    const bool Contact::isBounsingFinished(const unsigned long timeFromStartMillis) const
+    bool Contact::isBounsingFinished(const unsigned long timeFromStartMillis) const
     {
         return (timeFromStartMillis - this->lastTimeStateChangedMillis) > Contact::maxBouncingTimeMillis;
     }

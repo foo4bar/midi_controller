@@ -1,6 +1,7 @@
-#include <DigitalIO.hpp>
 // Arduino.h is to be included right here, not in the header.
 #include <Arduino.h>
+
+#include "DigitalIO.hpp"
 
 namespace arduino
 {
