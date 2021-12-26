@@ -27,7 +27,7 @@ namespace kbd
             digital::setPinMode(input, digital::Mode::inputWithInternalPullUp);
     }
 
-    const std::vector<std::vector<Contact>> &ContactMatrix::getContacts()
+    const std::vector<std::vector<Contact>> &ContactMatrix::scanContactsAndGet()
     {
         for (const auto &outputs : {this->firstClosedContactsOutputs, this->lastClosedContactsOutputs})
             for (uint8_t i = 0; i < this->numberOfContactPairGroups; i++)

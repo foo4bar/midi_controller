@@ -5,17 +5,11 @@
 
 #include <stdint.h>
 
-#include "ContactMatrices.hpp"
+#include "Contacts.hpp"
 #include "Key.hpp"
 
 namespace kbd
 {
-    enum class KeyEvent
-    {
-        depressed,
-        released
-    };
-
     class KeyboardController
     {
     private:

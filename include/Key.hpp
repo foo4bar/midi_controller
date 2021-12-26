@@ -14,6 +14,13 @@ namespace kbd
         Key(const Contact &firstClosedContact, const Contact &lastClosedContact);
 
     public:
+        enum class State
+        {
+            depressed,
+            halfReleased,
+            released
+        };
+
         class Builder
         {
         private:
