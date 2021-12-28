@@ -19,4 +19,9 @@ namespace arduino::digital
     {
         digitalWrite(pinNumber, static_cast<uint8_t>(state));
     }
+
+    const kbd::ContactPairState getActualInstantaneousContactPairState(const uint8_t contactPairNumber)
+    {
+        //TODO
+    }
 }

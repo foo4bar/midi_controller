@@ -45,7 +45,7 @@ namespace arduino::digital
 
     void setPinState(const uint8_t pinNumber, const State state);
 
-    void updateContactPairStatus(const uint8_t contactPairNumber);
+    const kbd::ContactPairState getActualInstantaneousContactPairState(const uint8_t contactPairNumber);
 }
 
 #endif
