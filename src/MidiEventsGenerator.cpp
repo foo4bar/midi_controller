@@ -10,7 +10,7 @@ namespace midi
         }
     }
 
-    void MidiEventsGenerator::generate(const std::array<kbd::Key, arduino::digital::numberOfServedContactPairs> &keys) const
+    void MidiEventsGenerator::generate(const std::array<kbd::Key, arduino::digital::numberOfScannedContactPairs> &keys) const
     {
         //TODO
     }

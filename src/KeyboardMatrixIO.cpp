@@ -11,8 +11,7 @@ namespace arduino::digital
                                                                              numberOfInputs{numberOfInputs},
                                                                              firstClosedContactsOutputs{firstClosedContactsOutputs},
                                                                              lastClosedContactsOutputs{lastClosedContactsOutputs},
-                                                                             inputs{inputs},
-                                                                             contacts{std::vector<std::vector<kbd::Contact>>(numberOfOutputPairs, std::vector<kbd::Contact>(numberOfInputs))}
+                                                                             inputs{inputs}
     {
         for (const auto &outputs : {firstClosedContactsOutputs, lastClosedContactsOutputs})
             for (const uint8_t output : outputs)
@@ -25,27 +24,23 @@ namespace arduino::digital
             digital::setPinMode(input, digital::Mode::inputWithInternalPullUp);
     }
 
-    const void KeyboardMatrixIO::updateContactsState(std::vector<std::vector<kbd::Contact>> &contacts) const
+    const kbd::ContactPairState KeyboardMatrixIO::getActualInstantaneousContactPairState(const uint8_t contactPairNumber) const
     {
-        for (const auto &outputs : {this->firstClosedContactsOutputs, this->lastClosedContactsOutputs})
-            for (uint8_t i = 0; i < this->numberOfOutputPairs; i++)
-            {
-                digital::setPinState(outputs[i], digital::State::low);
+        kbd::ContactPairState contactPairState;
 
-                for (uint8_t j = 0; j < this->numberOfInputs; j++)
-                {
-                    const auto actualInstantaneousState{digital::getPinState(this->inputs[j]) == digital::State::high
-                                                            ? kbd::Contact::State::open
-                                                            : kbd::Contact::State::closed};
-                    contacts[i][j].updateStateWithDebouncing(actualInstantaneousState);
-                }
+        const uint8_t outputNumber{}; //TODO
+        const uint8_t inputNumber{};  //TODO
 
-                digital::setPinState(outputs[i], digital::State::high);
-            }
-    }
+        digital::setPinState(this->firstClosedContactsOutputs[outputNumber], digital::State::low);
+        contactPairState.firstClosed = digital::getPinState(this->inputs[inputNumber]) == digital::State::high
+                                           ? kbd::Contact::State::open
+                                           : kbd::Contact::State::closed;
 
-    uint8_t KeyboardMatrixIO::getNumberOfKeys() const
-    {
-        return this->numberOfOutputPairs * this->numberOfInputs;
+        digital::setPinState(this->lastClosedContactsOutputs[outputNumber], digital::State::low);
+        contactPairState.lastClosed = digital::getPinState(this->inputs[inputNumber]) == digital::State::high
+                                          ? kbd::Contact::State::open
+                                          : kbd::Contact::State::closed;
+
+        return contactPairState;
     }
 }

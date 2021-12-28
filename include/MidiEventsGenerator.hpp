@@ -16,7 +16,7 @@ namespace midi
     public:
         MidiEventsGenerator();
 
-        void generate(const std::array<kbd::Key, arduino::digital::numberOfServedContactPairs> &keys) const;
+        void generate(const std::array<kbd::Key, arduino::digital::numberOfScannedContactPairs> &keys) const;
     };
 }
 

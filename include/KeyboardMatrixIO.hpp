@@ -22,8 +22,6 @@ namespace arduino::digital
         //It's supposed that the vectors is of size numberOfInputs. This is enforced by KeyboardMatrixIO::Builder.
         std::vector<uint8_t> inputs;
 
-        std::vector<std::vector<kbd::Contact>> contacts;
-
         KeyboardMatrixIO(const uint8_t numberOfOutputPairs,
                          const uint8_t numberOfInputs,
                          const std::vector<uint8_t> &firstClosedContactsOutputs,
@@ -31,9 +29,7 @@ namespace arduino::digital
                          const std::vector<uint8_t> &inputs);
 
     public:
-        const void updateContactsState(std::vector<std::vector<kbd::Contact>> &contacts) const;
-
-        uint8_t getNumberOfKeys() const;
+        const kbd::ContactPairState getActualInstantaneousContactPairState(const uint8_t contactPairNumber) const;
 
         template <uint8_t numberOfOutputPairs, uint8_t numberOfInputs>
         class Builder

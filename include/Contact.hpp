@@ -29,8 +29,14 @@ namespace kbd
 
     struct ContactPair
     {
-        Contact firstClosed{};
-        Contact lastClosed{};
+        Contact firstClosed;
+        Contact lastClosed;
+    };
+
+    struct ContactPairState
+    {
+        Contact::State firstClosed;
+        Contact::State lastClosed;
     };
 }
 

@@ -10,15 +10,17 @@
 
 namespace kbd
 {
+    using namespace arduino::digital;
+    
     class KeyboardController
     {
     private:
         static inline const uint8_t firstKeyMidiNoteNumber{21};
 
-        std::array<Key, arduino::digital::numberOfServedContactPairs> keys;
+        std::array<Key, numberOfScannedContactPairs> keys;
 
     public:
-        const std::array<Key, arduino::digital::numberOfServedContactPairs> &getKeys() const;
+        const std::array<Key, numberOfScannedContactPairs> &updateKeysStateAndGet();
     };
 
 }

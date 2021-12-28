@@ -3,8 +3,9 @@
 
 using namespace std;
 
-inline const kbd::KeyboardController keyboardController{};
 inline const midi::MidiEventsGenerator midiGenerator{};
+
+kbd::KeyboardController keyboardController{};
 
 void setup()
 {
@@ -13,5 +14,5 @@ void setup()
 
 void loop()
 {
-    midiGenerator.generate(keyboardController.getKeys());
+    midiGenerator.generate(keyboardController.updateKeysStateAndGet());
 }
