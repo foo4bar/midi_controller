@@ -1,5 +1,4 @@
-#include <MidiEventsGenerator.hpp>
-
+#include "MidiEventsGenerator.hpp"
 #include "KeyboardController.hpp"
 
 using namespace std;

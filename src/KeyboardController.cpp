@@ -2,9 +2,8 @@
 
 namespace kbd
 {
-    const std::vector<Key> &KeyboardController::getKeys() const
+    const std::array<Key, arduino::digital::numberOfServedContactPairs> &KeyboardController::getKeys() const
     {
-        
         return this->keys;
     }
 }

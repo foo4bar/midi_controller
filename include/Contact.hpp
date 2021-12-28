@@ -26,6 +26,12 @@ namespace kbd
 
         bool isBounsingFinished(const unsigned long timeFromStartMillis) const;
     };
+
+    struct ContactPair
+    {
+        Contact firstClosed{};
+        Contact lastClosed{};
+    };
 }
 
 #endif

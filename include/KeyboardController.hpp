@@ -1,12 +1,12 @@
 #ifndef KeyboardController_hpp
 #define KeyboardController_hpp
 
-#include <vector>
+#include <array>
 
 #include <stdint.h>
 
-#include "Contacts.hpp"
 #include "Key.hpp"
+#include "DigitalIO.hpp"
 
 namespace kbd
 {
@@ -15,10 +15,10 @@ namespace kbd
     private:
         static inline const uint8_t firstKeyMidiNoteNumber{21};
 
-        std::vector<Key> keys;
+        std::array<Key, arduino::digital::numberOfServedContactPairs> keys;
 
     public:
-        const std::vector<Key> &getKeys() const;
+        const std::array<Key, arduino::digital::numberOfServedContactPairs> &getKeys() const;
     };
 
 }

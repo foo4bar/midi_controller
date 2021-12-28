@@ -5,13 +5,14 @@
 
 namespace kbd
 {
+    //Each key is served by a pair of contacts.
+    //One of them is closed first when a corresponding key starts to be pressed,
+    //another one is closed last when the key is fully depressed.
+    //
     class Key
     {
     private:
-        Contact firstClosedContact;
-        Contact lastClosedContact;
-
-        Key(const Contact &firstClosedContact, const Contact &lastClosedContact);
+        ContactPair contacts{};
 
     public:
         enum class State
@@ -20,22 +21,7 @@ namespace kbd
             halfReleased,
             released
         };
-
-        class Builder
-        {
-        private:
-            Contact firstClosedContact;
-            Contact lastClosedContact;
-
-        public:
-            Builder &withFirstClosedContact(const Contact &contact);
-
-            Builder &withLastClosedContact(const Contact &contact);
-
-            Key build() const;
-        };
     };
-
 }
 
 #endif

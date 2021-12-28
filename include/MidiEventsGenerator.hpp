@@ -1,11 +1,13 @@
 #ifndef MidiEventsGenerator_hpp
 #define MidiEventsGenerator_hpp
 
-#include <vector>
+#include <array>
 
+#include <HardwareSerial.h>
 #include <MIDI.h>
 
 #include "Key.hpp"
+#include "DigitalIO.hpp"
 
 namespace midi
 {
@@ -14,7 +16,7 @@ namespace midi
     public:
         MidiEventsGenerator();
 
-        void generate(const std::vector<kbd::Key> &keys) const;
+        void generate(const std::array<kbd::Key, arduino::digital::numberOfServedContactPairs> &keys) const;
     };
 }
 

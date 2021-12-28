@@ -3,31 +3,49 @@
 
 #include <stdint.h>
 
+#include "KeyboardMatrixIO.hpp"
+
 //Serves as a kind of HAL to decouple of C stuff in Arduino.h.
-namespace arduino
+namespace arduino::digital
 {
-    namespace digital
+    enum class State : uint8_t
     {
-        enum class State : uint8_t
-        {
-            low = 0, //LOW in Arduino.h
-            high = 1 //HIGH in Arduino.h
-        };
+        low = 0, //LOW in Arduino.h
+        high = 1 //HIGH in Arduino.h
+    };
 
-        enum class Mode : uint8_t
-        {
-            input = 0,                  //INPUT in Arduino.h
-            output = 1,                 //OUTPUT in Arduino.h
-            inputWithInternalPullUp = 2 //INPUT_PULLUP in Arduino.h
-        };
+    enum class Mode : uint8_t
+    {
+        input = 0,                  //INPUT in Arduino.h
+        output = 1,                 //OUTPUT in Arduino.h
+        inputWithInternalPullUp = 2 //INPUT_PULLUP in Arduino.h
+    };
 
-        void setPinMode(const uint8_t pinNumber, const Mode mode);
+    //See the circuit diagram for details regarding inputs/outputs configuration.
+    inline constexpr uint8_t numberOfOutputPairsLeft{6};
+    inline constexpr uint8_t numberOfOutputPairsRight{5};
+    inline constexpr uint8_t numberOfInputs{8};
 
-        State getPinState(const uint8_t pinNumber);
+    inline constexpr uint8_t numberOfServedContactPairs = (numberOfOutputPairsLeft + numberOfOutputPairsRight) * numberOfInputs;
 
-        void setPinState(const uint8_t pinNumber, const State state);
-    }
+    inline const KeyboardMatrixIO keyboardMatrixIOLeft = KeyboardMatrixIO::Builder<numberOfOutputPairsLeft, numberOfInputs>{}
+                                                             .withFirstClosedContactsOutputs({50, 46, 42, 38, 37, 32})
+                                                             .withLastClosedContactsOutputs({52, 48, 44, 40, 36, 34})
+                                                             .withInputs({53, 51, 49, 47, 45, 43, 41, 39})
+                                                             .build();
+    inline const KeyboardMatrixIO keyboardMatrixIORight = KeyboardMatrixIO::Builder<numberOfOutputPairsRight, numberOfInputs>{}
+                                                              .withFirstClosedContactsOutputs({28, 24, 2, 6, 5})
+                                                              .withLastClosedContactsOutputs({30, 26, 22, 4, 7})
+                                                              .withInputs({35, 33, 31, 29, 27, 25, 23, 3})
+                                                              .build();
 
+    inline const std::vector<KeyboardMatrixIO> keyboardMatrixIOs{keyboardMatrixIOLeft, keyboardMatrixIORight};
+
+    void setPinMode(const uint8_t pinNumber, const Mode mode);
+
+    const State getPinState(const uint8_t pinNumber);
+
+    void setPinState(const uint8_t pinNumber, const State state);
 }
 
 #endif
