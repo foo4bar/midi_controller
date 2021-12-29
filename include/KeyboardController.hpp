@@ -1,28 +1,28 @@
 #ifndef KeyboardController_hpp
 #define KeyboardController_hpp
 
-#include <array>
+#include <vector>
 
 #include <stdint.h>
 
 #include "Key.hpp"
+#include "MidiEventsSender.hpp"
 #include "DigitalIO.hpp"
 
 namespace kbd
 {
-    using namespace arduino::digital;
-    
     class KeyboardController
     {
     private:
-        static inline const uint8_t firstKeyMidiNoteNumber{21};
+        static inline constexpr uint8_t firstKeyMidiNoteNumber{21};
+        static inline constexpr uint8_t numberOfKeys{arduino::digital::numberOfScannedContactPairs};
 
-        std::array<Key, numberOfScannedContactPairs> keys;
+        midictrl::MidiEventsSender midiEventsSender;
+        std::vector<Key> keys{std::vector<Key>(numberOfKeys)};
 
     public:
-        const std::array<Key, numberOfScannedContactPairs> &updateKeysStateAndGet();
+        void sendMidiEvents();
     };
-
 }
 
 #endif

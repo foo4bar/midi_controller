@@ -2,13 +2,19 @@
 
 namespace kbd
 {
-    const std::array<Key, numberOfScannedContactPairs> &KeyboardController::updateKeysStateAndGet()
+    void KeyboardController::sendMidiEvents()
     {
-        for (uint8_t i = 0; i < numberOfScannedContactPairs; i++)
-        {
-            
-        }
+        uint8_t counter{0};
+        for (auto &key : this->keys)
+        {   
+            if (key.isSateChanged())
+            {
+                const uint8_t noteNumber = firstKeyMidiNoteNumber + counter;
+                this->midiEventsSender.generate(noteNumber, key.getActualState(), key.velocity);
+                key.resetStateChange();
+            }
 
-        return this->keys;
+            counter++;
+        }
     }
 }

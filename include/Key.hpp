@@ -5,22 +5,30 @@
 
 namespace kbd
 {
-    //Each key is served by a pair of contacts.
+    //Each key operates a pair of contacts.
     //One of them is closed first when a corresponding key starts to be pressed,
     //another one is closed last when the key is fully depressed.
     //
     class Key
     {
-    private:
-        ContactPair contacts{};
-
     public:
         enum class State
         {
             depressed,
-            halfReleased,
+            halfPressed,
             released
         };
+
+        ContactPair contacts;
+        uint8_t velocity{0};
+
+        const bool isSateChanged();
+        const State &getActualState() const;
+        void resetStateChange();
+
+    private:
+        State previousState{State::released};
+        State actualState{State::released};
     };
 }
 

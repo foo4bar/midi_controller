@@ -1,18 +1,13 @@
-#include "MidiEventsGenerator.hpp"
 #include "KeyboardController.hpp"
 
-using namespace std;
-
-inline const midi::MidiEventsGenerator midiGenerator{};
-
-kbd::KeyboardController keyboardController{};
+kbd::KeyboardController keyboardController;
 
 void setup()
 {
-    //Empty definition. There's nothing to setup.
+    //Empty definition. There's nothing to setup globally.
 }
 
 void loop()
 {
-    midiGenerator.generate(keyboardController.updateKeysStateAndGet());
+    keyboardController.sendMidiEvents();
 }
