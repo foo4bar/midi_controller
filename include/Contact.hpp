@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "Time.hpp"
+
 namespace kbd
 {
     class Contact
@@ -25,18 +27,6 @@ namespace kbd
         unsigned long lastTimeStateChangedMillis{0};
 
         bool isBounsingFinished(const unsigned long timeFromStartMillis) const;
-    };
-
-    struct ContactPair
-    {
-        Contact firstClosed;
-        Contact lastClosed;
-    };
-
-    struct ContactPairState
-    {
-        Contact::State firstClosed;
-        Contact::State lastClosed;
     };
 }
 

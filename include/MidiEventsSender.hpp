@@ -17,9 +17,9 @@ namespace midictrl
     public:
         MidiEventsSender();
 
-        void generate(const uint8_t midiNoteNumber,
-                      const kbd::Key::State &actualKeyState,
-                      const uint8_t keyVelocity) const;
+        void sendNoteEvent(const uint8_t midiNoteNumber,
+                           const kbd::Key::State &actualKeyState,
+                           const uint8_t keyVelocity) const;
     };
 }
 

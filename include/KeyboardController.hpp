@@ -18,9 +18,11 @@ namespace kbd
         static inline constexpr uint8_t numberOfKeys{arduino::digital::numberOfScannedContactPairs};
 
         midictrl::MidiEventsSender midiEventsSender;
-        std::vector<Key> keys{std::vector<Key>(numberOfKeys)};
+        std::vector<Key> keys;
 
     public:
+        KeyboardController();
+
         void sendMidiEvents();
     };
 }

@@ -1,5 +1,4 @@
 #include "Contact.hpp"
-#include "Time.hpp"
 
 namespace kbd
 {
