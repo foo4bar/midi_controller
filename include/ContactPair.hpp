@@ -8,18 +8,19 @@
 
 namespace kbd
 {
-    class ContactPair
+    struct ContactPair
     {
     public:
         Contact firstClosed;
         Contact lastClosed;
+        uint8_t number;
 
-        ContactPair(const uint8_t number);
+        ContactPair(const uint8_t);
 
         void updateStateWithDebouncing();
 
     private:
-        uint8_t number;
+        const Contact::State digitalStateToContactState(const arduino::digital::State &) const;
     };
 }
 

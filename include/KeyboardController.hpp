@@ -6,24 +6,31 @@
 #include <stdint.h>
 
 #include "Key.hpp"
-#include "MidiEventsSender.hpp"
-#include "DigitalIO.hpp"
+#include "KeyboardMatrices.hpp"
 
 namespace kbd
 {
     class KeyboardController
     {
     private:
-        static inline constexpr uint8_t firstKeyMidiNoteNumber{21};
-        static inline constexpr uint8_t numberOfKeys{arduino::digital::numberOfScannedContactPairs};
+        static inline constexpr uint8_t numberOfKeys{numberOfScannedContactPairs};
 
-        midictrl::MidiEventsSender midiEventsSender;
+        KeyboardController();
+
         std::vector<Key> keys;
 
     public:
-        KeyboardController();
+        static inline KeyboardController &getInstance()
+        {
+            static KeyboardController instance;
+
+            return instance;
+        }
 
         void sendMidiEvents();
+
+        KeyboardController(const KeyboardController &) = delete;
+        void operator=(const KeyboardController &) = delete;
     };
 }
 

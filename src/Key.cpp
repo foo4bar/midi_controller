@@ -2,35 +2,32 @@
 
 namespace kbd
 {
-    Key::Key(const uint8_t number) : number{number},
-                                     contacts{ContactPair{number}}
+    Key::Key(const uint8_t number) : contacts{ContactPair{number}}
     {
     }
 
-    const bool Key::isSateChanged()
+    void Key::sendMidiEvent()
     {
         this->contacts.updateStateWithDebouncing();
 
-        return this->previousState != this->actualState;
-    }
+        //TODO calculate key state based on contacts state
 
-    const Key::State &Key::getActualState() const
-    {
-        return this->actualState;
-    }
+        if (this->previousState != this->actualState)
+        {
+            const uint8_t noteNumber{midictrl::Midi::getActualMidiNoteNumber(this->contacts.number)};
 
-    const uint8_t Key::getVelocity() const
-    {
-        return this->velocity;
-    }
+            if (this->actualState == State::depressed)
+            {
+                midictrl::Midi::getIstance()
+                    .sendNoteOn(noteNumber, this->velocity);
+            }
+            else if (this->actualState == State::released)
+            {
+                midictrl::Midi::getIstance()
+                    .sendNoteOff(noteNumber, this->velocity);
+            }
 
-    const uint8_t Key::getNumber() const
-    {
-        return this->number;
-    }
-
-    void Key::resetStateChange()
-    {
-        this->previousState = this->actualState;
+            this->previousState = this->actualState;
+        }
     }
 }

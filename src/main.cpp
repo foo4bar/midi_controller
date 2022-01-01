@@ -1,13 +1,12 @@
 #include "KeyboardController.hpp"
 
-kbd::KeyboardController keyboardController;
-
 void setup()
 {
-    //Empty definition. There's nothing to setup globally.
+    //Empty definition.
 }
 
 void loop()
 {
-    keyboardController.sendMidiEvents();
+    kbd::KeyboardController::getInstance()
+        .sendMidiEvents();
 }

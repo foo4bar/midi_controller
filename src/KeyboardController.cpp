@@ -14,12 +14,7 @@ namespace kbd
     {
         for (auto &key : this->keys)
         {
-            if (key.isSateChanged())
-            {
-                const uint8_t noteNumber = firstKeyMidiNoteNumber + key.getNumber();
-                this->midiEventsSender.sendNoteEvent(noteNumber, key.getActualState(), key.getVelocity());
-                key.resetStateChange();
-            }
+            key.sendMidiEvent();
         }
     }
 }

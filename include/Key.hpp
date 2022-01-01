@@ -2,6 +2,7 @@
 #define Key_hpp
 
 #include "ContactPair.hpp"
+#include "Midi.hpp"
 
 namespace kbd
 {
@@ -15,17 +16,11 @@ namespace kbd
             released
         };
 
-        const State &getActualState() const;
-        const uint8_t getVelocity() const;
-        const uint8_t getNumber() const;
+        Key(const uint8_t);
 
-        const bool isSateChanged();
-        void resetStateChange();
-
-        Key(const uint8_t number);
+        void sendMidiEvent();
 
     private:
-        uint8_t number;
         // Each key operates a pair of contacts.
         // One of them is closed first when a corresponding key starts to be pressed,
         // another one is closed last when the key is fully depressed.
