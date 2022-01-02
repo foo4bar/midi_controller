@@ -1,5 +1,4 @@
 #include "ContactPair.hpp"
-#include "KeyboardMatrices.hpp"
 
 namespace kbd
 {

@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "Contact.hpp"
+#include "KeyboardMatrices.hpp"
 #include "DigitalIO.hpp"
 
 namespace kbd
