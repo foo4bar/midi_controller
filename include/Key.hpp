@@ -2,7 +2,7 @@
 #define Key_hpp
 
 #include "ContactPair.hpp"
-#include "Midi.hpp"
+#include "MidiControl.hpp"
 
 namespace kbd
 {
@@ -26,6 +26,7 @@ namespace kbd
         // another one is closed last when the key is fully depressed.
         // Key state is defined by its contacts state.
         ContactPair contacts;
+
         State previousState{State::released};
         State actualState{State::released};
         uint8_t velocity{0};

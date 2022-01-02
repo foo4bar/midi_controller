@@ -1,6 +1,6 @@
 #include "KeyboardMatrixIO.hpp"
 
-namespace kbd
+namespace kbdmatrix
 {
     KeyboardMatrixIO::KeyboardMatrixIO(const uint8_t numberOfOutputPairs,
                                        const uint8_t numberOfInputs,

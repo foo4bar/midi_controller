@@ -2,13 +2,7 @@
 
 namespace kbd
 {
-    KeyboardController::KeyboardController()
-    {
-        for (uint8_t i = 0; i < this->numberOfKeys; i++)
-        {
-            this->keys.push_back(Key{i});
-        }
-    }
+    KeyboardController::KeyboardController(const std::vector<Key> &keys) : keys{keys} {}
 
     void KeyboardController::sendMidiEvents()
     {

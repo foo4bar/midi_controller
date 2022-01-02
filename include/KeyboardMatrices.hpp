@@ -4,7 +4,7 @@
 #include "DigitalIO.hpp"
 #include "KeyboardMatrixIO.hpp"
 
-namespace kbd
+namespace kbdmatrix
 {
     //See the circuit diagram for details regarding inputs/outputs configuration.
     inline constexpr uint8_t numberOfOutputPairsLeft{6};

@@ -8,7 +8,7 @@
 
 #include "DigitalIO.hpp"
 
-namespace kbd
+namespace kbdmatrix
 {   
     using namespace arduino::digital;
     

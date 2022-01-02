@@ -1,6 +1,6 @@
 #include "KeyboardMatrices.hpp"
 
-namespace kbd
+namespace kbdmatrix
 {
     const arduino::digital::StatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber)
     {

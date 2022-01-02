@@ -8,7 +8,7 @@ namespace kbd
 
     void ContactPair::updateStateWithDebouncing()
     {
-        const arduino::digital::StatePair statePair{getActualInstantaneousInputStatePair(this->number)};
+        const arduino::digital::StatePair statePair{kbdmatrix::getActualInstantaneousInputStatePair(this->number)};
         this->firstClosed.updateStateWithDebouncing(digitalStateToContactState(statePair.firstClosed));
         this->lastClosed.updateStateWithDebouncing(digitalStateToContactState(statePair.lastClosed));
     }

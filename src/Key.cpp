@@ -10,21 +10,19 @@ namespace kbd
     {
         this->contacts.updateStateWithDebouncing();
 
-        //TODO calculate key state based on contacts state
+        // TODO calculate key state based on contacts state
 
         if (this->previousState != this->actualState)
         {
-            const uint8_t noteNumber{midictrl::Midi::getActualMidiNoteNumber(this->contacts.number)};
+            const uint8_t noteNumber{midictrl::MidiControl::getActualMidiNoteNumber(this->contacts.number)};
 
             if (this->actualState == State::depressed)
             {
-                midictrl::Midi::getIstance()
-                    .sendNoteOn(noteNumber, this->velocity);
+                midictrl::MidiControl::sendNoteOn(noteNumber, this->velocity);
             }
             else if (this->actualState == State::released)
             {
-                midictrl::Midi::getIstance()
-                    .sendNoteOff(noteNumber, this->velocity);
+                midictrl::MidiControl::sendNoteOff(noteNumber, this->velocity);
             }
 
             this->previousState = this->actualState;
