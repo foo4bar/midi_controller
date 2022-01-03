@@ -2,7 +2,6 @@
 #define Key_hpp
 
 #include "ContactPair.hpp"
-#include "MidiControl.hpp"
 
 namespace kbd
 {
@@ -16,7 +15,10 @@ namespace kbd
             released
         };
 
-        Key(const uint8_t);
+        Key(const uint8_t,
+            void (*)(const uint8_t, const uint8_t),
+            void (*)(const uint8_t, const uint8_t),
+            uint8_t (*)(const uint8_t));
 
         void sendMidiEvent();
 
@@ -30,6 +32,10 @@ namespace kbd
         State previousState{State::released};
         State actualState{State::released};
         uint8_t velocity{0};
+
+        void (*sendNoteOn)(const uint8_t, const uint8_t);
+        void (*sendNoteOff)(const uint8_t, const uint8_t);
+        uint8_t (*getActualMidiNoteNumber)(const uint8_t);
     };
 }
 

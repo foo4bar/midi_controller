@@ -2,7 +2,13 @@
 
 namespace kbd
 {
-    Key::Key(const uint8_t number) : contacts{ContactPair{number}}
+    Key::Key(const uint8_t number,
+             void (*sendNoteOn)(const uint8_t, const uint8_t),
+             void (*sendNoteOff)(const uint8_t, const uint8_t),
+             uint8_t (*getActualMidiNoteNumber)(const uint8_t)) : contacts{ContactPair{number}},
+                                                                  sendNoteOn{sendNoteOn},
+                                                                  sendNoteOff{sendNoteOff},
+                                                                  getActualMidiNoteNumber{getActualMidiNoteNumber}
     {
     }
 
@@ -14,15 +20,15 @@ namespace kbd
 
         if (this->previousState != this->actualState)
         {
-            const uint8_t noteNumber{midictrl::MidiControl::getActualMidiNoteNumber(this->contacts.number)};
+            const uint8_t noteNumber{getActualMidiNoteNumber(this->contacts.number)};
 
             if (this->actualState == State::depressed)
             {
-                midictrl::MidiControl::sendNoteOn(noteNumber, this->velocity);
+                sendNoteOn(noteNumber, this->velocity);
             }
             else if (this->actualState == State::released)
             {
-                midictrl::MidiControl::sendNoteOff(noteNumber, this->velocity);
+                sendNoteOff(noteNumber, this->velocity);
             }
 
             this->previousState = this->actualState;
