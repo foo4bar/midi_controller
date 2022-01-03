@@ -21,7 +21,7 @@ namespace kbd
         void updateStateWithDebouncing();
 
     private:
-        const Contact::State digitalStateToContactState(const arduino::digital::State &) const;
+        const Contact::State digitalStateToContactState(const arduino::digital::State &) const; //TODO static
     };
 }
 

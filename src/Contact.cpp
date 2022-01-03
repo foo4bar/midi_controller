@@ -24,4 +24,14 @@ namespace kbd
             this->lastTimeStateChangedMillis = timeFromStartMillis;
         }
     }
+
+    bool Contact::isClosed() const
+    {
+        return this->actualSteadyState == State::closed;
+    }
+
+    unsigned long Contact::getLastTimeStateChangedMillis() const
+    {
+        return this->lastTimeStateChangedMillis;
+    }
 }

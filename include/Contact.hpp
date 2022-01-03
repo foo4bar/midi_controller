@@ -18,6 +18,10 @@ namespace kbd
 
         void updateStateWithDebouncing(const Contact::State actualInstantaneousState);
 
+        bool isClosed() const;
+
+        unsigned long getLastTimeStateChangedMillis() const;
+
     private:
         static const unsigned long maxBouncingTimeMillis{1};
 

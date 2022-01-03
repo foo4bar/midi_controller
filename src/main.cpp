@@ -1,8 +1,12 @@
+#include <MIDI.h>
+
 #include "KeyboardMatrices.hpp"
 #include "Key.hpp"
 #include "KeyboardController.hpp"
-#include "MidiControl.hpp"
 
+MIDI_CREATE_DEFAULT_INSTANCE()
+
+//Copied from the framework main() implementation.
 void attachUsbDeviceIfAny()
 {
 #if defined(USBCON)
@@ -10,24 +14,23 @@ void attachUsbDeviceIfAny()
 #endif
 }
 
-kbd::KeyboardController buildKeyboardController()
+void initMidiInterface()
 {
-    std::vector<kbd::Key> keys;
-    for (uint8_t keyNumber = 0; keyNumber < kbdmatrix::numberOfScannedContactPairs; ++keyNumber)
-    {
-        keys.push_back(kbd::Key(
-            keyNumber,
-            [](const uint8_t keyNumber, const uint8_t velocity)
-            { midictrl::MidiControl::sendNoteOn(keyNumber, velocity); },
-            [](const uint8_t keyNumber, const uint8_t velocity)
-            { midictrl::MidiControl::sendNoteOff(keyNumber, velocity); },
-            [](const uint8_t zeroBasedNumber) -> uint8_t
-            { return midictrl::MidiControl::getActualMidiNoteNumber(zeroBasedNumber); }));
-    }
-
-    return kbd::KeyboardController(keys);
+    MIDI.begin(MIDI_CHANNEL_OMNI);
 }
 
+auto buildKeyboardController()
+{
+    std::vector<kbd::Key> keys;
+    for (uint8_t keyNumber{0}; keyNumber < kbdmatrix::numberOfScannedContactPairs; ++keyNumber)
+    {
+        keys.push_back(kbd::Key{keyNumber, &MIDI});
+    }
+
+    return kbd::KeyboardController{keys};
+}
+
+//Copied from the framework main() implementation.
 void serialEventSafeRun()
 {
     if (serialEventRun)
@@ -38,11 +41,14 @@ void serialEventSafeRun()
 
 int main()
 {
+    //Copied from the framework main() implementation.
     init();
+
     attachUsbDeviceIfAny();
 
-    kbd::KeyboardController keyboardController{buildKeyboardController()};
+    initMidiInterface();
 
+    auto keyboardController{buildKeyboardController()};
     for (;;)
     {
         keyboardController.sendMidiEvents();

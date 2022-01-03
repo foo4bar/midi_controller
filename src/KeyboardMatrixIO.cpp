@@ -30,7 +30,7 @@ namespace kbdmatrix
         const uint8_t outputNumber{}; //TODO
         const uint8_t inputNumber{};  //TODO
 
-        setPinState(this->firstClosedContactsOutputs[outputNumber], State::low);
+        setPinState(this->firstClosedContactsOutputs[outputNumber], State::low); //TODO extract to getInputSate()
         statePair.firstClosed = getPinState(this->inputs[inputNumber]);
         setPinState(this->firstClosedContactsOutputs[outputNumber], State::high);
 
