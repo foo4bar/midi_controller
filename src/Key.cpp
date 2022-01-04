@@ -2,12 +2,13 @@
 
 namespace kbd
 {
-    Key::Key(const uint8_t number, MidiInterface *const midiInterface) : contacts{ContactPair{number}},
-                                                                         midiInterface{midiInterface}
+    Key::Key(const uint8_t number) : contacts{ContactPair{number}}
     {
     }
 
-    void Key::sendMidiEvent(const uint8_t firstKeyMidiNoteNumber, const uint8_t midiChannel)
+    void Key::sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
+                            const uint8_t midiChannel,
+                            MidiInterface *const midiInterface)
     {
         this->contacts.updateStateWithDebouncing();
 
@@ -24,11 +25,11 @@ namespace kbd
             switch (this->actualState)
             {
             case State::depressed:
-                this->midiInterface->sendNoteOn(noteNumber, this->velocity, midiChannel);
+                midiInterface->sendNoteOn(noteNumber, this->velocity, midiChannel);
                 this->previousState = this->actualState;
                 break;
             case State::released:
-                this->midiInterface->sendNoteOff(noteNumber, this->velocity, midiChannel);
+                midiInterface->sendNoteOff(noteNumber, this->velocity, midiChannel);
                 this->previousState = this->actualState;
                 break;
             case State::halfReleased:
@@ -42,8 +43,10 @@ namespace kbd
 
     void Key::updateActualState()
     {
-        if (const auto firstContact{this->contacts.firstClosed}, lastContact{this->contacts.lastClosed};
-            firstContact.isClosed() && lastContact.isClosed())
+        const auto firstContact{this->contacts.firstClosed};
+        const auto lastContact{this->contacts.lastClosed};
+
+        if (firstContact.isClosed() && lastContact.isClosed())
         {
             this->actualState = State::depressed;
             if (this->previousState == State::halfReleased)

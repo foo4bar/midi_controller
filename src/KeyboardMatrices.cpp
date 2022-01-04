@@ -2,10 +2,10 @@
 
 namespace kbdmatrix
 {
-    const arduino::digital::StatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber)
+    const arduino::digital::InputStatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber)
     {
         //TODO
 
-        return arduino::digital::StatePair{};
+        return arduino::digital::InputStatePair{};
     }
 }

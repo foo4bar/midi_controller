@@ -8,7 +8,7 @@
 namespace kbd
 {
     using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
-
+    
     class Key
     {
     public:
@@ -19,9 +19,9 @@ namespace kbd
             released
         };
 
-        Key(const uint8_t, MidiInterface *const);
+        Key(const uint8_t);
 
-        void sendMidiEvent(const uint8_t, const uint8_t);
+        void sendMidiEvent(const uint8_t, const uint8_t, MidiInterface *const);
 
     private:
         // Each key operates a pair of contacts.
@@ -29,8 +29,6 @@ namespace kbd
         // another one is closed last when the key is fully depressed.
         // Key state is defined by its contacts state.
         ContactPair contacts;
-
-        MidiInterface *const midiInterface;
 
         State previousState{State::released};
         State actualState{State::released};

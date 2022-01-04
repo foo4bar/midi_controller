@@ -31,7 +31,7 @@ namespace kbdmatrix
                          const std::vector<uint8_t> &inputs);
 
     public:
-        const StatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber) const;
+        const InputStatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber) const;
 
         template <uint8_t numberOfOutputPairs, uint8_t numberOfInputs>
         class Builder

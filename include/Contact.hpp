@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "Time.hpp"
+#include "DigitalIO.hpp"
 
 namespace kbd
 {
@@ -16,7 +17,7 @@ namespace kbd
             closed = 1
         };
 
-        void updateStateWithDebouncing(const Contact::State actualInstantaneousState);
+        void updateStateWithDebouncing(const arduino::digital::State actualInstantaneousState);
 
         bool isClosed() const;
 

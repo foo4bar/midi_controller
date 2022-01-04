@@ -7,9 +7,14 @@ namespace kbd
         return (timeFromStartMillis - this->lastTimeStateChangedMillis) > Contact::maxBouncingTimeMillis;
     }
 
-    void Contact::updateStateWithDebouncing(const Contact::State actualInstantaneousState)
+    
+    
+    void Contact::updateStateWithDebouncing(const arduino::digital::State actualInstantaneousInputState)
     {
-        const unsigned long timeFromStartMillis = arduino::getTimeFromStartMillis();
+        const auto actualInstantaneousState = actualInstantaneousInputState == arduino::digital::State::high
+                                                  ? State::open
+                                                  : State::closed;
+        const auto timeFromStartMillis = arduino::getTimeFromStartMillis();
 
         if (this->lastDetectedInstantaneousState == actualInstantaneousState &&
             this->actualSteadyState != this->lastDetectedInstantaneousState &&

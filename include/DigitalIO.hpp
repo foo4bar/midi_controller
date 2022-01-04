@@ -12,10 +12,10 @@ namespace arduino::digital
         high = 1 //HIGH in Arduino.h
     };
 
-    struct StatePair
+    struct InputStatePair
     {
-        State firstClosed{State::high};
-        State lastClosed{State::high};
+        State withFirstClosedContactOutput{State::high};
+        State withLastClosedContactOutput{State::high};
     };
 
     enum class Mode : uint8_t

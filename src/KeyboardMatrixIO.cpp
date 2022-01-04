@@ -23,19 +23,19 @@ namespace kbdmatrix
             setPinMode(input, Mode::inputWithInternalPullUp);
     }
 
-    const StatePair KeyboardMatrixIO::getActualInstantaneousInputStatePair(const uint8_t contactPairNumber) const
+    const InputStatePair KeyboardMatrixIO::getActualInstantaneousInputStatePair(const uint8_t contactPairNumber) const
     {
-        StatePair statePair;
+        InputStatePair statePair;
 
         const uint8_t outputNumber{}; //TODO
         const uint8_t inputNumber{};  //TODO
 
         setPinState(this->firstClosedContactsOutputs[outputNumber], State::low); //TODO extract to getInputSate()
-        statePair.firstClosed = getPinState(this->inputs[inputNumber]);
+        statePair.withFirstClosedContactOutput = getPinState(this->inputs[inputNumber]);
         setPinState(this->firstClosedContactsOutputs[outputNumber], State::high);
 
         setPinState(this->lastClosedContactsOutputs[outputNumber], State::low);
-        statePair.lastClosed = getPinState(this->inputs[inputNumber]);
+        statePair.withLastClosedContactOutput = getPinState(this->inputs[inputNumber]);
         setPinState(this->lastClosedContactsOutputs[outputNumber], State::high);
 
         return statePair;
