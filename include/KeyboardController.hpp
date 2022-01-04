@@ -10,6 +10,9 @@ namespace kbd
     class KeyboardController
     {
     private:
+        static inline constexpr uint8_t firstKeyMidiNoteNumber{21};
+        static inline constexpr uint8_t midiChannel{1};
+
         std::vector<Key> keys;
 
     public:

@@ -8,7 +8,7 @@ namespace kbd
     {
         for (auto &key : this->keys)
         {
-            key.sendMidiEvent();
+            key.sendMidiEvent(firstKeyMidiNoteNumber, midiChannel);
         }
     }
 }

@@ -21,12 +21,9 @@ namespace kbd
 
         Key(const uint8_t, MidiInterface *const);
 
-        void sendMidiEvent();
+        void sendMidiEvent(const uint8_t, const uint8_t);
 
     private:
-        static inline constexpr uint8_t firstKeyMidiNoteNumber{21};
-        static inline constexpr uint8_t midiChannel{1};
-
         // Each key operates a pair of contacts.
         // One of them is closed first when a corresponding key starts to be pressed,
         // another one is closed last when the key is fully depressed.
