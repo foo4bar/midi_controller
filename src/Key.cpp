@@ -21,15 +21,14 @@ namespace kbd
         {
             const uint8_t noteNumber = this->contacts.number + firstKeyMidiNoteNumber;
 
-            switch (auto midi = this->midiInterface;
-                    this->actualState)
+            switch (this->actualState)
             {
             case State::depressed:
-                midi->sendNoteOn(noteNumber, this->velocity, midiChannel);
+                this->midiInterface->sendNoteOn(noteNumber, this->velocity, midiChannel);
                 this->previousState = this->actualState;
                 break;
             case State::released:
-                midi->sendNoteOff(noteNumber, this->velocity, midiChannel);
+                this->midiInterface->sendNoteOff(noteNumber, this->velocity, midiChannel);
                 this->previousState = this->actualState;
                 break;
             case State::halfReleased:
