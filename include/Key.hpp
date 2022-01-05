@@ -1,8 +1,6 @@
 #ifndef Key_hpp
 #define Key_hpp
 
-#include <cmath>
-
 #include <MIDI.h>
 
 #include "ContactPair.hpp"
