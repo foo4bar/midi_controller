@@ -4,10 +4,8 @@ namespace kbd
 {
     KeyboardController::KeyboardController(const uint8_t firstKeyMidiNoteNumber,
                                            const uint8_t midiChannel,
-                                           const uint8_t numberOfKeys,
-                                           MidiInterface *const midiInterface) : firstKeyMidiNoteNumber{firstKeyMidiNoteNumber},
-                                                                                 midiChannel{midiChannel},
-                                                                                 midiInterface{midiInterface}
+                                           const uint8_t numberOfKeys) : firstKeyMidiNoteNumber{firstKeyMidiNoteNumber},
+                                                                                 midiChannel{midiChannel}
     {
         for (uint8_t keyNumber{0}; keyNumber < numberOfKeys; ++keyNumber)
         {
@@ -15,11 +13,11 @@ namespace kbd
         }
     }
 
-    void KeyboardController::sendMidiEvents()
+    void KeyboardController::sendMidiEvents(MidiInterface &midiInterface)
     {
         for (auto &key : this->keys)
         {
-            key.sendMidiEvent(this->firstKeyMidiNoteNumber, this->midiChannel, this->midiInterface);
+            key.sendMidiEvent(this->firstKeyMidiNoteNumber, this->midiChannel, midiInterface);
         }
     }
 }

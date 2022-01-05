@@ -40,11 +40,10 @@ int main()
                                 .withfirstKeyMidiNoteNumber(21)
                                 .withMidiChannel(1)
                                 .withNumberOfKeys(kbdmatrix::numberOfScannedKeys)
-                                .withMidiInterface(&MIDI)
                                 .build()};
     for (;;)
     {
-        keyboardController.sendMidiEvents();
+        keyboardController.sendMidiEvents(MIDI);
     }
 
     serialEventSafeRun();

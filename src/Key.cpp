@@ -2,15 +2,15 @@
 
 namespace kbd
 {
-    Key::Key(const uint8_t number) : contacts{ContactPair{number}}
+    Key::Key(const uint8_t number) : number{number}
     {
     }
 
     void Key::sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                             const uint8_t midiChannel,
-                            MidiInterface *const midiInterface)
+                            MidiInterface &midiInterface)
     {
-        this->contacts.updateStateWithDebouncing();
+        this->contacts.updateStateWithDebouncing(this->number);
 
         updateActualState();
 
@@ -20,16 +20,16 @@ namespace kbd
         }
         else
         {
-            const uint8_t noteNumber = this->contacts.number + firstKeyMidiNoteNumber;
+            const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
 
             switch (this->actualState)
             {
             case State::depressed:
-                midiInterface->sendNoteOn(noteNumber, this->velocity, midiChannel);
+                midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
                 this->previousState = this->actualState;
                 break;
             case State::released:
-                midiInterface->sendNoteOff(noteNumber, this->velocity, midiChannel);
+                midiInterface.sendNoteOff(noteNumber, this->velocity, midiChannel);
                 this->previousState = this->actualState;
                 break;
             case State::halfReleased:
@@ -43,10 +43,7 @@ namespace kbd
 
     void Key::updateActualState()
     {
-        const auto firstContact{this->contacts.firstClosed};
-        const auto lastContact{this->contacts.lastClosed};
-
-        if (firstContact.isClosed() && lastContact.isClosed())
+        if (this->contacts.isAsKeyDepressed())
         {
             this->actualState = State::depressed;
             if (this->previousState == State::halfReleased)
@@ -57,11 +54,10 @@ namespace kbd
             }
             else
             {
-                this->velocity =
-                    lastContact.getLastTimeStateChangedMillis() - firstContact.getLastTimeStateChangedMillis(); //TODO normalization
+                this->velocity = this->contacts.getPressingTimeMillis(); //TODO normalization
             }
         }
-        else if (firstContact.isClosed() && !lastContact.isClosed())
+        else if (this->contacts.isAsKeyHalfReleased())
         {
             if (this->previousState == State::depressed)
             {
@@ -73,15 +69,10 @@ namespace kbd
                 //Do nothing.
             }
         }
-        else if (!firstContact.isClosed() && !lastContact.isClosed())
+        else if (this->contacts.isAsKeyReleases())
         {
             this->actualState = State::released;
-            this->velocity =
-                firstContact.getLastTimeStateChangedMillis() - lastContact.getLastTimeStateChangedMillis(); //TODO normalization
-        }
-        else if (!firstContact.isClosed() && lastContact.isClosed())
-        {
-            //The state is illegal and shouldn't be processed.
+            this->velocity = this->contacts.getReleasingTimeMillis(); //TODO normalization
         }
     }
 }

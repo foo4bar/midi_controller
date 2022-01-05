@@ -8,15 +8,24 @@
 
 namespace kbd
 {
-    struct ContactPair
+    class ContactPair
     {
+    private:
         Contact firstClosed;
         Contact lastClosed;
-        uint8_t number;
 
-        ContactPair(const uint8_t);
+    public:
+        void updateStateWithDebouncing(const uint8_t);
 
-        void updateStateWithDebouncing();
+        const uint8_t getPressingTimeMillis() const;
+
+        const uint8_t getReleasingTimeMillis() const;
+
+        const bool isAsKeyDepressed() const;
+
+        const bool isAsKeyReleases() const;
+
+        const bool isAsKeyHalfReleased() const;
     };
 }
 

@@ -8,10 +8,15 @@
 namespace kbd
 {
     using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
-    
+
     class Key
     {
     public:
+        Key(const uint8_t);
+
+        void sendMidiEvent(const uint8_t, const uint8_t, MidiInterface &);
+
+    private:
         enum class State
         {
             depressed,
@@ -19,11 +24,12 @@ namespace kbd
             released
         };
 
-        Key(const uint8_t);
+        static inline constexpr uint8_t maxPressingTimeMillis{250}; //TODO double check
+        static inline constexpr uint8_t minVelocity{10};            //TODO double check
+        static inline constexpr uint8_t maxVelocity{120};           //TODO double check
 
-        void sendMidiEvent(const uint8_t, const uint8_t, MidiInterface *const);
+        uint8_t number;
 
-    private:
         // Each key operates a pair of contacts.
         // One of them is closed first when a corresponding key starts to be pressed,
         // another one is closed last when the key is fully depressed.

@@ -14,11 +14,10 @@ namespace kbd
     class KeyboardController
     {
     private:
-        KeyboardController(const uint8_t, const uint8_t, const uint8_t, MidiInterface *const);
+        KeyboardController(const uint8_t, const uint8_t, const uint8_t);
 
         uint8_t firstKeyMidiNoteNumber;
         uint8_t midiChannel;
-        MidiInterface *midiInterface;
 
         std::vector<Key> keys;
 
@@ -50,22 +49,15 @@ namespace kbd
                 return *this;
             }
 
-            Builder &withMidiInterface(MidiInterface *const midiInterface)
-            {
-                this->midiInterface = midiInterface;
-                return *this;
-            }
-
             KeyboardController build() const
             {
                 return KeyboardController{this->firstKeyMidiNoteNumber,
                                           this->midiChannel,
-                                          this->numberOfKeys,
-                                          this->midiInterface};
+                                          this->numberOfKeys};
             }
         };
 
-        void sendMidiEvents();
+        void sendMidiEvents(MidiInterface &);
     };
 }
 

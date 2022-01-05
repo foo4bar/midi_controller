@@ -2,7 +2,7 @@
 
 namespace kbd
 {
-    bool Contact::isBounsingFinished(const unsigned long timeFromStartMillis) const
+    const bool Contact::isBounsingFinished(const unsigned long timeFromStartMillis) const
     {
         return (timeFromStartMillis - this->lastTimeStateChangedMillis) > Contact::maxBouncingTimeMillis;
     }
@@ -30,12 +30,12 @@ namespace kbd
         }
     }
 
-    bool Contact::isClosed() const
+    const bool Contact::isClosed() const
     {
         return this->actualSteadyState == State::closed;
     }
 
-    unsigned long Contact::getLastTimeStateChangedMillis() const
+    const unsigned long Contact::getLastTimeStateChangedMillis() const
     {
         return this->lastTimeStateChangedMillis;
     }
