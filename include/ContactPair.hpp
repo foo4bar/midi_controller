@@ -17,15 +17,15 @@ namespace kbd
     public:
         void updateStateWithDebouncing(const uint8_t);
 
-        const uint8_t getPressingTimeMillis() const;
+        const unsigned long getPressingTimeMillis() const;
 
-        const uint8_t getReleasingTimeMillis() const;
+        const unsigned long getReleasingTimeMillis() const;
 
-        const bool isAsKeyDepressed() const;
+        const bool isAsKeyIsDepressed() const;
 
-        const bool isAsKeyReleases() const;
+        const bool isAsKeyIsReleased() const;
 
-        const bool isAsKeyHalfReleased() const;
+        const bool isAsKeyIsHalfReleased() const;
     };
 }
 

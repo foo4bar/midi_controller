@@ -20,30 +20,37 @@ namespace kbd
         }
         else
         {
-            const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
-
-            switch (this->actualState)
+            if (this->velocity == 0)
             {
-            case State::depressed:
-                midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
-                this->previousState = this->actualState;
-                break;
-            case State::released:
-                midiInterface.sendNoteOff(noteNumber, this->velocity, midiChannel);
-                this->previousState = this->actualState;
-                break;
-            case State::halfReleased:
                 //Do nothing.
-                break;
-            default:
-                break;
             }
+            else
+            {
+                const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
+
+                switch (this->actualState)
+                {
+                case State::depressed:
+                    midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);                    
+                    break;
+                case State::released:
+                    midiInterface.sendNoteOff(noteNumber, this->velocity, midiChannel);                    
+                    break;
+                case State::halfReleased:
+                    //Do nothing.
+                    break;
+                default:
+                    break;
+                }
+            }
+
+            this->previousState = this->actualState;
         }
     }
 
     void Key::updateActualState()
     {
-        if (this->contacts.isAsKeyDepressed())
+        if (this->contacts.isAsKeyIsDepressed())
         {
             this->actualState = State::depressed;
             if (this->previousState == State::halfReleased)
@@ -54,10 +61,18 @@ namespace kbd
             }
             else
             {
-                this->velocity = this->contacts.getPressingTimeMillis(); //TODO normalization
+                const auto pressingTimeMillis{this->contacts.getPressingTimeMillis()};
+                if (pressingTimeMillis <= maxManipulationTimeMillis)
+                {
+                    this->velocity = pressingTimeMillis; //TODO normalization
+                }
+                else
+                {
+                    this->velocity = 0;
+                }
             }
         }
-        else if (this->contacts.isAsKeyHalfReleased())
+        else if (this->contacts.isAsKeyIsHalfReleased())
         {
             if (this->previousState == State::depressed)
             {
@@ -69,10 +84,18 @@ namespace kbd
                 //Do nothing.
             }
         }
-        else if (this->contacts.isAsKeyReleases())
+        else if (this->contacts.isAsKeyIsReleased())
         {
             this->actualState = State::released;
-            this->velocity = this->contacts.getReleasingTimeMillis(); //TODO normalization
+            const auto releasingTimeMillis{this->contacts.getReleasingTimeMillis()};
+            if (releasingTimeMillis <= maxManipulationTimeMillis)
+            {
+                this->velocity = releasingTimeMillis; //TODO normalization
+            }
+            else
+            {
+                this->velocity = 0;
+            }
         }
     }
 }

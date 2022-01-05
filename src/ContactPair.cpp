@@ -9,27 +9,27 @@ namespace kbd
         this->lastClosed.updateStateWithDebouncing(inputStatePair.withLastClosedContactOutput);
     }
 
-    const uint8_t ContactPair::getPressingTimeMillis() const
+    const unsigned long ContactPair::getPressingTimeMillis() const
     {
         return this->firstClosed.getLastTimeStateChangedMillis() - this->lastClosed.getLastTimeStateChangedMillis();
     }
 
-    const uint8_t ContactPair::getReleasingTimeMillis() const
+    const unsigned long ContactPair::getReleasingTimeMillis() const
     {
         return this->lastClosed.getLastTimeStateChangedMillis() - this->firstClosed.getLastTimeStateChangedMillis();
     }
 
-    const bool ContactPair::isAsKeyDepressed() const
+    const bool ContactPair::isAsKeyIsDepressed() const
     {
         return this->firstClosed.isClosed() && this->lastClosed.isClosed();
     }
 
-    const bool ContactPair::isAsKeyReleases() const
+    const bool ContactPair::isAsKeyIsReleased() const
     {
         return !this->firstClosed.isClosed() && !this->lastClosed.isClosed();
     }
 
-    const bool ContactPair::isAsKeyHalfReleased() const
+    const bool ContactPair::isAsKeyIsHalfReleased() const
     {
         return this->firstClosed.isClosed() && !this->lastClosed.isClosed();
     }

@@ -1,6 +1,8 @@
 #ifndef Key_hpp
 #define Key_hpp
 
+#include <cmath>
+
 #include <MIDI.h>
 
 #include "ContactPair.hpp"
@@ -24,9 +26,12 @@ namespace kbd
             released
         };
 
-        static inline constexpr uint8_t maxPressingTimeMillis{250}; //TODO double check
-        static inline constexpr uint8_t minVelocity{10};            //TODO double check
-        static inline constexpr uint8_t maxVelocity{120};           //TODO double check
+        static inline constexpr uint8_t maxManipulationTimeMillis{250}; //TODO double check
+        static inline constexpr uint8_t minVelocity{8};                 //pppp
+        static inline constexpr uint8_t maxVelocity{127};               //ffff
+
+        static inline constexpr double timeToVelocityConvertionFactor{
+            maxManipulationTimeMillis / (maxVelocity - minVelocity)};
 
         uint8_t number;
 

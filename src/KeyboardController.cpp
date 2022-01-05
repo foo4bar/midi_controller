@@ -5,7 +5,7 @@ namespace kbd
     KeyboardController::KeyboardController(const uint8_t firstKeyMidiNoteNumber,
                                            const uint8_t midiChannel,
                                            const uint8_t numberOfKeys) : firstKeyMidiNoteNumber{firstKeyMidiNoteNumber},
-                                                                                 midiChannel{midiChannel}
+                                                                         midiChannel{midiChannel}
     {
         for (uint8_t keyNumber{0}; keyNumber < numberOfKeys; ++keyNumber)
         {
