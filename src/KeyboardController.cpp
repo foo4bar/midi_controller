@@ -9,7 +9,7 @@ namespace kbd
     {
         for (uint8_t keyNumber{0}; keyNumber < numberOfKeys; ++keyNumber)
         {
-            this->keys.push_back(kbd::Key{keyNumber});
+            this->keys.push_back(Key{keyNumber});
         }
     }
 

@@ -25,19 +25,21 @@ namespace kbdmatrix
 
     const InputStatePair KeyboardMatrixIO::getActualInstantaneousInputStatePair(const uint8_t contactPairNumber) const
     {
-        InputStatePair statePair;
+        const uint8_t outputNumber{(uint8_t)(contactPairNumber / numberOfInputs)};
+        const uint8_t inputNumber{(uint8_t)(contactPairNumber % this->numberOfInputs)};
 
-        const uint8_t outputNumber{}; //TODO
-        const uint8_t inputNumber{};  //TODO
+        return InputStatePair{getInputState(this->firstClosedContactsOutputs, outputNumber, inputNumber),
+                              getInputState(this->lastClosedContactsOutputs, outputNumber, inputNumber)};
+    }
 
-        setPinState(this->firstClosedContactsOutputs[outputNumber], State::low); //TODO extract to getInputSate()
-        statePair.withFirstClosedContactOutput = getPinState(this->inputs[inputNumber]);
-        setPinState(this->firstClosedContactsOutputs[outputNumber], State::high);
+    const State KeyboardMatrixIO::getInputState(const std::vector<uint8_t> outputs,
+                                                const uint8_t outputNumber,
+                                                const uint8_t inputNumber) const
+    {
+        setPinState(outputs[outputNumber], State::low);
+        State result{getPinState(this->inputs[inputNumber])};
+        setPinState(outputs[outputNumber], State::high);
 
-        setPinState(this->lastClosedContactsOutputs[outputNumber], State::low);
-        statePair.withLastClosedContactOutput = getPinState(this->inputs[inputNumber]);
-        setPinState(this->lastClosedContactsOutputs[outputNumber], State::high);
-
-        return statePair;
+        return result;
     }
 }

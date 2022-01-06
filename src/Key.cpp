@@ -20,31 +20,7 @@ namespace kbd
         }
         else
         {
-            if (this->velocity == 0)
-            {
-                //Do nothing.
-            }
-            else
-            {
-                const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
-
-                switch (this->actualState)
-                {
-                case State::depressed:
-                    midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);                    
-                    break;
-                case State::released:
-                    midiInterface.sendNoteOff(noteNumber, this->velocity, midiChannel);                    
-                    break;
-                case State::halfReleased:
-                    //Do nothing.
-                    break;
-                default:
-                    break;
-                }
-            }
-
-            this->previousState = this->actualState;
+            doSendMidiEvent(firstKeyMidiNoteNumber, midiChannel, midiInterface);
         }
     }
 
@@ -64,7 +40,7 @@ namespace kbd
                 const auto pressingTimeMillis{this->contacts.getPressingTimeMillis()};
                 if (pressingTimeMillis <= maxManipulationTimeMillis)
                 {
-                    this->velocity = pressingTimeMillis; //TODO normalization
+                    this->velocity = slope * pressingTimeMillis + maxVelocity;
                 }
                 else
                 {
@@ -90,12 +66,50 @@ namespace kbd
             const auto releasingTimeMillis{this->contacts.getReleasingTimeMillis()};
             if (releasingTimeMillis <= maxManipulationTimeMillis)
             {
-                this->velocity = releasingTimeMillis; //TODO normalization
+                this->velocity = slope * releasingTimeMillis + maxVelocity;
             }
             else
             {
                 this->velocity = 0;
             }
+        }
+    }
+
+    void Key::doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
+                                 const uint8_t midiChannel,
+                                 MidiInterface &midiInterface)
+    {
+        const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
+
+        switch (this->actualState)
+        {
+        case State::depressed:
+            if (this->velocity == 0)
+            {
+                //Do nothing.
+            }
+            else
+            {
+                midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
+            }
+            this->previousState = this->actualState;
+            break;
+        case State::released:
+            if (this->velocity == 0)
+            {
+                //Do nothing.
+            }
+            else
+            {
+                midiInterface.sendNoteOff(noteNumber, this->velocity, midiChannel);
+            }
+            this->previousState = this->actualState;
+            break;
+        case State::halfReleased:
+            //Do nothing.
+            break;
+        default:
+            break;
         }
     }
 }

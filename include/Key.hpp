@@ -14,7 +14,9 @@ namespace kbd
     public:
         Key(const uint8_t);
 
-        void sendMidiEvent(const uint8_t, const uint8_t, MidiInterface &);
+        void sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
+                           const uint8_t midiChannel,
+                           MidiInterface &midiInterface);
 
     private:
         enum class State
@@ -28,8 +30,7 @@ namespace kbd
         static inline constexpr uint8_t minVelocity{8};                 //pppp
         static inline constexpr uint8_t maxVelocity{127};               //ffff
 
-        static inline constexpr double timeToVelocityConvertionFactor{
-            maxManipulationTimeMillis / (maxVelocity - minVelocity)};
+        static inline constexpr double slope{(minVelocity - maxVelocity) / maxManipulationTimeMillis};
 
         uint8_t number;
 
@@ -44,6 +45,9 @@ namespace kbd
         uint8_t velocity{0};
 
         void updateActualState();
+        void doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
+                             const uint8_t midiChannel,
+                             MidiInterface &midiInterface);
     };
 }
 

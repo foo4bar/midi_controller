@@ -11,11 +11,13 @@ namespace kbd
     class ContactPair
     {
     private:
+        // One of contacts is closed first when a corresponding key starts to be pressed,
+        // another one is closed last when the key is fully depressed.
         Contact firstClosed;
         Contact lastClosed;
 
     public:
-        void updateStateWithDebouncing(const uint8_t);
+        void updateStateWithDebouncing(const uint8_t keyNumber);
 
         const unsigned long getPressingTimeMillis() const;
 

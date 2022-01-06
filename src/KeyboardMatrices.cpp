@@ -2,10 +2,22 @@
 
 namespace kbdmatrix
 {
-    const arduino::digital::InputStatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber)
+    const arduino::digital::InputStatePair getActualInstantaneousInputStatePair(const uint8_t keyNumber)
     {
-        //TODO
-
-        return arduino::digital::InputStatePair{};
+        if (keyNumber < numberOfScannedKeys)
+        {
+            if (keyNumber < numberOfScannedKeysLeft)
+            {
+                return keyboardMatrixIOLeft.getActualInstantaneousInputStatePair(keyNumber);
+            }
+            else
+            {
+                return keyboardMatrixIORight.getActualInstantaneousInputStatePair(keyNumber - numberOfScannedKeysLeft);
+            }
+        }
+        else
+        {
+            return arduino::digital::InputStatePair{};
+        }
     }
 }

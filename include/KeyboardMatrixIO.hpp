@@ -9,9 +9,9 @@
 #include "DigitalIO.hpp"
 
 namespace kbdmatrix
-{   
+{
     using namespace arduino::digital;
-    
+
     class KeyboardMatrixIO
     {
     private:
@@ -29,6 +29,10 @@ namespace kbdmatrix
                          const std::vector<uint8_t> &firstClosedContactsOutputs,
                          const std::vector<uint8_t> &lastClosedContactsOutputs,
                          const std::vector<uint8_t> &inputs);
+
+        const State getInputState(const std::vector<uint8_t> outputs,
+                                  const uint8_t outputNumber,
+                                  const uint8_t inputNumber) const;
 
     public:
         const InputStatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber) const;

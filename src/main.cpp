@@ -1,4 +1,5 @@
 #include <MIDI.h>
+#include <Arduino.h>
 
 #include "KeyboardMatrices.hpp"
 #include "KeyboardController.hpp"

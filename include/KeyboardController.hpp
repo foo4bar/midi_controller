@@ -9,12 +9,16 @@
 
 namespace kbd
 {
+    class Key;
+
     using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
 
     class KeyboardController
     {
     private:
-        KeyboardController(const uint8_t, const uint8_t, const uint8_t);
+        KeyboardController(const uint8_t firstKeyMidiNoteNumber,
+                           const uint8_t midiChannel,
+                           const uint8_t numberOfKeys);
 
         uint8_t firstKeyMidiNoteNumber;
         uint8_t midiChannel;
