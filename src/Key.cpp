@@ -1,3 +1,5 @@
+#include <string>
+
 #include "Key.hpp"
 
 namespace kbd
@@ -76,8 +78,8 @@ namespace kbd
     }
 
     void Key::doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
-                                 const uint8_t midiChannel,
-                                 MidiInterface &midiInterface)
+                              const uint8_t midiChannel,
+                              MidiInterface &midiInterface)
     {
         const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
 
@@ -91,6 +93,17 @@ namespace kbd
             else
             {
                 midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
+#ifdef DEBUG_VIA_SERIAL
+                char buffer[10];
+                Serial.write(std::basic_string("ON: note=")
+                                 .append(itoa(noteNumber, buffer, 10))
+                                 .append(", vel=")
+                                 .append(itoa(this->velocity, buffer, 10))
+                                 .append(", channel=")
+                                 .append(itoa(midiChannel, buffer, 10))
+                                 .append("\n")
+                                 .c_str());
+#endif
             }
             this->previousState = this->actualState;
             break;
@@ -102,6 +115,17 @@ namespace kbd
             else
             {
                 midiInterface.sendNoteOff(noteNumber, this->velocity, midiChannel);
+#ifdef DEBUG_VIA_SERIAL
+                char buffer[10];
+                Serial.write(std::basic_string("OFF: note=")
+                                 .append(itoa(noteNumber, buffer, 10))
+                                 .append(", vel=")
+                                 .append(itoa(this->velocity, buffer, 10))
+                                 .append(", channel=")
+                                 .append(itoa(midiChannel, buffer, 10))
+                                 .append("\n")
+                                 .c_str());
+#endif
             }
             this->previousState = this->actualState;
             break;

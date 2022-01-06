@@ -39,7 +39,7 @@ int main()
 
     auto keyboardController{kbd::KeyboardController::Builder{}
                                 .withfirstKeyMidiNoteNumber(21)
-                                .withMidiChannel(0)
+                                .withMidiChannel(1)
                                 .withNumberOfKeys(kbdmatrix::numberOfScannedKeys)
                                 .build()};
     for (;;)
