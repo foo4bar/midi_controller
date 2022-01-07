@@ -31,49 +31,19 @@ namespace kbd
         if (this->contacts.isAsKeyIsDepressed())
         {
             this->actualState = State::depressed;
-            if (this->previousState == State::halfReleased)
+            const auto pressingTimeMillis{this->contacts.getPressingTimeMillis()};
+            if (pressingTimeMillis <= maxManipulationTimeMillis)
             {
-                //Moving a key from the half-released state to the depressed state may be treated as a repetition
-                //that can be performed on grand pianos and some upright pianos.
-                //Previously calculated velocity shouldn't be changed in case of repetition.
-            }
-            else
-            {
-                const auto pressingTimeMillis{this->contacts.getPressingTimeMillis()};
-                if (pressingTimeMillis <= maxManipulationTimeMillis)
-                {
-                    this->velocity = slope * pressingTimeMillis + maxVelocity;
-                }
-                else
-                {
-                    this->velocity = 0;
-                }
-            }
-        }
-        else if (this->contacts.isAsKeyIsHalfReleased())
-        {
-            if (this->previousState == State::depressed)
-            {
-                //Preparing a key for repetition.
-                this->actualState = State::halfReleased;
-            }
-            else
-            {
-                //Do nothing.
-            }
-        }
-        else if (this->contacts.isAsKeyIsReleased())
-        {
-            this->actualState = State::released;
-            const auto releasingTimeMillis{this->contacts.getReleasingTimeMillis()};
-            if (releasingTimeMillis <= maxManipulationTimeMillis)
-            {
-                this->velocity = slope * releasingTimeMillis + maxVelocity;
+                this->velocity = slope * pressingTimeMillis + maxVelocity;
             }
             else
             {
                 this->velocity = 0;
             }
+        }
+        else if (this->contacts.isAsKeyIsReleased())
+        {
+            this->actualState = State::released;
         }
     }
 
@@ -86,51 +56,35 @@ namespace kbd
         switch (this->actualState)
         {
         case State::depressed:
-            if (this->velocity == 0)
-            {
-                //Do nothing.
-            }
-            else
-            {
-                midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
-#ifdef DEBUG_VIA_SERIAL
-                char buffer[10];
-                Serial.write(std::basic_string("ON: note=")
-                                 .append(itoa(noteNumber, buffer, 10))
-                                 .append(", vel=")
-                                 .append(itoa(this->velocity, buffer, 10))
-                                 .append(", channel=")
-                                 .append(itoa(midiChannel, buffer, 10))
-                                 .append("\n")
-                                 .c_str());
+            midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
+
+#ifdef DEBUG_MESSAGES
+            char buffer[10];
+            Serial.write(std::basic_string("ON: note=")
+                             .append(itoa(noteNumber, buffer, 10))
+                             .append(", vel=")
+                             .append(itoa(this->velocity, buffer, 10))
+                             .append(", time=")
+                             .append(ltoa(this->contacts.getPressingTimeMillis(), buffer, 10))
+                             .append("\n")
+                             .c_str());
 #endif
-            }
+
             this->previousState = this->actualState;
             break;
         case State::released:
-            if (this->velocity == 0)
-            {
-                //Do nothing.
-            }
-            else
-            {
-                midiInterface.sendNoteOff(noteNumber, this->velocity, midiChannel);
-#ifdef DEBUG_VIA_SERIAL
-                char buffer[10];
-                Serial.write(std::basic_string("OFF: note=")
-                                 .append(itoa(noteNumber, buffer, 10))
-                                 .append(", vel=")
-                                 .append(itoa(this->velocity, buffer, 10))
-                                 .append(", channel=")
-                                 .append(itoa(midiChannel, buffer, 10))
-                                 .append("\n")
-                                 .c_str());
+            midiInterface.sendNoteOff(noteNumber, defaultVelocity, midiChannel);
+
+#ifdef DEBUG_MESSAGES
+            Serial.write(std::basic_string("OFF: note=")
+                             .append(itoa(noteNumber, buffer, 10))
+                             .append(", time=")
+                             .append(ltoa(this->contacts.getReleasingTimeMillis(), buffer, 10))
+                             .append("\n")
+                             .c_str());
 #endif
-            }
+
             this->previousState = this->actualState;
-            break;
-        case State::halfReleased:
-            //Do nothing.
             break;
         default:
             break;

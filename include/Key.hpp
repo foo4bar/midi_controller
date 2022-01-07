@@ -22,13 +22,13 @@ namespace kbd
         enum class State
         {
             depressed,
-            halfReleased,
             released
         };
 
         static inline constexpr uint8_t maxManipulationTimeMillis{250}; //TODO double check
         static inline constexpr uint8_t minVelocity{8};                 //pppp
         static inline constexpr uint8_t maxVelocity{127};               //ffff
+        static inline constexpr uint8_t defaultVelocity{64};
 
         static inline constexpr double slope{(minVelocity - maxVelocity) / maxManipulationTimeMillis};
 

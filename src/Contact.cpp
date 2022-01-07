@@ -20,7 +20,6 @@ namespace kbd
             this->actualSteadyState != this->lastDetectedInstantaneousState &&
             isBounsingFinished(timeFromStartMillis))
         {
-            this->previousSteadyState = this->actualSteadyState;
             this->actualSteadyState = this->lastDetectedInstantaneousState;
         }
         else

@@ -26,7 +26,6 @@ namespace kbd
 
         static inline const unsigned long maxBouncingTimeMillis{3};
 
-        State previousSteadyState{State::open};
         State actualSteadyState{State::open};
         State lastDetectedInstantaneousState{State::open};
         unsigned long lastTimeStateChangedMillis{0};

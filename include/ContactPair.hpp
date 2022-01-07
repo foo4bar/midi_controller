@@ -26,8 +26,6 @@ namespace kbd
         const bool isAsKeyIsDepressed() const;
 
         const bool isAsKeyIsReleased() const;
-
-        const bool isAsKeyIsHalfReleased() const;
     };
 }
 

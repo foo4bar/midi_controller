@@ -28,9 +28,4 @@ namespace kbd
     {
         return !this->firstClosed.isClosed() && !this->lastClosed.isClosed();
     }
-
-    const bool ContactPair::isAsKeyIsHalfReleased() const
-    {
-        return this->firstClosed.isClosed() && !this->lastClosed.isClosed();
-    }
 }
