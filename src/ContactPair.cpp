@@ -11,12 +11,12 @@ namespace kbd
 
     const unsigned long ContactPair::getPressingTimeMillis() const
     {
-        return this->firstClosed.getLastTimeStateChangedMillis() - this->lastClosed.getLastTimeStateChangedMillis();
+        return this->lastClosed.getLastTimeStateChangedMillis() - this->firstClosed.getLastTimeStateChangedMillis();
     }
 
     const unsigned long ContactPair::getReleasingTimeMillis() const
     {
-        return this->lastClosed.getLastTimeStateChangedMillis() - this->firstClosed.getLastTimeStateChangedMillis();
+        return this->firstClosed.getLastTimeStateChangedMillis() - this->lastClosed.getLastTimeStateChangedMillis();
     }
 
     const bool ContactPair::isAsKeyIsDepressed() const

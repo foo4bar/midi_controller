@@ -1,4 +1,6 @@
+#ifdef DEBUG_MESSAGES
 #include <string>
+#endif
 
 #include "Key.hpp"
 
@@ -59,7 +61,7 @@ namespace kbd
             midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
 
 #ifdef DEBUG_MESSAGES
-            char buffer[10];
+            char buffer[10];           
             Serial.write(std::basic_string("ON: note=")
                              .append(itoa(noteNumber, buffer, 10))
                              .append(", vel=")
