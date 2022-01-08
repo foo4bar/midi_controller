@@ -1,5 +1,4 @@
 #ifdef DEBUG_MESSAGES
-#include <string>
 #include <Time.hpp>
 #endif
 
@@ -58,10 +57,9 @@ int main()
         if (counter == 1'000)
         {
             counter = 0;
-            Serial.write(std::basic_string("1k cicles executed: timeFromStartMillis=")
-                             .append(ltoa(arduino::getTimeFromStartMillis(), buffer, 10))
-                             .append("\n")
-                             .c_str());
+            Serial.write("1k cicles executed: timeFromStartMillis=");
+            Serial.write(ltoa(arduino::getTimeFromStartMillis(), buffer, 10));
+            Serial.write("\n");
         }
 #endif
         keyboardController.sendMidiEvents(MIDI);

@@ -1,7 +1,3 @@
-#ifdef DEBUG_MESSAGES
-#include <string>
-#endif
-
 #include "Key.hpp"
 
 namespace kbd
@@ -61,15 +57,14 @@ namespace kbd
             midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
 
 #ifdef DEBUG_MESSAGES
-            char buffer[10];           
-            Serial.write(std::basic_string("ON: note=")
-                             .append(itoa(noteNumber, buffer, 10))
-                             .append(", vel=")
-                             .append(itoa(this->velocity, buffer, 10))
-                             .append(", time=")
-                             .append(ltoa(this->contacts.getPressingTimeMillis(), buffer, 10))
-                             .append("\n")
-                             .c_str());
+            char buffer[10];
+            Serial.write("ON: note=");
+            Serial.write(itoa(noteNumber, buffer, 10));
+            Serial.write(", vel=");
+            Serial.write(itoa(this->velocity, buffer, 10));
+            Serial.write(", time=");
+            Serial.write(ltoa(this->contacts.getPressingTimeMillis(), buffer, 10));
+            Serial.write("\n");
 #endif
 
             this->previousState = this->actualState;
@@ -78,12 +73,11 @@ namespace kbd
             midiInterface.sendNoteOff(noteNumber, defaultVelocity, midiChannel);
 
 #ifdef DEBUG_MESSAGES
-            Serial.write(std::basic_string("OFF: note=")
-                             .append(itoa(noteNumber, buffer, 10))
-                             .append(", time=")
-                             .append(ltoa(this->contacts.getReleasingTimeMillis(), buffer, 10))
-                             .append("\n")
-                             .c_str());
+            Serial.write("OFF: note=");
+            Serial.write(itoa(noteNumber, buffer, 10));
+            Serial.write(", time=");
+            Serial.write(ltoa(this->contacts.getReleasingTimeMillis(), buffer, 10));
+            Serial.write("\n");
 #endif
 
             this->previousState = this->actualState;
