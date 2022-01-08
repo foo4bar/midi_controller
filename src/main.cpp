@@ -46,22 +46,22 @@ int main()
                                 .withMidiChannel(1)
                                 .withNumberOfKeys(kbdmatrix::numberOfScannedKeys)
                                 .build()};
-#ifdef DEBUG_MESSAGES
-    long counter{};
-    char buffer[100];
-#endif
+// #ifdef DEBUG_MESSAGES
+//     long counter{};
+//     char buffer[100];
+// #endif
     for (;;)
     {
-#ifdef DEBUG_MESSAGES
-        ++counter;
-        if (counter == 1'000)
-        {
-            counter = 0;
-            Serial.write("1k cicles executed: timeFromStartMillis=");
-            Serial.write(ltoa(arduino::getTimeFromStartMillis(), buffer, 10));
-            Serial.write("\n");
-        }
-#endif
+// #ifdef DEBUG_MESSAGES
+//         ++counter;
+//         if (counter == 1'000)
+//         {
+//             counter = 0;
+//             Serial.write("1k cicles executed: timeFromStartMillis=");
+//             Serial.write(ltoa(arduino::getTimeFromStartMillis(), buffer, 10));
+//             Serial.write("\n");
+//         }
+// #endif
         keyboardController.sendMidiEvents(MIDI);
     }
 

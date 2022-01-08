@@ -4,8 +4,8 @@ namespace kbdmatrix
 {
     KeyboardMatrixIO::KeyboardMatrixIO(const uint8_t numberOfOutputPairs,
                                        const uint8_t numberOfInputs,
-                                       const std::vector<uint8_t> &firstClosedContactsOutputs,
-                                       const std::vector<uint8_t> &lastClosedContactsOutputs,
+                                       const std::vector<Pin> &firstClosedContactsOutputs,
+                                       const std::vector<Pin> &lastClosedContactsOutputs,
                                        const std::vector<uint8_t> &inputs) : numberOfOutputPairs{numberOfOutputPairs},
                                                                              numberOfInputs{numberOfInputs},
                                                                              firstClosedContactsOutputs{firstClosedContactsOutputs},
@@ -13,10 +13,10 @@ namespace kbdmatrix
                                                                              inputs{inputs}
     {
         for (const auto &outputs : {firstClosedContactsOutputs, lastClosedContactsOutputs})
-            for (const uint8_t output : outputs)
+            for (Pin output : outputs)
             {
-                setPinMode(output, Mode::output);
-                setPinState(output, State::high);
+                setPinMode(output.getNumber(), Mode::output);
+                output.setHigh();
             }
 
         for (const uint8_t input : inputs)
@@ -32,13 +32,13 @@ namespace kbdmatrix
                               getInputState(this->lastClosedContactsOutputs, outputNumber, inputNumber)};
     }
 
-    const State KeyboardMatrixIO::getInputState(const std::vector<uint8_t> outputs,
+    const State KeyboardMatrixIO::getInputState(std::vector<Pin> outputs,
                                                 const uint8_t outputNumber,
                                                 const uint8_t inputNumber) const
     {
-        setPinState(outputs[outputNumber], State::low);
+        outputs[outputNumber].setLow();
         State result{getPinState(this->inputs[inputNumber])};
-        setPinState(outputs[outputNumber], State::high);
+        outputs[outputNumber].setHigh();
 
         return result;
     }
