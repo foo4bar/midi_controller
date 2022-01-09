@@ -1,38 +1,82 @@
+#include <Arduino.h>
+
 #include "DigitalIO.hpp"
 
 namespace arduino::digital
 {
-    void setPinMode(const uint8_t pinNumber, const Mode mode)
+    Pin::Pin()
     {
-        pinMode(pinNumber, static_cast<uint8_t>(mode));
     }
 
-    const State getPinState(const uint8_t pinNumber)
+    Pin::Pin(const uint8_t number) : bitMask{digitalPinToBitMask(number)},
+                                     port{digitalPinToPort(number)},
+                                     inputRegister{portInputRegister(port)},
+                                     outputRegister{portOutputRegister(port)},
+                                     modeRegister{portModeRegister(port)}
     {
-        return static_cast<State>(digitalRead(pinNumber));
     }
 
-    void setPinState(const uint8_t pinNumber, const State state)
+    void Pin::setState(const State state)
     {
-        digitalWrite(pinNumber, static_cast<uint8_t>(state));
+        if (state == State::high)
+        {
+            *this->outputRegister |= this->bitMask;
+        }
+        else if (state == State::low)
+        {
+            *this->outputRegister &= ~this->bitMask;
+        }
     }
 
-    Pin::Pin(const uint8_t pin, const uint8_t port, const uint8_t number) : pin{pin}, port{port}, number{number} {}
-
-    Pin::Pin() : pin{255}, port{255}, number{255} {} //TODO Get rid of the ctor.
-
-    void Pin::setHigh()
+    const State Pin::getState()
     {
-        this->port |= _BV(this->pin);
+        if (*this->inputRegister & this->bitMask)
+        {
+            return State::high;
+        }
+        else
+        {
+            return State::low;
+        }
     }
 
-    void Pin::setLow()
+    void Pin::setMode(const Mode mode)
     {
-        this->port &= ~_BV(this->pin);
+        switch (mode)
+        {
+        case Mode::input:
+            doWithDisabledInterrupts([](Pin pin)
+                                     {
+                                         *pin.modeRegister &= ~pin.bitMask;
+                                         *pin.outputRegister &= ~pin.bitMask;
+                                     });
+            break;
+
+        case Mode::inputWithInternalPullUp:
+            doWithDisabledInterrupts([](Pin pin)
+                                     {
+                                         *pin.modeRegister &= ~pin.bitMask;
+                                         *pin.outputRegister |= pin.bitMask;
+                                     });
+            break;
+
+        case Mode::output:
+            doWithDisabledInterrupts([](Pin pin)
+                                     { *pin.modeRegister |= pin.bitMask; });
+            break;
+
+        default:
+            break;
+        }
     }
 
-    const uint8_t Pin::getNumber() const
+    void Pin::doWithDisabledInterrupts(void (*function)(Pin pin))
     {
-        return this->number;
+        uint8_t oldSREG = SREG;
+        cli();
+
+        function(*this);
+
+        SREG = oldSREG;
     }
 }
