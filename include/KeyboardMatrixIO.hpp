@@ -41,9 +41,9 @@ namespace kbdmatrix
         class Builder
         {
         private:
-            std::vector<uint8_t> firstClosedContactsOutputs{};
-            std::vector<uint8_t> lastClosedContactsOutputs{};
-            std::vector<uint8_t> inputs{};
+            std::vector<uint8_t> firstClosedContactsOutputs;
+            std::vector<uint8_t> lastClosedContactsOutputs;
+            std::vector<uint8_t> inputs;
 
         public:
             Builder &withFirstClosedContactsOutputs(const std::array<uint8_t, numberOfOutputPairs> &outputs)

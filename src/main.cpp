@@ -1,4 +1,4 @@
-#ifdef DEBUG_MESSAGES
+#ifdef CYCLE_TIME_DEBUG_MESSAGES
 #include <Time.hpp>
 #endif
 
@@ -46,13 +46,13 @@ int main()
                                 .withMidiChannel(1)
                                 .withNumberOfKeys(kbdmatrix::numberOfScannedKeys)
                                 .build()};
-#ifdef DEBUG_MESSAGES
+#ifdef CYCLE_TIME_DEBUG_MESSAGES
     long counter{};
     char buffer[100];
 #endif
     for (;;)
     {
-#ifdef DEBUG_MESSAGES
+#ifdef CYCLE_TIME_DEBUG_MESSAGES
         ++counter;
         if (counter == 1'000)
         {

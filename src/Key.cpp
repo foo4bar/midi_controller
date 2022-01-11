@@ -56,7 +56,7 @@ namespace kbd
         case State::depressed:
             midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
 
-#ifdef DEBUG_MESSAGES
+#ifdef MIDI_EVENTS_DEBUG_MESSAGES
             char buffer[10];
             Serial.write("ON: note=");
             Serial.write(itoa(noteNumber, buffer, 10));
@@ -72,7 +72,7 @@ namespace kbd
         case State::released:
             midiInterface.sendNoteOff(noteNumber, defaultVelocity, midiChannel);
 
-#ifdef DEBUG_MESSAGES
+#ifdef MIDI_EVENTS_DEBUG_MESSAGES
             Serial.write("OFF: note=");
             Serial.write(itoa(noteNumber, buffer, 10));
             Serial.write(", time=");
