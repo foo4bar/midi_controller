@@ -4,7 +4,7 @@ namespace kbd
 {
     void ContactPair::updateStateWithDebouncing(const uint8_t keyNumber)
     {
-        const auto inputStatePair{kbdmatrix::getActualInstantaneousInputStatePair(keyNumber)};
+        const auto inputStatePair{getActualInstantaneousInputStatePair(keyNumber)};
         this->firstClosed.updateStateWithDebouncing(inputStatePair.withFirstClosedContactOutput);
         this->lastClosed.updateStateWithDebouncing(inputStatePair.withLastClosedContactOutput);
     }

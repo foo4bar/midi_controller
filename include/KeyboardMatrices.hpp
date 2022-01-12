@@ -7,15 +7,13 @@
 #include "DigitalIO.hpp"
 #include "KeyboardMatrixIO.hpp"
 
-namespace kbdmatrix
+namespace kbd
 {
 
     //See the circuit diagram for details regarding inputs/outputs configuration.
     inline constexpr uint8_t numberOfOutputPairsLeft{6};
     inline constexpr uint8_t numberOfOutputPairsRight{5};
     inline constexpr uint8_t numberOfInputs{8};
-
-    using KbdMatrix = KeyboardMatrixIO<numberOfOutputPairsLeft, numberOfInputs>;
 
     inline constexpr uint8_t numberOfScannedKeysLeft{numberOfOutputPairsLeft * numberOfInputs};
     inline constexpr uint8_t numberOfScannedKeysRight{numberOfOutputPairsRight * numberOfInputs};

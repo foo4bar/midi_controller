@@ -44,7 +44,7 @@ int main()
     auto keyboardController{kbd::KeyboardController::Builder{}
                                 .withfirstKeyMidiNoteNumber(21)
                                 .withMidiChannel(1)
-                                .withNumberOfKeys(kbdmatrix::numberOfScannedKeys)
+                                .withNumberOfKeys(kbd::numberOfScannedKeys)
                                 .build()};
 #ifdef CYCLE_TIME_DEBUG_MESSAGES
     long counter{};

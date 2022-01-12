@@ -7,7 +7,7 @@
 
 #include "DigitalIO.hpp"
 
-namespace kbdmatrix
+namespace kbd
 {
     template <uint8_t numberOfOutputPairs, uint8_t numberOfInputs>
     class KeyboardMatrixIO
