@@ -28,32 +28,12 @@ namespace kbd
     public:
         class Builder
         {
-        private:
+        public:
             uint8_t firstKeyMidiNoteNumber;
             uint8_t midiChannel;
             uint8_t numberOfKeys;
-            MidiInterface *midiInterface;
 
-        public:
-            Builder &withfirstKeyMidiNoteNumber(const uint8_t firstKeyMidiNoteNumber)
-            {
-                this->firstKeyMidiNoteNumber = firstKeyMidiNoteNumber;
-                return *this;
-            }
-
-            Builder &withMidiChannel(const uint8_t midiChannel)
-            {
-                this->midiChannel = midiChannel;
-                return *this;
-            }
-
-            Builder &withNumberOfKeys(const uint8_t numberOfKeys)
-            {
-                this->numberOfKeys = numberOfKeys;
-                return *this;
-            }
-
-            KeyboardController build() const
+            auto build() const
             {
                 return KeyboardController{this->firstKeyMidiNoteNumber,
                                           this->midiChannel,

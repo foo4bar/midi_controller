@@ -20,11 +20,11 @@ namespace arduino::digital
     {
         if (state == State::high)
         {
-            *this->outputRegister |= this->bitMask;
+            *this->outputRegister = *this->outputRegister | this->bitMask;
         }
         else if (state == State::low)
         {
-            *this->outputRegister &= ~this->bitMask;
+            *this->outputRegister = *this->outputRegister & ~this->bitMask;
         }
     }
 
@@ -47,22 +47,22 @@ namespace arduino::digital
         case Mode::input:
             doWithDisabledInterrupts([](Pin pin)
                                      {
-                                         *pin.modeRegister &= ~pin.bitMask;
-                                         *pin.outputRegister &= ~pin.bitMask;
+                                         *pin.modeRegister = *pin.modeRegister & ~pin.bitMask;
+                                         *pin.outputRegister = *pin.outputRegister & ~pin.bitMask;
                                      });
             break;
 
         case Mode::inputWithInternalPullUp:
             doWithDisabledInterrupts([](Pin pin)
                                      {
-                                         *pin.modeRegister &= ~pin.bitMask;
-                                         *pin.outputRegister |= pin.bitMask;
+                                         *pin.modeRegister = *pin.modeRegister & ~pin.bitMask;
+                                         *pin.outputRegister = *pin.outputRegister | pin.bitMask;
                                      });
             break;
 
         case Mode::output:
             doWithDisabledInterrupts([](Pin pin)
-                                     { *pin.modeRegister |= pin.bitMask; });
+                                     { *pin.modeRegister = *pin.modeRegister | pin.bitMask; });
             break;
 
         default:

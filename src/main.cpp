@@ -41,10 +41,9 @@ int main()
 
     initMidiInterface();
 
-    auto keyboardController{kbd::KeyboardController::Builder{}
-                                .withfirstKeyMidiNoteNumber(21)
-                                .withMidiChannel(1)
-                                .withNumberOfKeys(kbd::numberOfScannedKeys)
+    auto keyboardController{kbd::KeyboardController::Builder{.firstKeyMidiNoteNumber{21},
+                                                             .midiChannel{1},
+                                                             .numberOfKeys{kbd::numberOfScannedKeys}}
                                 .build()};
 #ifdef CYCLE_TIME_DEBUG_MESSAGES
     long counter{};
