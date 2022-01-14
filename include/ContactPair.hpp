@@ -4,20 +4,16 @@
 #include <stdint.h>
 
 #include "Contact.hpp"
-#include "KeyboardMatrices.hpp"
+#include "KeyboardMatricesIO.hpp"
 
 namespace kbd
 {
     class ContactPair
     {
-    private:
-        // One of contacts is closed first when a corresponding key starts to be pressed,
-        // another one is closed last when the key is fully depressed.
-        Contact firstClosed;
-        Contact lastClosed;
-
     public:
-        void updateStateWithDebouncing(const uint8_t keyNumber);
+        ContactPair(const uint8_t number);
+
+        void updateStateWithDebouncing(KeyboardMatricesIO *const);
 
         const unsigned long getPressingTimeMillis() const;
 
@@ -26,6 +22,14 @@ namespace kbd
         const bool isAsKeyIsDepressed() const;
 
         const bool isAsKeyIsReleased() const;
+
+    private:
+        // One of contacts is closed first when a corresponding key starts to be pressed,
+        // another one is closed last when the key is fully depressed.
+        Contact firstClosed;
+        Contact lastClosed;
+
+        uint8_t number;
     };
 }
 

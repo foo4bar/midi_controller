@@ -2,9 +2,13 @@
 
 namespace kbd
 {
-    void ContactPair::updateStateWithDebouncing(const uint8_t keyNumber)
+    ContactPair::ContactPair(const uint8_t number) : number{number}
     {
-        const auto inputStatePair{getActualInstantaneousInputStatePair(keyNumber)};
+    }
+
+    void ContactPair::updateStateWithDebouncing(KeyboardMatricesIO *const keyboardMatrices)
+    {
+        const auto inputStatePair{keyboardMatrices->getActualInstantaneousInputStatePair(this->number)};
         this->firstClosed.updateStateWithDebouncing(inputStatePair.withFirstClosedContactOutput);
         this->lastClosed.updateStateWithDebouncing(inputStatePair.withLastClosedContactOutput);
     }

@@ -2,6 +2,8 @@
 #include <HardwareSerial.h>
 #endif
 
+#include <Arduino.h>
+
 #include "Contact.hpp"
 
 namespace kbd
@@ -16,7 +18,7 @@ namespace kbd
         const auto actualInstantaneousState = actualInstantaneousInputState == arduino::digital::State::high
                                                   ? State::open
                                                   : State::closed;
-        const auto timeFromStartMillis = arduino::getTimeFromStartMillis();
+        const auto timeFromStartMillis = millis();
 
         if (this->lastDetectedInstantaneousState == actualInstantaneousState)
         {

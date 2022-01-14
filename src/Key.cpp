@@ -2,15 +2,16 @@
 
 namespace kbd
 {
-    Key::Key(const uint8_t number) : number{number}
+    Key::Key(const uint8_t number) : number{number}, contacts{ContactPair{number}}
     {
     }
 
     void Key::sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                             const uint8_t midiChannel,
-                            MidiInterface &midiInterface)
+                            MidiInterface *const midiInterface,
+                            KeyboardMatricesIO *const keyboardMatrices)
     {
-        this->contacts.updateStateWithDebouncing(this->number);
+        this->contacts.updateStateWithDebouncing(keyboardMatrices);
 
         updateActualState();
 
@@ -20,7 +21,9 @@ namespace kbd
         }
         else
         {
-            doSendMidiEvent(firstKeyMidiNoteNumber, midiChannel, midiInterface);
+            doSendMidiEvent(firstKeyMidiNoteNumber,
+                            midiChannel,
+                            midiInterface);
         }
     }
 
@@ -47,14 +50,14 @@ namespace kbd
 
     void Key::doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                               const uint8_t midiChannel,
-                              MidiInterface &midiInterface)
+                              MidiInterface *const midiInterface)
     {
         const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
 
         switch (this->actualState)
         {
         case State::depressed:
-            midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
+            midiInterface->sendNoteOn(noteNumber, this->velocity, midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             char buffer[10];
@@ -70,7 +73,7 @@ namespace kbd
             this->previousState = this->actualState;
             break;
         case State::released:
-            midiInterface.sendNoteOff(noteNumber, defaultVelocity, midiChannel);
+            midiInterface->sendNoteOff(noteNumber, defaultVelocity, midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             Serial.write("OFF: note=");

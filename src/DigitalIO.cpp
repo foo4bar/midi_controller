@@ -4,48 +4,43 @@
 
 namespace arduino::digital
 {
-    Pin::Pin()
+    AvrPin::AvrPin(const uint8_t arduinoPinNumber) : bitMask{digitalPinToBitMask(arduinoPinNumber)},
+                                                     port{digitalPinToPort(arduinoPinNumber)},
+                                                     inputRegister{portInputRegister(port)},
+                                                     outputRegister{portOutputRegister(port)},
+                                                     modeRegister{portModeRegister(port)}
     {
     }
 
-    Pin::Pin(const uint8_t number) : bitMask{digitalPinToBitMask(number)},
-                                     port{digitalPinToPort(number)},
-                                     inputRegister{portInputRegister(port)},
-                                     outputRegister{portOutputRegister(port)},
-                                     modeRegister{portModeRegister(port)}
+    void AvrPin::setState(const State state)
     {
-    }
-
-    void Pin::setState(const State state)
-    {
-        if (state == State::high)
+        switch (state)
         {
+        case State::high:
             *this->outputRegister = *this->outputRegister | this->bitMask;
-        }
-        else if (state == State::low)
-        {
+            break;
+
+        case State::low:
             *this->outputRegister = *this->outputRegister & ~this->bitMask;
+            break;
+
+        default:
+            //Do nothing
+            break;
         }
     }
 
-    const State Pin::getState()
+    const State AvrPin::getState()
     {
-        if (*this->inputRegister & this->bitMask)
-        {
-            return State::high;
-        }
-        else
-        {
-            return State::low;
-        }
+        return (*this->inputRegister & this->bitMask) ? State::high : State::low;
     }
 
-    void Pin::setMode(const Mode mode)
+    void AvrPin::setMode(const Mode mode)
     {
         switch (mode)
         {
         case Mode::input:
-            doWithDisabledInterrupts([](Pin pin)
+            doWithDisabledInterrupts([](AvrPin pin)
                                      {
                                          *pin.modeRegister = *pin.modeRegister & ~pin.bitMask;
                                          *pin.outputRegister = *pin.outputRegister & ~pin.bitMask;
@@ -53,7 +48,7 @@ namespace arduino::digital
             break;
 
         case Mode::inputWithInternalPullUp:
-            doWithDisabledInterrupts([](Pin pin)
+            doWithDisabledInterrupts([](AvrPin pin)
                                      {
                                          *pin.modeRegister = *pin.modeRegister & ~pin.bitMask;
                                          *pin.outputRegister = *pin.outputRegister | pin.bitMask;
@@ -61,16 +56,17 @@ namespace arduino::digital
             break;
 
         case Mode::output:
-            doWithDisabledInterrupts([](Pin pin)
+            doWithDisabledInterrupts([](AvrPin pin)
                                      { *pin.modeRegister = *pin.modeRegister | pin.bitMask; });
             break;
 
         default:
+            //Do nothing
             break;
         }
     }
 
-    void Pin::doWithDisabledInterrupts(void (*function)(Pin pin))
+    void AvrPin::doWithDisabledInterrupts(void (*function)(AvrPin pin))
     {
         uint8_t oldSREG = SREG;
         cli();

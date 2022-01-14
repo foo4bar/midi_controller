@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-#include "Time.hpp"
 #include "DigitalIO.hpp"
 
 namespace kbd

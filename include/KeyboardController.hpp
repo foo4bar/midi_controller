@@ -6,6 +6,7 @@
 #include <MIDI.h>
 
 #include "Key.hpp"
+#include "KeyboardMatricesIO.hpp"
 
 namespace kbd
 {
@@ -15,34 +16,40 @@ namespace kbd
 
     class KeyboardController
     {
-    private:
-        KeyboardController(const uint8_t firstKeyMidiNoteNumber,
-                           const uint8_t midiChannel,
-                           const uint8_t numberOfKeys);
-
-        uint8_t firstKeyMidiNoteNumber;
-        uint8_t midiChannel;
-
-        std::vector<Key> keys;
-
     public:
         class Builder
         {
         public:
             uint8_t firstKeyMidiNoteNumber;
             uint8_t midiChannel;
-            uint8_t numberOfKeys;
+            KeyboardMatricesIO *keyboardMatrices;
+            MidiInterface *midiInterface;
 
             auto build() const
             {
                 return KeyboardController{this->firstKeyMidiNoteNumber,
                                           this->midiChannel,
-                                          this->numberOfKeys};
+                                          this->keyboardMatrices,
+                                          this->midiInterface};
             }
         };
 
-        void sendMidiEvents(MidiInterface &);
+        void sendMidiEvents();
+
+    private:
+        KeyboardController(const uint8_t firstKeyMidiNoteNumber,
+                           const uint8_t midiChannel,
+                           KeyboardMatricesIO *const,
+                           MidiInterface *const);
+
+        uint8_t firstKeyMidiNoteNumber;
+        uint8_t midiChannel;
+        KeyboardMatricesIO *keyboardMatrices;
+        MidiInterface *midiInterface;
+
+        std::vector<Key> keys;
     };
+
 }
 
 #endif

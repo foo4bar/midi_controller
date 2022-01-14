@@ -16,7 +16,8 @@ namespace kbd
 
         void sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                            const uint8_t midiChannel,
-                           MidiInterface &midiInterface);
+                           MidiInterface *const,
+                           KeyboardMatricesIO *const);
 
     private:
         enum class State
@@ -47,7 +48,7 @@ namespace kbd
         void updateActualState();
         void doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                              const uint8_t midiChannel,
-                             MidiInterface &midiInterface);
+                             MidiInterface *const midiInterface);
     };
 }
 
