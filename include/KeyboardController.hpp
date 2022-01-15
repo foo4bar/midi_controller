@@ -22,8 +22,8 @@ namespace kbd
         public:
             uint8_t firstKeyMidiNoteNumber;
             uint8_t midiChannel;
-            KeyboardMatricesIO *keyboardMatrices;
-            MidiInterface *midiInterface;
+            KeyboardMatricesIO &keyboardMatrices;
+            MidiInterface &midiInterface;
 
             auto build() const
             {
@@ -39,13 +39,13 @@ namespace kbd
     private:
         KeyboardController(const uint8_t firstKeyMidiNoteNumber,
                            const uint8_t midiChannel,
-                           KeyboardMatricesIO *const,
-                           MidiInterface *const);
+                           KeyboardMatricesIO &,
+                           MidiInterface &);
 
         uint8_t firstKeyMidiNoteNumber;
         uint8_t midiChannel;
-        KeyboardMatricesIO *keyboardMatrices;
-        MidiInterface *midiInterface;
+        KeyboardMatricesIO &keyboardMatrices;
+        MidiInterface &midiInterface;
 
         std::vector<Key> keys;
     };

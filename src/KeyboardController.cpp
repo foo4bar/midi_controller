@@ -4,14 +4,14 @@ namespace kbd
 {
     KeyboardController::KeyboardController(const uint8_t firstKeyMidiNoteNumber,
                                            const uint8_t midiChannel,
-                                           KeyboardMatricesIO *const keyboardMatrices,
-                                           MidiInterface *const midiInterface) : firstKeyMidiNoteNumber{firstKeyMidiNoteNumber},
-                                                                                 midiChannel{midiChannel},
-                                                                                 keyboardMatrices{keyboardMatrices},
-                                                                                 midiInterface{midiInterface}
+                                           KeyboardMatricesIO &keyboardMatrices,
+                                           MidiInterface &midiInterface) : firstKeyMidiNoteNumber{firstKeyMidiNoteNumber},
+                                                                           midiChannel{midiChannel},
+                                                                           keyboardMatrices{keyboardMatrices},
+                                                                           midiInterface{midiInterface}
 
     {
-        for (uint8_t keyNumber{0}; keyNumber < keyboardMatrices->getNumberOfKeysBeingScanned(); ++keyNumber)
+        for (uint8_t keyNumber{0}; keyNumber < keyboardMatrices.getNumberOfKeysBeingScanned(); ++keyNumber)
         {
             this->keys.push_back(Key{keyNumber});
         }

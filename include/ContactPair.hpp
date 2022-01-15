@@ -13,7 +13,7 @@ namespace kbd
     public:
         ContactPair(const uint8_t number);
 
-        void updateStateWithDebouncing(KeyboardMatricesIO *const);
+        void updateStateWithDebouncing(KeyboardMatricesIO &);
 
         const unsigned long getPressingTimeMillis() const;
 

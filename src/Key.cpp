@@ -8,8 +8,8 @@ namespace kbd
 
     void Key::sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                             const uint8_t midiChannel,
-                            MidiInterface *const midiInterface,
-                            KeyboardMatricesIO *const keyboardMatrices)
+                            MidiInterface &midiInterface,
+                            KeyboardMatricesIO &keyboardMatrices)
     {
         this->contacts.updateStateWithDebouncing(keyboardMatrices);
 
@@ -50,14 +50,14 @@ namespace kbd
 
     void Key::doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                               const uint8_t midiChannel,
-                              MidiInterface *const midiInterface)
+                              MidiInterface &midiInterface)
     {
         const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
 
         switch (this->actualState)
         {
         case State::depressed:
-            midiInterface->sendNoteOn(noteNumber, this->velocity, midiChannel);
+            midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             char buffer[10];
@@ -73,7 +73,7 @@ namespace kbd
             this->previousState = this->actualState;
             break;
         case State::released:
-            midiInterface->sendNoteOff(noteNumber, defaultVelocity, midiChannel);
+            midiInterface.sendNoteOff(noteNumber, defaultVelocity, midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             Serial.write("OFF: note=");

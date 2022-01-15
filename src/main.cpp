@@ -70,12 +70,12 @@ int main()
 
     auto avrPins{initAvrPins()};
 
-    auto keyboardMatricesIO{initKeyboardMatrices(avrPins)};
+    auto keyboardMatrices{initKeyboardMatrices(avrPins)};
 
     auto keyboardController{kbd::KeyboardController::Builder{.firstKeyMidiNoteNumber{21},
                                                              .midiChannel{1},
-                                                             .keyboardMatrices{&keyboardMatricesIO},
-                                                             .midiInterface{&MIDI}}
+                                                             .keyboardMatrices{keyboardMatrices},
+                                                             .midiInterface{MIDI}}
                                 .build()};
 
 #ifdef CYCLE_TIME_DEBUG_MESSAGES
