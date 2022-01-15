@@ -29,7 +29,11 @@ namespace kbd
 
     void Key::updateActualState()
     {
-        if (this->contacts.isAsKeyIsDepressed())
+        if (this->contacts.isAsKeyIsReleased())
+        {
+            this->actualState = State::released;
+        }
+        else if (this->contacts.isAsKeyIsDepressed())
         {
             this->actualState = State::depressed;
             const auto pressingTimeMillis{this->contacts.getPressingTimeMillis()};
@@ -41,10 +45,6 @@ namespace kbd
             {
                 this->velocity = 0;
             }
-        }
-        else if (this->contacts.isAsKeyIsReleased())
-        {
-            this->actualState = State::released;
         }
     }
 

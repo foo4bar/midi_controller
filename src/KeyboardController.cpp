@@ -21,7 +21,10 @@ namespace kbd
     {
         for (auto &key : this->keys)
         {
-            key.sendMidiEvent(this->firstKeyMidiNoteNumber, this->midiChannel, this->midiInterface, this->keyboardMatrices);
+            key.sendMidiEvent(this->firstKeyMidiNoteNumber,
+                              this->midiChannel,
+                              this->midiInterface,
+                              this->keyboardMatrices);
         }
     }
 }
