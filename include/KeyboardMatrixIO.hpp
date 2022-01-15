@@ -20,7 +20,7 @@ namespace kbd
             std::vector<uint8_t> lastClosedContactsOutputs;
             std::vector<uint8_t> inputs;
             uint8_t numberOfKeysBeingScanned;
-            std::vector<arduino::digital::AvrPin> *avrPins;
+            std::vector<arduino::digital::AvrPin> &avrPins;
 
             KeyboardMatrixIO build() const;
         };
@@ -40,13 +40,13 @@ namespace kbd
 
         uint8_t numberOfInputs;
         uint8_t numberOfKeysBeingScanned;
-        std::vector<arduino::digital::AvrPin> *avrPins;
+        std::vector<arduino::digital::AvrPin> &avrPins;
 
         KeyboardMatrixIO(const std::vector<uint8_t> &firstClosedContactsOutputs,
                          const std::vector<uint8_t> &lastClosedContactsOutputs,
                          const std::vector<uint8_t> &inputs,
                          const uint8_t numberOfKeysBeingScanned,
-                         std::vector<arduino::digital::AvrPin> *const avrPins);
+                         std::vector<arduino::digital::AvrPin> &avrPins);
 
         const arduino::digital::State getInputState(const uint8_t outputToToggle, const uint8_t inputToCheck);
     };

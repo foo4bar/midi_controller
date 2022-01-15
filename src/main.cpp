@@ -39,14 +39,14 @@ kbd::KeyboardMatricesIO initKeyboardMatrices(std::vector<arduino::digital::AvrPi
                                         .lastClosedContactsOutputs{52, 48, 44, 40, 36, 34},
                                         .inputs{53, 51, 49, 47, 45, 43, 41, 39},
                                         .numberOfKeysBeingScanned{48},
-                                        .avrPins{&avrPins}}
+                                        .avrPins{avrPins}}
                                         .build(),
                                     kbd::KeyboardMatrixIO::Builder{
                                         .firstClosedContactsOutputs{28, 24, 2, 6, 5},
                                         .lastClosedContactsOutputs{30, 26, 22, 4, 7},
                                         .inputs{35, 33, 31, 29, 27, 25, 23, 3},
                                         .numberOfKeysBeingScanned{40},
-                                        .avrPins{&avrPins}}
+                                        .avrPins{avrPins}}
                                         .build()}};
 }
 
