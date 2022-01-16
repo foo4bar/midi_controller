@@ -48,7 +48,7 @@ namespace kbd
                          const uint8_t numberOfKeysBeingScanned,
                          std::vector<arduino::digital::AvrPin> &avrPins);
 
-        const arduino::digital::State getInputState(const uint8_t outputToToggle, const uint8_t inputToCheck);
+        const arduino::digital::State getInputState(const uint8_t outputToBounce, const uint8_t inputToCheck);
     };
 }
 

@@ -52,11 +52,11 @@ namespace kbd
         this->numberOfInputs = inputs.size();
     }
 
-    const arduino::digital::State KeyboardMatrixIO::getInputState(const uint8_t outputToToggle, const uint8_t inputToCheck)
+    const arduino::digital::State KeyboardMatrixIO::getInputState(const uint8_t outputToBounce, const uint8_t inputToCheck)
     {
-        this->avrPins[outputToToggle].setState(arduino::digital::State::low);
+        this->avrPins[outputToBounce].setState(arduino::digital::State::low);
         auto result{this->avrPins[inputToCheck].getState()};
-        this->avrPins[outputToToggle].setState(arduino::digital::State::high);
+        this->avrPins[outputToBounce].setState(arduino::digital::State::high);
 
         return result;
     }

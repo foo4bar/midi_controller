@@ -23,7 +23,7 @@ namespace kbd
             closed = 1
         };
 
-        static inline const unsigned long maxBouncingTimeMillis{3};
+        static inline const unsigned long maxBouncingTimeMillis{3}; //TODO Check with 2 ms.
 
         State actualSteadyState{State::open};
         State lastDetectedInstantaneousState{State::open};
