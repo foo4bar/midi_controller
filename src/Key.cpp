@@ -13,9 +13,9 @@ namespace kbd
     {
         this->contacts.updateStateWithDebouncing(keyboardMatrices);
 
-        updateActualState();
+        const State actualState{getActualState()};
 
-        if (this->previousState == this->actualState)
+        if (this->previousState == actualState)
         {
             //Do nothing.
         }
@@ -23,19 +23,19 @@ namespace kbd
         {
             doSendMidiEvent(firstKeyMidiNoteNumber,
                             midiChannel,
-                            midiInterface);
+                            midiInterface,
+                            actualState);
         }
     }
 
-    void Key::updateActualState()
+    const Key::State Key::getActualState()
     {
         if (this->contacts.isAsKeyIsReleased())
         {
-            this->actualState = State::released;
+            return State::released;
         }
         else if (this->contacts.isAsKeyIsDepressed())
         {
-            this->actualState = State::depressed;
             const auto pressingTimeMillis{this->contacts.getPressingTimeMillis()};
             if (pressingTimeMillis <= maxManipulationTimeMillis)
             {
@@ -45,16 +45,23 @@ namespace kbd
             {
                 this->velocity = 0;
             }
+
+            return State::depressed;
+        }
+        else
+        {
+            return State::released;
         }
     }
 
     void Key::doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                               const uint8_t midiChannel,
-                              MidiInterface &midiInterface)
+                              MidiInterface &midiInterface,
+                              const State actualState)
     {
         const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
 
-        switch (this->actualState)
+        switch (actualState)
         {
         case State::depressed:
             midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
@@ -70,7 +77,7 @@ namespace kbd
             Serial.write("\n");
 #endif
 
-            this->previousState = this->actualState;
+            this->previousState = actualState;
             break;
         case State::released:
             midiInterface.sendNoteOff(noteNumber, defaultVelocity, midiChannel);
@@ -83,7 +90,7 @@ namespace kbd
             Serial.write("\n");
 #endif
 
-            this->previousState = this->actualState;
+            this->previousState = actualState;
             break;
         default:
             break;

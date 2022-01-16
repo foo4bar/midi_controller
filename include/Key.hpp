@@ -42,13 +42,13 @@ namespace kbd
         ContactPair contacts;
 
         State previousState{State::released};
-        State actualState{State::released};
         uint8_t velocity{0};
 
-        void updateActualState();
+        const State getActualState();
         void doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                              const uint8_t midiChannel,
-                             MidiInterface &midiInterface);
+                             MidiInterface &midiInterface,
+                             const State);
     };
 }
 
