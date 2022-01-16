@@ -15,7 +15,7 @@ namespace kbd
     public:
         KeyboardMatricesIO(const std::vector<KeyboardMatrixIO> &keyboardMatrices);
 
-        const uint8_t getNumberOfKeysBeingScanned() const;
+        uint8_t getNumberOfKeysBeingScanned() const;
 
         const arduino::digital::InputStatePair getActualInstantaneousInputStatePair(const uint8_t keyNumber);
 

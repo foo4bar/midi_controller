@@ -12,9 +12,9 @@ namespace kbd
     public:
         void updateStateWithDebouncing(const arduino::digital::State actualInstantaneousState);
 
-        const bool isClosed() const;
+        bool isClosed() const;
 
-        const unsigned long getLastTimeStateChangedMillis() const;
+        unsigned long getLastTimeStateChangedMillis() const;
 
     private:
         enum class State : uint8_t
@@ -29,7 +29,7 @@ namespace kbd
         State lastDetectedInstantaneousState{State::open};
         unsigned long lastTimeStateChangedMillis{0};
 
-        const bool isBounsingFinished(const unsigned long timeFromStartMillis) const;
+        bool isBounsingFinished(const unsigned long timeFromStartMillis) const;
     };
 }
 

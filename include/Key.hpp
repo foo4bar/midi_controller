@@ -44,7 +44,7 @@ namespace kbd
         State previousState{State::released};
         uint8_t velocity{0};
 
-        const State getActualState();
+        State getActualState();
         void doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                              const uint8_t midiChannel,
                              MidiInterface &midiInterface,

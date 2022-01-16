@@ -6,7 +6,7 @@ namespace kbd
     {
     }
 
-    const uint8_t KeyboardMatricesIO::getNumberOfKeysBeingScanned() const
+    uint8_t KeyboardMatricesIO::getNumberOfKeysBeingScanned() const
     {
         return std::accumulate(this->keyboardMatrices.begin(),
                                this->keyboardMatrices.end(),

@@ -29,7 +29,7 @@ namespace kbd
 
         const InputStatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber);
 
-        const uint8_t getNumberOfKeysBeingScanned() const;
+        uint8_t getNumberOfKeysBeingScanned() const;
 
     private:
         inline static constexpr uint8_t numberOfPins{54};
@@ -50,7 +50,7 @@ namespace kbd
                          const uint8_t numberOfKeysBeingScanned,
                          std::vector<AvrPin> &avrPins);
 
-        const State getInputState(const uint8_t outputToBounce, const uint8_t inputToCheck);
+        State getInputState(const uint8_t outputToBounce, const uint8_t inputToCheck);
     };
 }
 

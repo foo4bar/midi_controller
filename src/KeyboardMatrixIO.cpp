@@ -24,7 +24,7 @@ namespace kbd
                               getInputState(lastClosedContactsOutput, input)};
     }
 
-    const uint8_t KeyboardMatrixIO::getNumberOfKeysBeingScanned() const
+    uint8_t KeyboardMatrixIO::getNumberOfKeysBeingScanned() const
     {
         return this->numberOfKeysBeingScanned;
     }
@@ -52,7 +52,7 @@ namespace kbd
         this->numberOfInputs = inputs.size();
     }
 
-    const State KeyboardMatrixIO::getInputState(const uint8_t outputToBounce, const uint8_t inputToCheck)
+    State KeyboardMatrixIO::getInputState(const uint8_t outputToBounce, const uint8_t inputToCheck)
     {
         this->avrPins[outputToBounce].setState(State::low);
         auto result{this->avrPins[inputToCheck].getState()};

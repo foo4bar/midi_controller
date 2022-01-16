@@ -5,12 +5,11 @@
 
 #include <stdint.h>
 
-// Serves as a kind of HAL to decouple of C stuff in Arduino.h.
 namespace arduino::digital
 {
-    
+
     static inline constexpr uint8_t numberOfPins{54};
-    
+
     enum class State : uint8_t
     {
         low = 0, // LOW in Arduino.h
@@ -30,7 +29,7 @@ namespace arduino::digital
         AvrPin(const uint8_t arduinoPinNumber);
 
         void setState(const State);
-        const State getState();
+        State getState();
         void setMode(const Mode);
 
     private:
@@ -40,7 +39,7 @@ namespace arduino::digital
         volatile uint8_t *outputRegister;
         volatile uint8_t *modeRegister;
 
-        void doWithDisabledInterrupts(void (*function)(AvrPin));
+        void doWithDisabledInterrupts(void (*function)(AvrPin &));
     };
 
     struct InputStatePair

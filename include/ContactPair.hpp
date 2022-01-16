@@ -15,13 +15,13 @@ namespace kbd
 
         void updateStateWithDebouncing(KeyboardMatricesIO &);
 
-        const unsigned long getPressingTimeMillis() const;
+        unsigned long getPressingTimeMillis() const;
 
-        const unsigned long getReleasingTimeMillis() const;
+        unsigned long getReleasingTimeMillis() const;
 
-        const bool isAsKeyIsDepressed() const;
+        bool isAsKeyIsDepressed() const;
 
-        const bool isAsKeyIsReleased() const;
+        bool isAsKeyIsReleased() const;
 
     private:
         // One of contacts is closed first when a corresponding key starts to be pressed,

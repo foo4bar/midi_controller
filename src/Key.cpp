@@ -30,7 +30,7 @@ namespace kbd
         }
     }
 
-    const Key::State Key::getActualState()
+    Key::State Key::getActualState()
     {
         if (this->contacts.isAsKeyIsReleased())
         {
