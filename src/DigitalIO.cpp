@@ -14,7 +14,6 @@ namespace arduino::digital
 
     void AvrPin::setState(const State state)
     {
-        //The portOutputRegister macros is about 0.25ms slower than the member variable.
         switch (state)
         {
         case State::high:
@@ -33,8 +32,7 @@ namespace arduino::digital
 
     const State AvrPin::getState()
     {
-        //The portInputRegister macros is about 0.2ms faster than a member variable.
-        return (*portInputRegister(this->port) & this->bitMask) ? State::high : State::low;
+        return (*this->inputRegister & this->bitMask) ? State::high : State::low;
     }
 
     void AvrPin::setMode(const Mode mode)

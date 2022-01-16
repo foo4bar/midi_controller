@@ -10,6 +10,8 @@
 
 namespace kbd
 {
+    using namespace arduino::digital;
+
     class KeyboardMatrixIO
     {
     public:
@@ -20,12 +22,12 @@ namespace kbd
             std::vector<uint8_t> lastClosedContactsOutputs;
             std::vector<uint8_t> inputs;
             uint8_t numberOfKeysBeingScanned;
-            std::vector<arduino::digital::AvrPin> &avrPins;
+            std::vector<AvrPin> &avrPins;
 
             KeyboardMatrixIO build() const;
         };
 
-        const arduino::digital::InputStatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber);
+        const InputStatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber);
 
         const uint8_t getNumberOfKeysBeingScanned() const;
 
@@ -40,15 +42,15 @@ namespace kbd
 
         uint8_t numberOfInputs;
         uint8_t numberOfKeysBeingScanned;
-        std::vector<arduino::digital::AvrPin> &avrPins;
+        std::vector<AvrPin> &avrPins;
 
         KeyboardMatrixIO(const std::vector<uint8_t> &firstClosedContactsOutputs,
                          const std::vector<uint8_t> &lastClosedContactsOutputs,
                          const std::vector<uint8_t> &inputs,
                          const uint8_t numberOfKeysBeingScanned,
-                         std::vector<arduino::digital::AvrPin> &avrPins);
+                         std::vector<AvrPin> &avrPins);
 
-        const arduino::digital::State getInputState(const uint8_t outputToBounce, const uint8_t inputToCheck);
+        const State getInputState(const uint8_t outputToBounce, const uint8_t inputToCheck);
     };
 }
 
