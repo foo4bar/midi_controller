@@ -21,10 +21,12 @@ namespace kbd
         }
         else
         {
+#ifndef AVR_STUB_DEBUG
             doSendMidiEvent(firstKeyMidiNoteNumber,
                             midiChannel,
                             midiInterface,
                             actualState);
+#endif
         }
     }
 

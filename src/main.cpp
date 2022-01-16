@@ -1,11 +1,19 @@
 #include <MIDI.h>
 #include <Arduino.h>
 
+#ifdef AVR_STUB_DEBUG
+#include <avr8-stub.h>
+#endif
+
 #include "KeyboardMatricesIO.hpp"
 #include "KeyboardController.hpp"
 #include "DigitalIO.hpp"
 
+#ifndef AVR_STUB_DEBUG
 MIDI_CREATE_DEFAULT_INSTANCE()
+#else
+MIDI_CREATE_INSTANCE(HardwareSerial, Serial1,  MIDI)
+#endif
 
 // Copied as is from the Arduino framework main() implementation.
 void attachUsbDeviceIfAny()
@@ -17,7 +25,9 @@ void attachUsbDeviceIfAny()
 
 void initMidiInterface()
 {
+#ifndef AVR_STUB_DEBUG
     MIDI.begin(MIDI_CHANNEL_OMNI);
+#endif
 }
 
 std::vector<arduino::digital::AvrPin> initAvrPins()
@@ -63,6 +73,10 @@ int main()
 {
     // Copied as is from the Arduino framework main() implementation.
     init();
+
+#ifdef AVR_STUB_DEBUG
+    debug_init();
+#endif
 
     attachUsbDeviceIfAny();
 

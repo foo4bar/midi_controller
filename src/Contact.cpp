@@ -1,7 +1,3 @@
-#ifdef DEBUG_MESSAGES
-#include <HardwareSerial.h>
-#endif
-
 #include <Arduino.h>
 
 #include "Contact.hpp"
@@ -25,19 +21,6 @@ namespace kbd
             if (this->actualSteadyState != this->lastDetectedInstantaneousState &&
                 isBounsingFinished(timeFromStartMillis))
             {
-// #ifdef DEBUG_MESSAGES
-//                 char buffer[100];
-//                 Serial.write(std::basic_string("Sate changed: actualSteadyState=")
-//                                  .append(itoa((uint8_t)this->actualSteadyState, buffer, 10))
-//                                  .append(", lastDetectedInstantaneousState=")
-//                                  .append(itoa((uint8_t)this->lastDetectedInstantaneousState, buffer, 10))
-//                                  .append(", lastTimeStateChangedMillis=")
-//                                  .append(ltoa(this->lastTimeStateChangedMillis, buffer, 10))
-//                                  .append(", timeFromStartMillis=")
-//                                  .append(ltoa(timeFromStartMillis, buffer, 10))
-//                                  .append("\n")
-//                                  .c_str());
-// #endif
                 this->actualSteadyState = this->lastDetectedInstantaneousState;
             }
             else
@@ -47,15 +30,6 @@ namespace kbd
         }
         else
         {
-// #ifdef DEBUG_MESSAGES
-//             char buffer[100];
-//             Serial.write(std::basic_string("Bouncing: actualInstantaneousState=")
-//                              .append(itoa((uint8_t)actualInstantaneousState, buffer, 10))
-//                              .append(", timeFromStartMillis=")
-//                              .append(ltoa(timeFromStartMillis, buffer, 10))
-//                              .append("\n")
-//                              .c_str());
-// #endif
             this->lastDetectedInstantaneousState = actualInstantaneousState;
             this->lastTimeStateChangedMillis = timeFromStartMillis;
         }
