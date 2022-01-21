@@ -23,10 +23,10 @@ namespace arduino::digital
         inputWithInternalPullUp = 2 // INPUT_PULLUP in Arduino.h
     };
 
-    class AvrPin
+    class Pin
     {
     public:
-        AvrPin(const uint8_t arduinoPinNumber);
+        Pin(const uint8_t arduinoPinNumber);
 
         void setState(const State) const;
         const State getState() const;
@@ -39,7 +39,7 @@ namespace arduino::digital
         volatile uint8_t *const outputRegister;
         volatile uint8_t *const modeRegister;
 
-        void doWithDisabledInterrupts(void (*function)(const AvrPin &)) const;
+        void doWithDisabledInterrupts(void (*function)(const Pin &)) const;
     };
 
     struct InputStatePair

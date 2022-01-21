@@ -22,7 +22,7 @@ namespace kbd
             std::vector<uint8_t> lastClosedContactsOutputs;
             std::vector<uint8_t> inputs;
             uint8_t numberOfKeysBeingScanned;
-            std::vector<AvrPin> &avrPins;
+            std::vector<Pin> &pins;
 
             KeyboardMatrixIO build() const;
         };
@@ -42,15 +42,15 @@ namespace kbd
 
         uint8_t numberOfInputs;
         uint8_t numberOfKeysBeingScanned;
-        std::vector<AvrPin> &avrPins;
+        std::vector<Pin> &pins;
 
         KeyboardMatrixIO(const std::vector<uint8_t> &firstClosedContactsOutputs,
                          const std::vector<uint8_t> &lastClosedContactsOutputs,
                          const std::vector<uint8_t> &inputs,
                          const uint8_t numberOfKeysBeingScanned,
-                         std::vector<AvrPin> &avrPins);
+                         std::vector<Pin> &pins);
 
-        State getInputState(const AvrPin &outputToBounce, const AvrPin &inputToCheck) const;
+        State getInputState(const Pin &outputToBounce, const Pin &inputToCheck) const;
     };
 }
 

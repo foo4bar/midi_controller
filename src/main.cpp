@@ -12,7 +12,7 @@
 #ifndef AVR_STUB_DEBUG
 MIDI_CREATE_DEFAULT_INSTANCE()
 #else
-MIDI_CREATE_INSTANCE(HardwareSerial, Serial1,  MIDI)
+MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI)
 #endif
 
 // Copied as is from the Arduino framework main() implementation.
@@ -30,18 +30,18 @@ void initMidiInterface()
 #endif
 }
 
-std::vector<arduino::digital::AvrPin> initAvrPins()
+std::vector<arduino::digital::Pin> initPins()
 {
-    std::vector<arduino::digital::AvrPin> avrPins;
-    for (uint8_t avrPinNumber = 0; avrPinNumber < arduino::digital::numberOfPins; ++avrPinNumber)
+    std::vector<arduino::digital::Pin> pins;
+    for (uint8_t pinNumber = 0; pinNumber < arduino::digital::numberOfPins; ++pinNumber)
     {
-        avrPins.push_back(arduino::digital::AvrPin{avrPinNumber});
+        pins.push_back(arduino::digital::Pin{pinNumber});
     }
 
-    return avrPins;
+    return pins;
 }
 
-kbd::KeyboardMatricesIO initKeyboardMatrices(std::vector<arduino::digital::AvrPin> &avrPins)
+kbd::KeyboardMatricesIO initKeyboardMatrices(std::vector<arduino::digital::Pin> &pins)
 {
     // See the circuit diagram for details regarding inputs/outputs configuration.
     return kbd::KeyboardMatricesIO{{kbd::KeyboardMatrixIO::Builder{
@@ -49,14 +49,14 @@ kbd::KeyboardMatricesIO initKeyboardMatrices(std::vector<arduino::digital::AvrPi
                                         .lastClosedContactsOutputs{52, 48, 44, 40, 36, 34},
                                         .inputs{53, 51, 49, 47, 45, 43, 41, 39},
                                         .numberOfKeysBeingScanned{48},
-                                        .avrPins{avrPins}}
+                                        .pins{pins}}
                                         .build(),
                                     kbd::KeyboardMatrixIO::Builder{
                                         .firstClosedContactsOutputs{28, 24, 2, 6, 5},
                                         .lastClosedContactsOutputs{30, 26, 22, 4, 7},
                                         .inputs{35, 33, 31, 29, 27, 25, 23, 3},
                                         .numberOfKeysBeingScanned{40},
-                                        .avrPins{avrPins}}
+                                        .pins{pins}}
                                         .build()}};
 }
 
@@ -82,9 +82,9 @@ int main()
 
     initMidiInterface();
 
-    auto avrPins{initAvrPins()};
+    auto pins{initPins()};
 
-    auto keyboardMatrices{initKeyboardMatrices(avrPins)};
+    auto keyboardMatrices{initKeyboardMatrices(pins)};
 
     auto keyboardController{kbd::KeyboardController::Builder{.firstKeyMidiNoteNumber{21},
                                                              .midiChannel{1},
