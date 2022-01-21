@@ -28,18 +28,18 @@ namespace arduino::digital
     public:
         AvrPin(const uint8_t arduinoPinNumber);
 
-        void setState(const State);
+        void setState(const State) const;
         const State getState() const;
-        void setMode(const Mode);
+        void setMode(const Mode) const;
 
     private:
         uint8_t bitMask;
         uint8_t port;
-        volatile uint8_t *inputRegister;
-        volatile uint8_t *outputRegister;
-        volatile uint8_t *modeRegister;
+        volatile uint8_t *const inputRegister;
+        volatile uint8_t *const outputRegister;
+        volatile uint8_t *const modeRegister;
 
-        void doWithDisabledInterrupts(void (*function)(AvrPin &));
+        void doWithDisabledInterrupts(void (*function)(const AvrPin &)) const;
     };
 
     struct InputStatePair

@@ -12,7 +12,7 @@ namespace arduino::digital
     {
     }
 
-    void AvrPin::setState(const State state)
+    void AvrPin::setState(const State state) const
     {
         switch (state)
         {
@@ -35,12 +35,12 @@ namespace arduino::digital
         return (*this->inputRegister & this->bitMask) ? State::high : State::low;
     }
 
-    void AvrPin::setMode(const Mode mode)
+    void AvrPin::setMode(const Mode mode) const
     {
         switch (mode)
         {
         case Mode::input:
-            doWithDisabledInterrupts([](AvrPin &pin)
+            doWithDisabledInterrupts([](const AvrPin &pin)
                                      {
                                          *pin.modeRegister = *pin.modeRegister & ~pin.bitMask;
                                          *pin.outputRegister = *pin.outputRegister & ~pin.bitMask;
@@ -48,7 +48,7 @@ namespace arduino::digital
             break;
 
         case Mode::inputWithInternalPullUp:
-            doWithDisabledInterrupts([](AvrPin &pin)
+            doWithDisabledInterrupts([](const AvrPin &pin)
                                      {
                                          *pin.modeRegister = *pin.modeRegister & ~pin.bitMask;
                                          *pin.outputRegister = *pin.outputRegister | pin.bitMask;
@@ -56,7 +56,7 @@ namespace arduino::digital
             break;
 
         case Mode::output:
-            doWithDisabledInterrupts([](AvrPin &pin)
+            doWithDisabledInterrupts([](const AvrPin &pin)
                                      { *pin.modeRegister = *pin.modeRegister | pin.bitMask; });
             break;
 
@@ -66,7 +66,7 @@ namespace arduino::digital
         }
     }
 
-    void AvrPin::doWithDisabledInterrupts(void (*function)(AvrPin &pin))
+    void AvrPin::doWithDisabledInterrupts(void (*function)(const AvrPin &pin)) const
     {
         uint8_t oldSREG = SREG;
         cli();

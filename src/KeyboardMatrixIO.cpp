@@ -13,12 +13,12 @@ namespace kbd
 
     const InputStatePair KeyboardMatrixIO::getActualInstantaneousInputStatePair(const uint8_t contactPairNumber)
     {
-        const uint8_t outputNumber{static_cast<uint8_t>(contactPairNumber / this->numberOfInputs)};
-        AvrPin &firstClosedContactsOutput{this->avrPins[this->firstClosedContactsOutputs[outputNumber]]};
-        AvrPin &lastClosedContactsOutput{this->avrPins[this->lastClosedContactsOutputs[outputNumber]]};
+        const auto outputNumber{static_cast<uint8_t>(contactPairNumber / this->numberOfInputs)};
+        const auto &firstClosedContactsOutput{this->avrPins[this->firstClosedContactsOutputs[outputNumber]]};
+        const auto &lastClosedContactsOutput{this->avrPins[this->lastClosedContactsOutputs[outputNumber]]};
 
-        const uint8_t inputNumber{static_cast<uint8_t>(contactPairNumber % this->numberOfInputs)};
-        AvrPin &input{this->avrPins[this->inputs[inputNumber]]};
+        const auto inputNumber{static_cast<uint8_t>(contactPairNumber % this->numberOfInputs)};
+        const auto &input{this->avrPins[this->inputs[inputNumber]]};
 
         return InputStatePair{getInputState(firstClosedContactsOutput, input),
                               getInputState(lastClosedContactsOutput, input)};
@@ -52,10 +52,10 @@ namespace kbd
         this->numberOfInputs = inputs.size();
     }
 
-    State KeyboardMatrixIO::getInputState(AvrPin &outputToBounce, AvrPin &inputToCheck)
+    State KeyboardMatrixIO::getInputState(const AvrPin &outputToBounce, const AvrPin &inputToCheck) const
     {
         outputToBounce.setState(State::low);
-        auto result{inputToCheck.getState()};
+        const auto result{inputToCheck.getState()};
         outputToBounce.setState(State::high);
 
         return result;
