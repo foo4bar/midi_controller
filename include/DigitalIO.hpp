@@ -29,7 +29,7 @@ namespace arduino::digital
         AvrPin(const uint8_t arduinoPinNumber);
 
         void setState(const State);
-        State getState();
+        const State getState() const;
         void setMode(const Mode);
 
     private:

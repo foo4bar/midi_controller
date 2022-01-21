@@ -30,7 +30,7 @@ namespace arduino::digital
         }
     }
 
-    State AvrPin::getState()
+    const State AvrPin::getState() const
     {
         return (*this->inputRegister & this->bitMask) ? State::high : State::low;
     }

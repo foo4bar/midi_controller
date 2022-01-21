@@ -50,7 +50,7 @@ namespace kbd
                          const uint8_t numberOfKeysBeingScanned,
                          std::vector<AvrPin> &avrPins);
 
-        State getInputState(const uint8_t outputToBounce, const uint8_t inputToCheck);
+        State getInputState(AvrPin &outputToBounce, AvrPin &inputToCheck);
     };
 }
 
