@@ -18,11 +18,10 @@ namespace kbd
         class Builder
         {
         public:
-            std::vector<uint8_t> firstClosedContactsOutputs;
-            std::vector<uint8_t> lastClosedContactsOutputs;
-            std::vector<uint8_t> inputs;
+            const std::vector<Pin> firstClosedContactsOutputs;
+            const std::vector<Pin> lastClosedContactsOutputs;
+            const std::vector<Pin> inputs;
             uint8_t numberOfKeysBeingScanned;
-            std::vector<Pin> &pins;
 
             KeyboardMatrixIO build() const;
         };
@@ -35,20 +34,18 @@ namespace kbd
         inline static constexpr uint8_t numberOfPins{54};
 
         // It's supposed that both outputs vectors are of the same size.
-        std::vector<uint8_t> firstClosedContactsOutputs;
-        std::vector<uint8_t> lastClosedContactsOutputs;
+        const std::vector<Pin> firstClosedContactsOutputs;
+        const std::vector<Pin> lastClosedContactsOutputs;
 
-        std::vector<uint8_t> inputs;
+        const std::vector<Pin> inputs;
 
         uint8_t numberOfInputs;
         uint8_t numberOfKeysBeingScanned;
-        std::vector<Pin> &pins;
 
-        KeyboardMatrixIO(const std::vector<uint8_t> &firstClosedContactsOutputs,
-                         const std::vector<uint8_t> &lastClosedContactsOutputs,
-                         const std::vector<uint8_t> &inputs,
-                         const uint8_t numberOfKeysBeingScanned,
-                         std::vector<Pin> &pins);
+        KeyboardMatrixIO(const std::vector<Pin> &firstClosedContactsOutputs,
+                         const std::vector<Pin> &lastClosedContactsOutputs,
+                         const std::vector<Pin> inputs,
+                         const uint8_t numberOfKeysBeingScanned);
 
         State getInputState(const Pin &outputToBounce, const Pin &inputToCheck) const;
     };

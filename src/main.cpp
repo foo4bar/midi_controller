@@ -30,34 +30,32 @@ void initMidiInterface()
 #endif
 }
 
-std::vector<arduino::digital::Pin> initPins()
+std::vector<arduino::digital::Pin> initInputsPulledUp(const std::vector<uint8_t> pinNumbers)
 {
     std::vector<arduino::digital::Pin> pins;
-    for (uint8_t pinNumber = 0; pinNumber < arduino::digital::numberOfPins; ++pinNumber)
+    for (const uint8_t pinNumber : pinNumbers)
     {
-        pins.push_back(arduino::digital::Pin{pinNumber});
+        const arduino::digital::Pin &pin{pinNumber};
+        pin.setMode(arduino::digital::Mode::inputWithInternalPullUp);
+        pins.push_back(pin);
     }
 
     return pins;
 }
 
-kbd::KeyboardMatricesIO initKeyboardMatrices(std::vector<arduino::digital::Pin> &pins)
+std::vector<arduino::digital::Pin> initOutputsWithState(const std::vector<uint8_t> pinNumbers,
+                                                        const arduino::digital::State state)
 {
-    // See the circuit diagram for details regarding inputs/outputs configuration.
-    return kbd::KeyboardMatricesIO{{kbd::KeyboardMatrixIO::Builder{
-                                        .firstClosedContactsOutputs{50, 46, 42, 38, 37, 32},
-                                        .lastClosedContactsOutputs{52, 48, 44, 40, 36, 34},
-                                        .inputs{53, 51, 49, 47, 45, 43, 41, 39},
-                                        .numberOfKeysBeingScanned{48},
-                                        .pins{pins}}
-                                        .build(),
-                                    kbd::KeyboardMatrixIO::Builder{
-                                        .firstClosedContactsOutputs{28, 24, 2, 6, 5},
-                                        .lastClosedContactsOutputs{30, 26, 22, 4, 7},
-                                        .inputs{35, 33, 31, 29, 27, 25, 23, 3},
-                                        .numberOfKeysBeingScanned{40},
-                                        .pins{pins}}
-                                        .build()}};
+    std::vector<arduino::digital::Pin> pins;
+    for (const uint8_t pinNumber : pinNumbers)
+    {
+        const arduino::digital::Pin &pin{pinNumber};
+        pin.setMode(arduino::digital::Mode::output);
+        pin.setState(state);
+        pins.push_back(pin);
+    }
+
+    return pins;
 }
 
 // Copied as is from the Arduino framework main() implementation.
@@ -82,9 +80,23 @@ int main()
 
     initMidiInterface();
 
-    auto pins{initPins()};
-
-    auto keyboardMatrices{initKeyboardMatrices(pins)};
+    using State = arduino::digital::State;
+    auto keyboardMatrices{kbd::KeyboardMatricesIO{{kbd::KeyboardMatrixIO::Builder{
+                                                       .firstClosedContactsOutputs{initOutputsWithState({50, 46, 42, 38, 37, 32},
+                                                                                                        State::high)},
+                                                       .lastClosedContactsOutputs{initOutputsWithState({52, 48, 44, 40, 36, 34},
+                                                                                                       State::high)},
+                                                       .inputs{initInputsPulledUp({53, 51, 49, 47, 45, 43, 41, 39})},
+                                                       .numberOfKeysBeingScanned{48}}
+                                                       .build(),
+                                                   kbd::KeyboardMatrixIO::Builder{
+                                                       .firstClosedContactsOutputs{initOutputsWithState({28, 24, 2, 6, 5},
+                                                                                                        State::high)},
+                                                       .lastClosedContactsOutputs{initOutputsWithState({30, 26, 22, 4, 7},
+                                                                                                       State::high)},
+                                                       .inputs{initInputsPulledUp({35, 33, 31, 29, 27, 25, 23, 3})},
+                                                       .numberOfKeysBeingScanned{40}}
+                                                       .build()}}};
 
     auto keyboardController{kbd::KeyboardController::Builder{.firstKeyMidiNoteNumber{21},
                                                              .midiChannel{1},

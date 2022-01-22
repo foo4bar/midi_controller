@@ -33,6 +33,7 @@ namespace arduino::digital
         void setMode(const Mode) const;
 
     private:
+        uint8_t number;
         uint8_t bitMask;
         uint8_t port;
         volatile uint8_t *const inputRegister;

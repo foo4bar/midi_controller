@@ -4,11 +4,12 @@
 
 namespace arduino::digital
 {
-    Pin::Pin(const uint8_t arduinoPinNumber) : bitMask{digitalPinToBitMask(arduinoPinNumber)},
-                                                     port{digitalPinToPort(arduinoPinNumber)},
-                                                     inputRegister{portInputRegister(port)},
-                                                     outputRegister{portOutputRegister(port)},
-                                                     modeRegister{portModeRegister(port)}
+    Pin::Pin(const uint8_t arduinoPinNumber) : number{arduinoPinNumber},
+                                               bitMask{digitalPinToBitMask(arduinoPinNumber)},
+                                               port{digitalPinToPort(arduinoPinNumber)},
+                                               inputRegister{portInputRegister(port)},
+                                               outputRegister{portOutputRegister(port)},
+                                               modeRegister{portModeRegister(port)}
     {
     }
 
