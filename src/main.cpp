@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <MIDI.h>
 
 #ifdef AVR_STUB_DEBUG
