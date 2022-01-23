@@ -44,7 +44,7 @@ namespace kbd
 
         KeyboardMatrixIO(const std::vector<Pin> &firstClosedContactsOutputs,
                          const std::vector<Pin> &lastClosedContactsOutputs,
-                         const std::vector<Pin> inputs,
+                         const std::vector<Pin> &inputs,
                          const uint8_t numberOfKeysBeingScanned);
 
         State getInputState(const Pin &outputToBounce, const Pin &inputToCheck) const;

@@ -30,7 +30,7 @@ namespace kbd
 
     KeyboardMatrixIO::KeyboardMatrixIO(const std::vector<Pin> &firstClosedContactsOutputs,
                                        const std::vector<Pin> &lastClosedContactsOutputs,
-                                       const std::vector<Pin> inputs,
+                                       const std::vector<Pin> &inputs,
                                        const uint8_t numberOfKeysBeingScanned) : firstClosedContactsOutputs{firstClosedContactsOutputs},
                                                                                  lastClosedContactsOutputs{lastClosedContactsOutputs},
                                                                                  inputs{inputs},
