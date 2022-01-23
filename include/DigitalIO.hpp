@@ -24,7 +24,7 @@ namespace arduino::digital
     class Pin
     {
     public:
-        Pin(const uint8_t arduinoPinNumber);
+        explicit Pin(const uint8_t arduinoPinNumber);
 
         void setState(const State) const;
         State getState() const;

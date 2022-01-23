@@ -12,7 +12,7 @@ namespace kbd
     class Key
     {
     public:
-        Key(const uint8_t);
+        explicit Key(const uint8_t);
 
         void sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                            const uint8_t midiChannel,

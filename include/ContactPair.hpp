@@ -11,7 +11,7 @@ namespace kbd
     class ContactPair
     {
     public:
-        ContactPair(const uint8_t number);
+        explicit ContactPair(const uint8_t number);
 
         void updateStateWithDebouncing(KeyboardMatricesIO &);
 

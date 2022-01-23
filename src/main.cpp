@@ -18,8 +18,8 @@ void initAvrStubDebug();
 void attachUsbDevice();
 kbd::KeyboardMatricesIO initKeyboardMatrices();
 kbd::KeyboardController initKeyboardController(kbd::KeyboardMatricesIO &, MidiInterface &);
-std::vector<Pin> initOutputsWithState(const std::vector<uint8_t>, const State);
-std::vector<Pin> initInputsPulledUp(const std::vector<uint8_t>);
+std::vector<Pin> initOutputsWithState(const std::vector<uint8_t> &, const State);
+std::vector<Pin> initInputsPulledUp(const std::vector<uint8_t> &);
 void sendMidiEvents(const kbd::KeyboardController);
 void serialEventSafeRun();
 
@@ -83,7 +83,7 @@ kbd::KeyboardController initKeyboardController(kbd::KeyboardMatricesIO &keyboard
         .build();
 }
 
-std::vector<Pin> initOutputsWithState(const std::vector<uint8_t> pinNumbers, const State state)
+std::vector<Pin> initOutputsWithState(const std::vector<uint8_t> &pinNumbers, const State state)
 {
     std::vector<Pin> pins;
     for (const uint8_t pinNumber : pinNumbers)
@@ -97,7 +97,7 @@ std::vector<Pin> initOutputsWithState(const std::vector<uint8_t> pinNumbers, con
     return pins;
 }
 
-std::vector<Pin> initInputsPulledUp(const std::vector<uint8_t> pinNumbers)
+std::vector<Pin> initInputsPulledUp(const std::vector<uint8_t> &pinNumbers)
 {
     std::vector<Pin> pins;
     for (const uint8_t pinNumber : pinNumbers)

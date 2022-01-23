@@ -13,7 +13,7 @@ namespace kbd
     class KeyboardMatricesIO
     {
     public:
-        KeyboardMatricesIO(const std::vector<KeyboardMatrixIO> &keyboardMatrices);
+        explicit KeyboardMatricesIO(const std::vector<KeyboardMatrixIO> &keyboardMatrices);
 
         uint8_t getNumberOfKeysBeingScanned() const;
 

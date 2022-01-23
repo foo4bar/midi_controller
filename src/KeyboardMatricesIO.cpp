@@ -11,7 +11,7 @@ namespace kbd
         return std::accumulate(this->keyboardMatrices.begin(),
                                this->keyboardMatrices.end(),
                                0,
-                               [](uint8_t init, KeyboardMatrixIO keyboardMatrix)
+                               [](uint8_t init, const KeyboardMatrixIO &keyboardMatrix)
                                { return init + keyboardMatrix.getNumberOfKeysBeingScanned(); });
     }
 
