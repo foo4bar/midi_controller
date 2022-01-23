@@ -29,12 +29,12 @@ int main()
     initAvrStubDebug();
     attachUsbDevice();
 
-//This works either globally or in main(). It cannot be extracted to a function for some reason.
+//For some reason this cannot be extracted to a function returning MIDI. This works either globally or right here in main().
 #ifdef AVR_STUB_DEBUG
-MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI)
+    MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI)
 #else
-MIDI_CREATE_DEFAULT_INSTANCE()
-MIDI.begin(MIDI_CHANNEL_OMNI);
+    MIDI_CREATE_DEFAULT_INSTANCE()
+    MIDI.begin(MIDI_CHANNEL_OMNI);
 #endif
 
     auto keyboardMatrices{initKeyboardMatrices()};
@@ -88,7 +88,7 @@ std::vector<Pin> initOutputsWithState(const std::vector<uint8_t> pinNumbers, con
     std::vector<Pin> pins;
     for (const uint8_t pinNumber : pinNumbers)
     {
-        const Pin &pin{pinNumber};
+        const Pin pin{pinNumber};
         pin.setMode(Mode::output);
         pin.setState(state);
         pins.push_back(pin);
@@ -102,7 +102,7 @@ std::vector<Pin> initInputsPulledUp(const std::vector<uint8_t> pinNumbers)
     std::vector<Pin> pins;
     for (const uint8_t pinNumber : pinNumbers)
     {
-        const Pin &pin{pinNumber};
+        const Pin pin{pinNumber};
         pin.setMode(Mode::inputWithInternalPullUp);
         pins.push_back(pin);
     }
