@@ -1,5 +1,4 @@
 #include <MIDI.h>
-#include <Arduino.h>
 
 #ifdef AVR_STUB_DEBUG
 #include <avr8-stub.h>
