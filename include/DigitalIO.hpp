@@ -1,8 +1,6 @@
 #ifndef DigitalIO_hpp
 #define DigitalIO_hpp
 
-#include <array>
-
 #include <stdint.h>
 
 namespace arduino::digital
@@ -29,7 +27,7 @@ namespace arduino::digital
         Pin(const uint8_t arduinoPinNumber);
 
         void setState(const State) const;
-        const State getState() const;
+        State getState() const;
         void setMode(const Mode) const;
 
     private:

@@ -17,8 +17,6 @@ namespace kbd
 
         unsigned long getPressingTimeMillis() const;
 
-        unsigned long getReleasingTimeMillis() const;
-
         bool isAsKeyIsDepressed() const;
 
         bool isAsKeyIsReleased() const;

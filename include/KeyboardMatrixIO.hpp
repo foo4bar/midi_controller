@@ -2,7 +2,6 @@
 #define KeyboardMatrixIO_hpp
 
 #include <vector>
-#include <memory>
 
 #include <stdint.h>
 
@@ -26,7 +25,7 @@ namespace kbd
             KeyboardMatrixIO build() const;
         };
 
-        const InputStatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber);
+        InputStatePair getActualInstantaneousInputStatePair(const uint8_t contactPairNumber) const;
 
         uint8_t getNumberOfKeysBeingScanned() const;
 

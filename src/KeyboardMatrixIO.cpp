@@ -10,7 +10,7 @@ namespace kbd
                                 this->numberOfKeysBeingScanned);
     }
 
-    const InputStatePair KeyboardMatrixIO::getActualInstantaneousInputStatePair(const uint8_t contactPairNumber)
+    InputStatePair KeyboardMatrixIO::getActualInstantaneousInputStatePair(const uint8_t contactPairNumber) const
     {
         const auto outputNumber{static_cast<uint8_t>(contactPairNumber / this->numberOfInputs)};
         const auto &firstClosedContactsOutput{this->firstClosedContactsOutputs[outputNumber]};

@@ -81,20 +81,21 @@ namespace kbd
 
             this->previousState = actualState;
             break;
+
         case State::released:
             midiInterface.sendNoteOff(noteNumber, defaultVelocity, midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             Serial.write("OFF: note=");
             Serial.write(itoa(noteNumber, buffer, 10));
-            Serial.write(", time=");
-            Serial.write(ltoa(this->contacts.getReleasingTimeMillis(), buffer, 10));
             Serial.write("\n");
 #endif
 
             this->previousState = actualState;
             break;
+
         default:
+            // Do nothing.
             break;
         }
     }

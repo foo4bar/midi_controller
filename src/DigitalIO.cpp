@@ -31,7 +31,7 @@ namespace arduino::digital
         }
     }
 
-    const State Pin::getState() const
+    State Pin::getState() const
     {
         return (*this->inputRegister & this->bitMask) ? State::high : State::low;
     }
@@ -69,7 +69,7 @@ namespace arduino::digital
 
     void Pin::doWithDisabledInterrupts(void (*function)(const Pin &pin)) const
     {
-        uint8_t oldSREG = SREG;
+        const uint8_t oldSREG{SREG};
         cli();
 
         function(*this);

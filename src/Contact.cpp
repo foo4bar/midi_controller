@@ -18,8 +18,7 @@ namespace kbd
 
         if (this->lastDetectedInstantaneousState == actualInstantaneousState)
         {
-            if (this->actualSteadyState != this->lastDetectedInstantaneousState &&
-                isBounsingFinished(timeFromStartMillis))
+            if (this->actualSteadyState != this->lastDetectedInstantaneousState && isBounsingFinished(timeFromStartMillis))
             {
                 this->actualSteadyState = this->lastDetectedInstantaneousState;
             }

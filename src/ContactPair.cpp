@@ -18,11 +18,6 @@ namespace kbd
         return this->lastClosed.getLastTimeStateChangedMillis() - this->firstClosed.getLastTimeStateChangedMillis();
     }
 
-    unsigned long ContactPair::getReleasingTimeMillis() const
-    {
-        return this->firstClosed.getLastTimeStateChangedMillis() - this->lastClosed.getLastTimeStateChangedMillis();
-    }
-
     bool ContactPair::isAsKeyIsDepressed() const
     {
         return this->firstClosed.isClosed() && this->lastClosed.isClosed();
