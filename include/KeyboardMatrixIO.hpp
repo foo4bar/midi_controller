@@ -1,6 +1,8 @@
 #ifndef KeyboardMatrixIO_hpp
 #define KeyboardMatrixIO_hpp
 
+#define NOP __asm__ __volatile__ ("nop\n\t")
+
 #include <vector>
 
 #include <stdint.h>

@@ -22,12 +22,13 @@ namespace kbd
         bool isAsKeyIsReleased() const;
 
     private:
+        uint8_t number;
+        
         // One of contacts is closed first when a corresponding key starts to be pressed,
         // another one is closed last when the key is fully depressed.
         Contact firstClosed;
         Contact lastClosed;
 
-        uint8_t number;
     };
 }
 

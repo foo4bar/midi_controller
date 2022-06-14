@@ -2,7 +2,9 @@
 
 namespace kbd
 {
-    ContactPair::ContactPair(const uint8_t number) : number{number}
+    ContactPair::ContactPair(const uint8_t number) : number{number},
+                                                     firstClosed{Contact{true, number}},
+                                                     lastClosed{Contact{false, number}}
     {
     }
 
