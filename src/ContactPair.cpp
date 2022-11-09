@@ -22,11 +22,11 @@ namespace kbd
 
     bool ContactPair::isAsKeyIsDepressed() const
     {
-        return this->firstClosed.isClosed() && this->lastClosed.isClosed();
+        return !this->firstClosed.isClosed() && this->lastClosed.isClosed();
     }
 
     bool ContactPair::isAsKeyIsReleased() const
     {
-        return !this->firstClosed.isClosed() && !this->lastClosed.isClosed();
+        return this->firstClosed.isClosed() && !this->lastClosed.isClosed();
     }
 }
