@@ -15,13 +15,13 @@ namespace kbd
 
         const State actualState{getActualState()};
 
-        if (this->previousState == actualState)
+        if (actualState == State::moving || this->previousState == actualState)
         {
             //Do nothing.
         }
         else
         {
-#ifndef AVR_STUB_DEBUG
+#if !defined(AVR_STUB_DEBUG) && !defined(CONTACT_EVENTS_DEBUG_MESSAGES)
             doSendMidiEvent(firstKeyMidiNoteNumber,
                             midiChannel,
                             midiInterface,
@@ -52,7 +52,7 @@ namespace kbd
         }
         else
         {
-            return State::released;
+            return State::moving;
         }
     }
 

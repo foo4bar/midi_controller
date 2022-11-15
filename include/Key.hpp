@@ -23,7 +23,8 @@ namespace kbd
         enum class State
         {
             released = 0,
-            depressed = 1
+            depressed = 1,
+            moving = 2
         };
 
         static inline constexpr uint8_t maxManipulationTimeMillis{250}; //TODO double check
