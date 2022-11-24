@@ -2,6 +2,7 @@
 #define KeyboardMatrixIO_hpp
 
 #define NOP __asm__ __volatile__ ("nop\n\t")
+#define NOP_6_TIMES NOP; NOP; NOP; NOP; NOP; NOP
 
 #include <vector>
 
