@@ -42,12 +42,12 @@ namespace kbd
     State KeyboardMatrixIO::getInputState(const Pin &outputToBounce, const Pin &inputToCheck) const
     {
         outputToBounce.setState(State::low);
-        NOP_6_TIMES;
+        NOP_7_TIMES;
 
         const auto result{inputToCheck.getState()};
 
         outputToBounce.setState(State::high);
-        NOP_6_TIMES;
+        NOP_7_TIMES;
 
         return result;
     }
