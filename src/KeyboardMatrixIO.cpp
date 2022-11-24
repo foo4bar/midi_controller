@@ -45,10 +45,12 @@ namespace kbd
         NOP;
         NOP;
         NOP;
+        NOP;
 
         const auto result{inputToCheck.getState()};
 
         outputToBounce.setState(State::high);
+        NOP;
         NOP;
         NOP;
         NOP;
