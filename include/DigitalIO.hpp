@@ -6,8 +6,6 @@
 namespace arduino::digital
 {
 
-    static inline constexpr uint8_t numberOfPins{54};
-
     enum class State : uint8_t
     {
         low = 0, // LOW in Arduino.h
@@ -45,6 +43,22 @@ namespace arduino::digital
     {
         State withFirstActuatedContactOutput{State::high};
         State withLastActuatedContactOutput{State::high};
+    };
+
+    struct KeyGroupOutputs
+    {
+    public:
+        class Builder
+        {
+        public:
+            const Pin firstActuatedContactOutput;
+            const Pin lastActuatedContactOutput;
+
+            KeyGroupOutputs build() const;
+        };
+
+        Pin firstActuatedContactOutput;
+        Pin lastActuatedContactOutput;
     };
 }
 

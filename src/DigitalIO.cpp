@@ -76,4 +76,9 @@ namespace arduino::digital
 
         SREG = oldSREG;
     }
+
+    KeyGroupOutputs KeyGroupOutputs::Builder::build() const
+    {
+        return KeyGroupOutputs(this->firstActuatedContactOutput, this->lastActuatedContactOutput);
+    }
 }

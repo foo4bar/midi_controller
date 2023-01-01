@@ -4,19 +4,17 @@ namespace kbd
 {
     KeyboardMatrixIO KeyboardMatrixIO::Builder::build() const
     {
-        return KeyboardMatrixIO(this->firstActuatedContactsOutputs,
-                                this->lastActuatedContactsOutputs,
-                                this->inputs,
-                                this->numberOfKeysBeingScanned);
+        return KeyboardMatrixIO(this->outputs,
+                                this->inputs);
     }
 
-    KeyInputStates KeyboardMatrixIO::getActualInstantaneousKeyInputStates(const uint8_t contactPairNumber) const
+    KeyInputStates KeyboardMatrixIO::getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const
     {
-        const auto outputNumber{static_cast<uint8_t>(contactPairNumber / this->numberOfInputs)};
-        const auto &firstClosedContactOutput{this->firstActuatedContactsOutputs[outputNumber]};
-        const auto &lastClosedContactOutput{this->lastActuatedContactsOutputs[outputNumber]};
+        const auto outputNumber{static_cast<uint8_t>(keyNumber / this->numberOfInputs)};
+        const auto &firstClosedContactOutput{this->outputs[outputNumber].firstActuatedContactOutput};
+        const auto &lastClosedContactOutput{this->outputs[outputNumber].lastActuatedContactOutput};
 
-        const auto inputNumber{static_cast<uint8_t>(contactPairNumber % this->numberOfInputs)};
+        const auto inputNumber{static_cast<uint8_t>(keyNumber % this->numberOfInputs)};
         const auto &input{this->inputs[inputNumber]};
 
         return KeyInputStates{getInputState(firstClosedContactOutput, input),
@@ -28,14 +26,11 @@ namespace kbd
         return this->numberOfKeysBeingScanned;
     }
 
-    KeyboardMatrixIO::KeyboardMatrixIO(const std::vector<Pin> &firstActuatedContactsOutputs,
-                                       const std::vector<Pin> &lastActuatedContactsOutputs,
-                                       const std::vector<Pin> &inputs,
-                                       const uint8_t numberOfKeysBeingScanned) : firstActuatedContactsOutputs{firstActuatedContactsOutputs},
-                                                                                 lastActuatedContactsOutputs{lastActuatedContactsOutputs},
-                                                                                 inputs{inputs},
-                                                                                 numberOfInputs{static_cast<uint8_t>(inputs.size())},
-                                                                                 numberOfKeysBeingScanned{numberOfKeysBeingScanned}
+    KeyboardMatrixIO::KeyboardMatrixIO(const std::vector<KeyGroupOutputs> &outputs,
+                                       const std::vector<Pin> &inputs) : outputs{outputs},
+                                                                         inputs{inputs},
+                                                                         numberOfInputs{static_cast<uint8_t>(inputs.size())},
+                                                                         numberOfKeysBeingScanned{static_cast<uint8_t>(inputs.size() * outputs.size())}
     {
     }
 
