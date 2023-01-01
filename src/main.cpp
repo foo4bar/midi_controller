@@ -16,8 +16,9 @@ using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
 
 void initAvrStubDebug();
 void attachUsbDevice();
+kbd::PedalsIO initPedals();
 kbd::KeyboardMatricesIO initKeyboardMatrices();
-kbd::KeyboardController initKeyboardController(kbd::KeyboardMatricesIO &, MidiInterface &);
+kbd::KeyboardController initKeyboardController(kbd::PedalsIO &, kbd::KeyboardMatricesIO &, MidiInterface &);
 std::vector<Pin> initOutputsWithState(const std::vector<uint8_t> &, const State);
 std::vector<Pin> initInputsPulledUp(const std::vector<uint8_t> &);
 void sendMidiEvents(const kbd::KeyboardController);
@@ -29,7 +30,7 @@ int main()
     initAvrStubDebug();
     attachUsbDevice();
 
-//For some reason this cannot be extracted to a function returning MIDI. This works either globally or right here in main().
+// For some reason this cannot be extracted to a function returning MIDI. This works either globally or right here in main().
 #ifdef AVR_STUB_DEBUG
     MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI)
 #else
@@ -37,9 +38,10 @@ int main()
     MIDI.begin(MIDI_CHANNEL_OMNI);
 #endif
 
+    auto pedalsIO{initPedals()};
     auto keyboardMatrices{initKeyboardMatrices()};
 
-    sendMidiEvents(initKeyboardController(keyboardMatrices, MIDI));
+    sendMidiEvents(initKeyboardController(pedalsIO, keyboardMatrices, MIDI));
     serialEventSafeRun();
 }
 
@@ -58,26 +60,34 @@ void attachUsbDevice()
 #endif
 }
 
+kbd::PedalsIO initPedals()
+{
+    return kbd::PedalsIO{initInputsPulledUp({8, 9, 10})};
+}
+
 kbd::KeyboardMatricesIO initKeyboardMatrices()
 {
     return kbd::KeyboardMatricesIO{{kbd::KeyboardMatrixIO::Builder{
-                                        .firstClosedContactsOutputs{initOutputsWithState({50, 46, 42, 38, 37, 32}, State::high)},
-                                        .lastClosedContactsOutputs{initOutputsWithState({52, 48, 44, 40, 36, 34}, State::high)},
+                                        .firstActuatedContactsOutputs{initOutputsWithState({50, 46, 42, 38, 37, 32}, State::high)},
+                                        .lastActuatedContactsOutputs{initOutputsWithState({52, 48, 44, 40, 36, 34}, State::high)},
                                         .inputs{initInputsPulledUp({53, 51, 49, 47, 45, 43, 41, 39})},
                                         .numberOfKeysBeingScanned{48}}
                                         .build(),
                                     kbd::KeyboardMatrixIO::Builder{
-                                        .firstClosedContactsOutputs{initOutputsWithState({28, 24, 2, 6, 5}, State::high)},
-                                        .lastClosedContactsOutputs{initOutputsWithState({30, 26, 22, 4, 7}, State::high)},
+                                        .firstActuatedContactsOutputs{initOutputsWithState({28, 24, 2, 6, 5}, State::high)},
+                                        .lastActuatedContactsOutputs{initOutputsWithState({30, 26, 22, 4, 7}, State::high)},
                                         .inputs{initInputsPulledUp({35, 33, 31, 29, 27, 25, 23, 3})},
                                         .numberOfKeysBeingScanned{40}}
                                         .build()}};
 }
 
-kbd::KeyboardController initKeyboardController(kbd::KeyboardMatricesIO &keyboardMatrices, MidiInterface &midiInterface)
+kbd::KeyboardController initKeyboardController(kbd::PedalsIO &pedalsIO,
+                                               kbd::KeyboardMatricesIO &keyboardMatrices,
+                                               MidiInterface &midiInterface)
 {
     return kbd::KeyboardController::Builder{.firstKeyMidiNoteNumber{21},
                                             .midiChannel{1},
+                                            .pedalsIO{pedalsIO},
                                             .keyboardMatrices{keyboardMatrices},
                                             .midiInterface{midiInterface}}
         .build();

@@ -3,7 +3,7 @@
 
 #include <MIDI.h>
 
-#include "ContactPair.hpp"
+#include "KeyContacts.hpp"
 
 namespace kbd
 {
@@ -40,7 +40,7 @@ namespace kbd
         // One of them is closed first when a corresponding key starts to be pressed,
         // another one is closed last when the key is fully depressed.
         // Key state is defined by its contacts state.
-        ContactPair contacts;
+        KeyContacts contacts;
 
         State previousState{State::released};
         uint8_t velocity{0};

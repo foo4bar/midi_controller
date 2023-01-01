@@ -2,7 +2,7 @@
 
 namespace kbd
 {
-    Key::Key(const uint8_t number) : number{number}, contacts{ContactPair{number}}
+    Key::Key(const uint8_t number) : number{number}, contacts{KeyContacts{number}}
     {
     }
 
@@ -38,7 +38,7 @@ namespace kbd
         }
         else if (this->contacts.isAsKeyIsDepressed())
         {
-            const auto pressingTimeMillis{this->contacts.getPressingTimeMillis()};
+            const auto pressingTimeMillis{this->contacts.getKeyPressingTimeMillis()};
             if (pressingTimeMillis <= maxManipulationTimeMillis)
             {
                 this->velocity = slope * pressingTimeMillis + maxVelocity;
@@ -75,7 +75,7 @@ namespace kbd
             Serial.write(", vel=");
             Serial.write(itoa(this->velocity, buffer, 10));
             Serial.write(", time=");
-            Serial.write(ltoa(this->contacts.getPressingTimeMillis(), buffer, 10));
+            Serial.write(ltoa(this->contacts.getKeyPressingTimeMillis(), buffer, 10));
             Serial.write("\n");
 #endif
 

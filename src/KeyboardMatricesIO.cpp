@@ -15,14 +15,14 @@ namespace kbd
                                { return init + keyboardMatrix.getNumberOfKeysBeingScanned(); });
     }
 
-    arduino::digital::InputStatePair KeyboardMatricesIO::getActualInstantaneousInputStatePair(const uint8_t keyNumber)
+    arduino::digital::KeyInputStates KeyboardMatricesIO::getActualInstantaneousKeyInputStates(const uint8_t keyNumber)
     {
         uint8_t numberOfKeysBeingScannedByPreviousMatrices{};
         for (const auto &keyboardMatrix : this->keyboardMatrices)
         {
             if (keyNumber < (keyboardMatrix.getNumberOfKeysBeingScanned() + numberOfKeysBeingScannedByPreviousMatrices))
             {
-                return keyboardMatrix.getActualInstantaneousInputStatePair(keyNumber - numberOfKeysBeingScannedByPreviousMatrices);
+                return keyboardMatrix.getActualInstantaneousKeyInputStates(keyNumber - numberOfKeysBeingScannedByPreviousMatrices);
             }
             else
             {
@@ -30,6 +30,6 @@ namespace kbd
             }
         }
 
-        return arduino::digital::InputStatePair{};
+        return arduino::digital::KeyInputStates{};
     }
 }

@@ -4,7 +4,10 @@
 
 namespace kbd
 {
-    Contact::Contact(const bool firstClosed, const uint8_t pairNumber) : firstClosed{firstClosed}, pairNumber{pairNumber}
+    Contact::Contact()
+    {
+    }
+    Contact::Contact(const char *(*debugOutput)()) : debugOutput{debugOutput}
     {
     }
 
@@ -28,8 +31,7 @@ namespace kbd
 
 #ifdef CONTACT_EVENTS_DEBUG_MESSAGES
                 char buffer[10];
-                Serial.write(itoa(this->pairNumber, buffer, 10));
-                Serial.write(this->firstClosed ? ", first, " : ", last, ");
+                Serial.write(this->debugOutput());
                 Serial.write("actualSteadyState is ");
                 Serial.write(this->actualSteadyState == State::closed ? "closed, " : "open, ");
                 Serial.write("timeFromStartMillis is ");
@@ -49,8 +51,7 @@ namespace kbd
 
 #ifdef CONTACT_EVENTS_DEBUG_MESSAGES
             char buffer[10];
-            Serial.write(itoa(this->pairNumber, buffer, 10));
-            Serial.write(this->firstClosed ? ", first, " : ", last, ");
+            Serial.write(this->debugOutput());
             Serial.write("lastDetectedInstantaneousState is ");
             Serial.write(this->lastDetectedInstantaneousState == State::closed ? "closed, " : "open, ");
             Serial.write("timeFromStartMillis is ");

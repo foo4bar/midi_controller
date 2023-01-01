@@ -10,7 +10,8 @@ namespace kbd
     class Contact
     {
     public:
-        Contact(const bool firstClosed, const uint8_t pairNumber);
+        Contact();
+        Contact(const char *(*debugOutput)());
 
         void updateStateWithDebouncing(const arduino::digital::State actualInstantaneousState);
 
@@ -31,10 +32,12 @@ namespace kbd
         State lastDetectedInstantaneousState{State::open};
         unsigned long lastTimeStateChangedMillis{0};
 
-        bool firstClosed;
-        uint8_t pairNumber;
-
         bool isBounsingFinished(const unsigned long timeFromStartMillis) const;
+
+        const char *(*debugOutput)() = []()
+        {
+            return "";
+        };
     };
 }
 

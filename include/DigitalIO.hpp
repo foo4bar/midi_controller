@@ -41,10 +41,10 @@ namespace arduino::digital
         void doWithDisabledInterrupts(void (*function)(const Pin &)) const;
     };
 
-    struct InputStatePair
+    struct KeyInputStates
     {
-        State withFirstClosedContactOutput{State::high};
-        State withLastClosedContactOutput{State::high};
+        State withFirstActuatedContactOutput{State::high};
+        State withLastActuatedContactOutput{State::high};
     };
 }
 

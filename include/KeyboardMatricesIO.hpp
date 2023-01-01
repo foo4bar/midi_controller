@@ -17,7 +17,7 @@ namespace kbd
 
         uint8_t getNumberOfKeysBeingScanned() const;
 
-        arduino::digital::InputStatePair getActualInstantaneousInputStatePair(const uint8_t keyNumber);
+        arduino::digital::KeyInputStates getActualInstantaneousKeyInputStates(const uint8_t keyNumber);
 
     private:
         std::vector<KeyboardMatrixIO> keyboardMatrices;
