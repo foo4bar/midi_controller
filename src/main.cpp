@@ -1,3 +1,8 @@
+#include <map>
+#include <vector>
+
+#include <stdint.h>
+
 #include <Arduino.h>
 #include <MIDI.h>
 
@@ -10,6 +15,7 @@
 #include "DigitalIO.hpp"
 
 using Pin = arduino::digital::Pin;
+using PinMap = arduino::digital::PinMap;
 using State = arduino::digital::State;
 using Mode = arduino::digital::Mode;
 using KeyGroupOutputs = arduino::digital::KeyGroupOutputs;
@@ -17,11 +23,10 @@ using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
 
 void initAvrStubDebug();
 void attachUsbDevice();
-kbd::PedalsIO initPedals();
-kbd::KeyboardMatricesIO initKeyboardMatrices();
+PinMap initPins(const std::map<Mode, std::vector<uint8_t>> &);
+kbd::PedalsIO initPedals(const PinMap &);
+kbd::KeyboardMatricesIO initKeyboardMatrices(const PinMap &);
 kbd::KeyboardController initKeyboardController(kbd::PedalsIO &, kbd::KeyboardMatricesIO &, MidiInterface &);
-Pin initOutputWithState(const uint8_t pinNumber, const State state);
-std::vector<Pin> initInputsPulledUp(const std::vector<uint8_t> &);
 void sendMidiEvents(const kbd::KeyboardController);
 void serialEventSafeRun();
 
@@ -39,8 +44,10 @@ int main()
     MIDI.begin(MIDI_CHANNEL_OMNI);
 #endif
 
-    auto pedalsIO{initPedals()};
-    auto keyboardMatrices{initKeyboardMatrices()};
+    auto pins{initPins({{Mode::output, {50, 52, 46, 48, 42, 44, 38, 40, 37, 36, 32, 34, 28, 30, 24, 26, 2, 22, 6, 4, 5, 7}},
+                        {Mode::inputWithInternalPullUp, {53, 51, 49, 47, 45, 43, 41, 39, 35, 33, 31, 29, 27, 25, 23, 3, 8, 9, 10}}})};
+    auto pedalsIO{initPedals(pins)};
+    auto keyboardMatrices{initKeyboardMatrices(pins)};
 
     sendMidiEvents(initKeyboardController(pedalsIO, keyboardMatrices, MIDI));
     serialEventSafeRun();
@@ -61,61 +68,52 @@ void attachUsbDevice()
 #endif
 }
 
-kbd::PedalsIO initPedals()
+PinMap initPins(const std::map<Mode, std::vector<uint8_t>> &modeToPinMapping)
 {
-    return kbd::PedalsIO{initInputsPulledUp({8, 9, 10})};
+    PinMap pins;
+
+    for (const auto &[mode, pinNumbers] : modeToPinMapping)
+    {
+        for (const uint8_t pinNumber : pinNumbers)
+        {
+            const Pin pin{pinNumber};
+            pin.setMode(mode);
+
+            if (mode == Mode::output)
+            {
+                pin.setState(State::high);
+            }
+
+            pins.insert(pinNumber, pin);
+        }
+    }
+
+    return pins;
 }
 
-kbd::KeyboardMatricesIO initKeyboardMatrices()
+kbd::PedalsIO initPedals(const PinMap &pins)
 {
-    auto keyGroupOutputs0{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(50, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(52, State::high)}}
-                              .build()};
-    auto keyGroupOutputs1{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(46, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(48, State::high)}}
-                              .build()};
-    auto keyGroupOutputs2{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(42, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(44, State::high)}}
-                              .build()};
-    auto keyGroupOutputs3{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(38, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(40, State::high)}}
-                              .build()};
-    auto keyGroupOutputs4{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(37, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(36, State::high)}}
-                              .build()};
-    auto keyGroupOutputs5{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(32, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(34, State::high)}}
-                              .build()};
-    auto keyGroupOutputs6{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(28, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(30, State::high)}}
-                              .build()};
-    auto keyGroupOutputs7{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(24, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(26, State::high)}}
-                              .build()};
-    auto keyGroupOutputs8{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(2, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(22, State::high)}}
-                              .build()};
-    auto keyGroupOutputs9{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(6, State::high)},
-                                                   .lastActuatedContactOutput{initOutputWithState(4, State::high)}}
-                              .build()};
-    auto keyGroupOutputs10{KeyGroupOutputs::Builder{.firstActuatedContactOutput{initOutputWithState(5, State::high)},
-                                                    .lastActuatedContactOutput{initOutputWithState(7, State::high)}}
-                               .build()};
+    return kbd::PedalsIO{{pins[8], pins[9], pins[10]}};
+}
 
-    return kbd::KeyboardMatricesIO{{kbd::KeyboardMatrixIO::Builder{.outputs{keyGroupOutputs0,
-                                                                            keyGroupOutputs1,
-                                                                            keyGroupOutputs2,
-                                                                            keyGroupOutputs3,
-                                                                            keyGroupOutputs4,
-                                                                            keyGroupOutputs5},
-                                                                   .inputs{initInputsPulledUp({53, 51, 49, 47, 45, 43, 41, 39})}}
+kbd::KeyboardMatricesIO initKeyboardMatrices(const PinMap &pins)
+{
+    return kbd::KeyboardMatricesIO{{kbd::KeyboardMatrixIO::Builder{
+                                        .outputs{{.firstActuatedContactOutput{pins[50]}, .lastActuatedContactOutput{pins[52]}},
+                                                 {.firstActuatedContactOutput{pins[46]}, .lastActuatedContactOutput{pins[48]}},
+                                                 {.firstActuatedContactOutput{pins[42]}, .lastActuatedContactOutput{pins[44]}},
+                                                 {.firstActuatedContactOutput{pins[38]}, .lastActuatedContactOutput{pins[40]}},
+                                                 {.firstActuatedContactOutput{pins[37]}, .lastActuatedContactOutput{pins[36]}},
+                                                 {.firstActuatedContactOutput{pins[32]}, .lastActuatedContactOutput{pins[34]}}},
+                                        .inputs{{pins[53], pins[51], pins[49], pins[47], pins[45], pins[43], pins[41], pins[39]}}}
                                         .build(),
-                                    kbd::KeyboardMatrixIO::Builder{.outputs{keyGroupOutputs6,
-                                                                            keyGroupOutputs7,
-                                                                            keyGroupOutputs8,
-                                                                            keyGroupOutputs9,
-                                                                            keyGroupOutputs10},
-                                                                   .inputs{initInputsPulledUp({35, 33, 31, 29, 27, 25, 23, 3})}}
+                                    kbd::KeyboardMatrixIO::Builder{
+                                        .outputs{{.firstActuatedContactOutput{pins[28]}, .lastActuatedContactOutput{pins[30]}},
+                                                 {.firstActuatedContactOutput{pins[24]}, .lastActuatedContactOutput{pins[26]}},
+                                                 {.firstActuatedContactOutput{pins[2]}, .lastActuatedContactOutput{pins[22]}},
+                                                 {.firstActuatedContactOutput{pins[6]}, .lastActuatedContactOutput{pins[4]}},
+                                                 {.firstActuatedContactOutput{pins[5]}, .lastActuatedContactOutput{pins[7]}}},
+                                        .inputs{{pins[35], pins[33], pins[31], pins[29], pins[27], pins[25], pins[23], pins[3]}}}
                                         .build()}};
 }
 
@@ -129,28 +127,6 @@ kbd::KeyboardController initKeyboardController(kbd::PedalsIO &pedalsIO,
                                             .keyboardMatrices{keyboardMatrices},
                                             .midiInterface{midiInterface}}
         .build();
-}
-
-Pin initOutputWithState(const uint8_t pinNumber, const State state)
-{
-    const Pin pin{pinNumber};
-    pin.setMode(Mode::output);
-    pin.setState(state);
-
-    return pin;
-}
-
-std::vector<Pin> initInputsPulledUp(const std::vector<uint8_t> &pinNumbers)
-{
-    std::vector<Pin> pins;
-    for (const uint8_t pinNumber : pinNumbers)
-    {
-        const Pin pin{pinNumber};
-        pin.setMode(Mode::inputWithInternalPullUp);
-        pins.push_back(pin);
-    }
-
-    return pins;
 }
 
 void sendMidiEvents(kbd::KeyboardController keyboardController)

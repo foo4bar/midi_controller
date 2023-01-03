@@ -26,7 +26,7 @@ namespace arduino::digital
             break;
 
         default:
-            //Do nothing
+            // Do nothing
             break;
         }
     }
@@ -44,16 +44,14 @@ namespace arduino::digital
             doWithDisabledInterrupts([](const Pin &pin)
                                      {
                                          *pin.modeRegister = *pin.modeRegister & ~pin.bitMask;
-                                         *pin.outputRegister = *pin.outputRegister & ~pin.bitMask;
-                                     });
+                                         *pin.outputRegister = *pin.outputRegister & ~pin.bitMask; });
             break;
 
         case Mode::inputWithInternalPullUp:
             doWithDisabledInterrupts([](const Pin &pin)
                                      {
                                          *pin.modeRegister = *pin.modeRegister & ~pin.bitMask;
-                                         *pin.outputRegister = *pin.outputRegister | pin.bitMask;
-                                     });
+                                         *pin.outputRegister = *pin.outputRegister | pin.bitMask; });
             break;
 
         case Mode::output:
@@ -62,7 +60,7 @@ namespace arduino::digital
             break;
 
         default:
-            //Do nothing
+            // Do nothing
             break;
         }
     }
@@ -77,8 +75,13 @@ namespace arduino::digital
         SREG = oldSREG;
     }
 
-    KeyGroupOutputs KeyGroupOutputs::Builder::build() const
+    void PinMap::insert(const uint8_t pinNumber, const Pin pin)
     {
-        return KeyGroupOutputs(this->firstActuatedContactOutput, this->lastActuatedContactOutput);
+        this->pins.insert({pinNumber, pin});
+    }
+
+    Pin PinMap::operator[](const uint8_t pinNumber) const
+    {
+        return this->pins.find(pinNumber)->second;
     }
 }

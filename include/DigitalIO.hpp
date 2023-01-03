@@ -1,6 +1,8 @@
 #ifndef DigitalIO_hpp
 #define DigitalIO_hpp
 
+#include <map>
+
 #include <stdint.h>
 
 namespace arduino::digital
@@ -39,6 +41,16 @@ namespace arduino::digital
         void doWithDisabledInterrupts(void (*function)(const Pin &)) const;
     };
 
+    class PinMap
+    {
+    public:
+        void insert(const uint8_t pinNumber, const Pin pin);
+        Pin operator[](const uint8_t pinNumber) const;
+
+    private:
+        std::map<uint8_t, Pin> pins;
+    };
+
     struct KeyInputStates
     {
         State withFirstActuatedContactOutput{State::high};
@@ -47,16 +59,6 @@ namespace arduino::digital
 
     struct KeyGroupOutputs
     {
-    public:
-        class Builder
-        {
-        public:
-            const Pin firstActuatedContactOutput;
-            const Pin lastActuatedContactOutput;
-
-            KeyGroupOutputs build() const;
-        };
-
         Pin firstActuatedContactOutput;
         Pin lastActuatedContactOutput;
     };

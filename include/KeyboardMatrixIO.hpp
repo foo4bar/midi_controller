@@ -41,10 +41,7 @@ namespace kbd
         uint8_t getNumberOfKeysBeingScanned() const;
 
     private:
-        // inline static constexpr uint8_t numberOfPins{54};
-
         const std::vector<KeyGroupOutputs> outputs;
-
         const std::vector<Pin> inputs;
 
         uint8_t numberOfInputs;
