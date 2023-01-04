@@ -2,22 +2,14 @@
 
 namespace kbd
 {
-    KeyboardController::KeyboardController(const uint8_t firstKeyMidiNoteNumber,
-                                           const uint8_t midiChannel,
-                                           PedalsIO &pedalsIO,
-                                           KeyboardMatricesIO &keyboardMatrices,
-                                           MidiInterface &midiInterface) : firstKeyMidiNoteNumber{firstKeyMidiNoteNumber},
-                                                                           midiChannel{midiChannel},
-                                                                           pedalsIO{pedalsIO},
-                                                                           keyboardMatrices{keyboardMatrices},
+    KeyboardController::KeyboardController(const PedalsIO &pedalsIO,
+                                           const KeyboardMatricesIO &keyboardMatricesIO,
+                                           MidiInterface &midiInterface) : pedalsIO{pedalsIO},
+                                                                           keyboardMatricesIO{keyboardMatricesIO},
                                                                            midiInterface{midiInterface}
 
     {
-        this->pedals.push_back(Pedal{0, Pedal::Function::soft});
-        this->pedals.push_back(Pedal{1, Pedal::Function::sostenuto});
-        this->pedals.push_back(Pedal{2, Pedal::Function::sustain});
-        
-        for (uint8_t keyNumber{0}; keyNumber < keyboardMatrices.getNumberOfKeysBeingScanned(); ++keyNumber)
+        for (uint8_t keyNumber{0}; keyNumber < keyboardMatricesIO.getNumberOfKeysBeingScanned(); ++keyNumber)
         {
             this->keys.push_back(Key{keyNumber});
         }
@@ -37,7 +29,7 @@ namespace kbd
             key.sendMidiEvent(this->firstKeyMidiNoteNumber,
                               this->midiChannel,
                               this->midiInterface,
-                              this->keyboardMatrices);
+                              this->keyboardMatricesIO);
         }
     }
 }

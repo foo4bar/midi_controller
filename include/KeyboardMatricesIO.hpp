@@ -13,14 +13,14 @@ namespace kbd
     class KeyboardMatricesIO
     {
     public:
-        explicit KeyboardMatricesIO(const std::vector<KeyboardMatrixIO> &keyboardMatrices);
+        explicit KeyboardMatricesIO(const std::vector<KeyboardMatrixIO> &keyboardMatricesIO);
 
         uint8_t getNumberOfKeysBeingScanned() const;
 
-        arduino::digital::KeyInputStates getActualInstantaneousKeyInputStates(const uint8_t keyNumber);
+        arduino::digital::KeyInputStates getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const;
 
     private:
-        std::vector<KeyboardMatrixIO> keyboardMatrices;
+        std::vector<KeyboardMatrixIO> keyboardMatricesIO;
     };
 }
 

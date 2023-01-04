@@ -13,7 +13,7 @@ namespace kbd
     public:
         explicit KeyContacts(const uint8_t number);
 
-        void updateStateWithDebouncing(KeyboardMatricesIO &);
+        void updateStateWithDebouncing(const KeyboardMatricesIO &);
 
         unsigned long getKeyPressingTimeMillis() const;
 

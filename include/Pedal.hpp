@@ -6,11 +6,12 @@
 #include <MIDI.h>
 
 #include "Contact.hpp"
-#include "PedalsIO.hpp"
 
 namespace kbd
 {
     using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
+
+    class PedalsIO;
 
     class Pedal
     {
@@ -22,11 +23,11 @@ namespace kbd
             soft = 67
         };
 
-        explicit Pedal(const uint8_t number, const Function);
+        explicit Pedal(const Function);
 
         void sendMidiEvent(const uint8_t midiChannel,
                            MidiInterface &,
-                           PedalsIO &);
+                           const PedalsIO &);
 
     private:
         enum class State
@@ -35,8 +36,6 @@ namespace kbd
             depressed = 1
         };
 
-        uint8_t number;
-        
         Function function;
 
         Contact contact{};

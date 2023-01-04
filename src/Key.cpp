@@ -9,9 +9,9 @@ namespace kbd
     void Key::sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                             const uint8_t midiChannel,
                             MidiInterface &midiInterface,
-                            KeyboardMatricesIO &keyboardMatrices)
+                            const KeyboardMatricesIO &keyboardMatricesIO)
     {
-        this->contacts.updateStateWithDebouncing(keyboardMatrices);
+        this->contacts.updateStateWithDebouncing(keyboardMatricesIO);
 
         const State actualState{getActualState()};
 

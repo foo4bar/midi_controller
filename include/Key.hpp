@@ -17,7 +17,7 @@ namespace kbd
         void sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                            const uint8_t midiChannel,
                            MidiInterface &,
-                           KeyboardMatricesIO &);
+                           const KeyboardMatricesIO &);
 
     private:
         enum class State

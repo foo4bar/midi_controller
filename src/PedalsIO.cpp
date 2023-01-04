@@ -2,12 +2,12 @@
 
 namespace kbd
 {
-    State PedalsIO::getActualInstantaneousInputState(const uint8_t pedalNumber) const
+    State PedalsIO::getActualInstantaneousInputState(const Pedal::Function pedalFuction) const
     {
-        return this->inputs[pedalNumber].getState();
+        return this->inputs.find(pedalFuction)->second.getState();
     }
 
-    PedalsIO::PedalsIO(const std::vector<Pin> &inputs) : inputs{inputs}
+    PedalsIO::PedalsIO(const std::map<Pedal::Function, Pin> &inputs) : inputs{inputs}
     {
     }
 }

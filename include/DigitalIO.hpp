@@ -2,6 +2,7 @@
 #define DigitalIO_hpp
 
 #include <map>
+#include <vector>
 
 #include <stdint.h>
 
@@ -41,10 +42,10 @@ namespace arduino::digital
         void doWithDisabledInterrupts(void (*function)(const Pin &)) const;
     };
 
-    class PinMap
+    class Pins
     {
     public:
-        void insert(const uint8_t pinNumber, const Pin pin);
+        explicit Pins(const std::map<Mode, std::vector<uint8_t>> &modeToPinMapping);
         Pin operator[](const uint8_t pinNumber) const;
 
     private:

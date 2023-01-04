@@ -2,31 +2,31 @@
 
 namespace kbd
 {
-    KeyboardMatricesIO::KeyboardMatricesIO(const std::vector<KeyboardMatrixIO> &keyboardMatrices) : keyboardMatrices{keyboardMatrices}
+    KeyboardMatricesIO::KeyboardMatricesIO(const std::vector<KeyboardMatrixIO> &keyboardMatricesIO) : keyboardMatricesIO{keyboardMatricesIO}
     {
     }
 
     uint8_t KeyboardMatricesIO::getNumberOfKeysBeingScanned() const
     {
-        return std::accumulate(this->keyboardMatrices.begin(),
-                               this->keyboardMatrices.end(),
+        return std::accumulate(this->keyboardMatricesIO.begin(),
+                               this->keyboardMatricesIO.end(),
                                0,
-                               [](uint8_t init, const KeyboardMatrixIO &keyboardMatrix)
-                               { return init + keyboardMatrix.getNumberOfKeysBeingScanned(); });
+                               [](uint8_t init, const KeyboardMatrixIO &keyboardMatrixIO)
+                               { return init + keyboardMatrixIO.getNumberOfKeysBeingScanned(); });
     }
 
-    arduino::digital::KeyInputStates KeyboardMatricesIO::getActualInstantaneousKeyInputStates(const uint8_t keyNumber)
+    arduino::digital::KeyInputStates KeyboardMatricesIO::getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const
     {
         uint8_t numberOfKeysBeingScannedByPreviousMatrices{};
-        for (const auto &keyboardMatrix : this->keyboardMatrices)
+        for (const auto &keyboardMatrixIO : this->keyboardMatricesIO)
         {
-            if (keyNumber < (keyboardMatrix.getNumberOfKeysBeingScanned() + numberOfKeysBeingScannedByPreviousMatrices))
+            if (keyNumber < (keyboardMatrixIO.getNumberOfKeysBeingScanned() + numberOfKeysBeingScannedByPreviousMatrices))
             {
-                return keyboardMatrix.getActualInstantaneousKeyInputStates(keyNumber - numberOfKeysBeingScannedByPreviousMatrices);
+                return keyboardMatrixIO.getActualInstantaneousKeyInputStates(keyNumber - numberOfKeysBeingScannedByPreviousMatrices);
             }
             else
             {
-                numberOfKeysBeingScannedByPreviousMatrices += keyboardMatrix.getNumberOfKeysBeingScanned();
+                numberOfKeysBeingScannedByPreviousMatrices += keyboardMatrixIO.getNumberOfKeysBeingScanned();
             }
         }
 

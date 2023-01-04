@@ -18,41 +18,22 @@ namespace kbd
     class KeyboardController
     {
     public:
-        class Builder
-        {
-        public:
-            uint8_t firstKeyMidiNoteNumber;
-            uint8_t midiChannel;
-            PedalsIO &pedalsIO;
-            KeyboardMatricesIO &keyboardMatrices;
-            MidiInterface &midiInterface;
-
-            auto build() const
-            {
-                return KeyboardController{this->firstKeyMidiNoteNumber,
-                                          this->midiChannel,
-                                          this->pedalsIO,
-                                          this->keyboardMatrices,
-                                          this->midiInterface};
-            }
-        };
+        KeyboardController(const PedalsIO &,
+                           const KeyboardMatricesIO &,
+                           MidiInterface &);
 
         void sendMidiEvents();
 
     private:
-        KeyboardController(const uint8_t firstKeyMidiNoteNumber,
-                           const uint8_t midiChannel,
-                           PedalsIO &,
-                           KeyboardMatricesIO &,
-                           MidiInterface &);
-
-        uint8_t firstKeyMidiNoteNumber;
-        uint8_t midiChannel;
-        PedalsIO &pedalsIO;
-        KeyboardMatricesIO &keyboardMatrices;
+        uint8_t firstKeyMidiNoteNumber{21};
+        uint8_t midiChannel{1};
+        const PedalsIO &pedalsIO;
+        const KeyboardMatricesIO &keyboardMatricesIO;
         MidiInterface &midiInterface;
 
-        std::vector<Pedal> pedals;
+        std::vector<Pedal> pedals{Pedal{Pedal::Function::soft},
+                                  Pedal{Pedal::Function::sostenuto},
+                                  Pedal{Pedal::Function::sustain}};
 
         std::vector<Key> keys;
     };

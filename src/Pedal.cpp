@@ -1,17 +1,17 @@
 #include "Pedal.hpp"
+#include "PedalsIO.hpp"
 
 namespace kbd
 {
-    Pedal::Pedal(const uint8_t number, const Function function) : number{number},
-                                                                  function{function}
+    Pedal::Pedal(const Function function) : function{function}
     {
     }
 
     void Pedal::sendMidiEvent(const uint8_t midiChannel,
                               MidiInterface &midiInterface,
-                              PedalsIO &pedalIO)
+                              const PedalsIO &pedalIO)
     {
-        this->contact.updateStateWithDebouncing(pedalIO.getActualInstantaneousInputState(this->number));
+        this->contact.updateStateWithDebouncing(pedalIO.getActualInstantaneousInputState(this->function));
 
         const State actualState{getActualState()};
 

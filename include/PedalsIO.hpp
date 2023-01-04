@@ -1,9 +1,10 @@
 #ifndef PedalsIO_hpp
 #define PedalsIO_hpp
 
-#include <vector>
+#include <map>
 
 #include "DigitalIO.hpp"
+#include "Pedal.hpp"
 
 namespace kbd
 {
@@ -12,12 +13,12 @@ namespace kbd
     class PedalsIO
     {
     public:
-        PedalsIO(const std::vector<Pin> &inputs);
+        explicit PedalsIO(const std::map<Pedal::Function, Pin> &inputs);
 
-        State getActualInstantaneousInputState(const uint8_t pedalNumber) const;
+        State getActualInstantaneousInputState(const Pedal::Function) const;
 
     private:
-        const std::vector<Pin> inputs;
+        const std::map<Pedal::Function, Pin> inputs;
     };
 }
 

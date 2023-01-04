@@ -75,12 +75,26 @@ namespace arduino::digital
         SREG = oldSREG;
     }
 
-    void PinMap::insert(const uint8_t pinNumber, const Pin pin)
+    Pins::Pins(const std::map<Mode, std::vector<uint8_t>> &modeToPinMapping)
     {
-        this->pins.insert({pinNumber, pin});
+        for (const auto &[mode, pinNumbers] : modeToPinMapping)
+        {
+            for (const uint8_t pinNumber : pinNumbers)
+            {
+                const Pin pin{pinNumber};
+                pin.setMode(mode);
+
+                if (mode == Mode::output)
+                {
+                    pin.setState(State::high);
+                }
+
+                this->pins.insert({pinNumber, pin});
+            }
+        }
     }
 
-    Pin PinMap::operator[](const uint8_t pinNumber) const
+    Pin Pins::operator[](const uint8_t pinNumber) const
     {
         return this->pins.find(pinNumber)->second;
     }
