@@ -19,9 +19,13 @@
 using namespace kbd;
 using namespace arduino::digital;
 
+using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
+
 void initAvrStubDebug();
 void attachUsbDevice();
 KeyboardMatricesIO initKeyboardMatricesIO(const Pins &);
+MidiInterface initMidiInterface();
+MidiInterface createMidiInterface(HardwareSerial &);
 void sendMidiEvents(KeyboardController &);
 void serialEventSafeRun();
 
@@ -31,21 +35,14 @@ int main()
     initAvrStubDebug();
     attachUsbDevice();
 
-// For some reason this cannot be extracted to a function returning MIDI. This works either globally or right here in main().
-#ifdef AVR_STUB_DEBUG
-    MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI)
-#else
-    MIDI_CREATE_DEFAULT_INSTANCE()
-    MIDI.begin(MIDI_CHANNEL_OMNI);
-#endif
-
     const Pins pins{{{Mode::output, {50, 52, 46, 48, 42, 44, 38, 40, 37, 36, 32, 34, 28, 30, 24, 26, 2, 22, 6, 4, 5, 7}},
                      {Mode::inputWithInternalPullUp, {53, 51, 49, 47, 45, 43, 41, 39, 35, 33, 31, 29, 27, 25, 23, 3, 8, 9, 10}}}};
     const PedalsIO pedalsIO{{{Pedal::Function::soft, pins[8]},
                              {Pedal::Function::sostenuto, pins[9]},
                              {Pedal::Function::sustain, pins[10]}}};
     const auto keyboardMatricesIO{initKeyboardMatricesIO(pins)};
-    KeyboardController controller{pedalsIO, keyboardMatricesIO, MIDI};    
+    auto midiInterface{initMidiInterface()};
+    KeyboardController controller{pedalsIO, keyboardMatricesIO, midiInterface};
 
     sendMidiEvents(controller);
     serialEventSafeRun();
@@ -85,6 +82,25 @@ KeyboardMatricesIO initKeyboardMatricesIO(const Pins &pins)
                                             {.firstActuatedContactOutput{pins[5]}, .lastActuatedContactOutput{pins[7]}}},
                                    .inputs{{pins[35], pins[33], pins[31], pins[29], pins[27], pins[25], pins[23], pins[3]}}}
                                    .build()}};
+}
+
+MidiInterface initMidiInterface()
+{
+#ifdef AVR_STUB_DEBUG
+    auto midiInterface{createMidiInterface(Serial1)};
+#else
+    auto midiInterface{createMidiInterface(Serial)};
+    midiInterface.begin(MIDI_CHANNEL_OMNI);
+#endif
+
+    return midiInterface;
+}
+
+MidiInterface createMidiInterface(HardwareSerial &hardwareSerial)
+{
+    static midi::SerialMIDI<HardwareSerial> serialMidi{hardwareSerial};
+
+    return MidiInterface{serialMidi};
 }
 
 void sendMidiEvents(KeyboardController &keyboardController)
