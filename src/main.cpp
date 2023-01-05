@@ -1,16 +1,15 @@
-#include <map>
-#include <vector>
 
-#include <stdint.h>
-
-#include <Arduino.h>
 #include <MIDI.h>
+
+#ifdef CYCLE_TIME_DEBUG_MESSAGES
+#include <Arduino.h>
+#endif
 
 #ifdef AVR_STUB_DEBUG
 #include <avr8-stub.h>
 #endif
 
-#include "KeyboardMatricesIO.hpp"
+#include "IOMatrices.hpp"
 #include "KeyboardController.hpp"
 #include "DigitalIO.hpp"
 #include "PedalsIO.hpp"
@@ -23,7 +22,7 @@ using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
 
 void initAvrStubDebug();
 void attachUsbDevice();
-KeyboardMatricesIO initKeyboardMatricesIO(const Pins &);
+IOMatrices initIOMatrices(const Pins &);
 MidiInterface initMidiInterface();
 MidiInterface createMidiInterface(HardwareSerial &);
 void sendMidiEvents(KeyboardController &);
@@ -40,9 +39,9 @@ int main()
     const PedalsIO pedalsIO{{{Pedal::Function::soft, pins[8]},
                              {Pedal::Function::sostenuto, pins[9]},
                              {Pedal::Function::sustain, pins[10]}}};
-    const auto keyboardMatricesIO{initKeyboardMatricesIO(pins)};
+    const auto ioMatrices{initIOMatrices(pins)};
     auto midiInterface{initMidiInterface()};
-    KeyboardController controller{pedalsIO, keyboardMatricesIO, midiInterface};
+    KeyboardController controller{pedalsIO, ioMatrices, midiInterface};
 
     sendMidiEvents(controller);
     serialEventSafeRun();
@@ -63,25 +62,25 @@ void attachUsbDevice()
 #endif
 }
 
-KeyboardMatricesIO initKeyboardMatricesIO(const Pins &pins)
+IOMatrices initIOMatrices(const Pins &pins)
 {
-    return KeyboardMatricesIO{{KeyboardMatrixIO::Builder{
-                                   .outputs{{.firstActuatedContactOutput{pins[50]}, .lastActuatedContactOutput{pins[52]}},
-                                            {.firstActuatedContactOutput{pins[46]}, .lastActuatedContactOutput{pins[48]}},
-                                            {.firstActuatedContactOutput{pins[42]}, .lastActuatedContactOutput{pins[44]}},
-                                            {.firstActuatedContactOutput{pins[38]}, .lastActuatedContactOutput{pins[40]}},
-                                            {.firstActuatedContactOutput{pins[37]}, .lastActuatedContactOutput{pins[36]}},
-                                            {.firstActuatedContactOutput{pins[32]}, .lastActuatedContactOutput{pins[34]}}},
-                                   .inputs{{pins[53], pins[51], pins[49], pins[47], pins[45], pins[43], pins[41], pins[39]}}}
-                                   .build(),
-                               KeyboardMatrixIO::Builder{
-                                   .outputs{{.firstActuatedContactOutput{pins[28]}, .lastActuatedContactOutput{pins[30]}},
-                                            {.firstActuatedContactOutput{pins[24]}, .lastActuatedContactOutput{pins[26]}},
-                                            {.firstActuatedContactOutput{pins[2]}, .lastActuatedContactOutput{pins[22]}},
-                                            {.firstActuatedContactOutput{pins[6]}, .lastActuatedContactOutput{pins[4]}},
-                                            {.firstActuatedContactOutput{pins[5]}, .lastActuatedContactOutput{pins[7]}}},
-                                   .inputs{{pins[35], pins[33], pins[31], pins[29], pins[27], pins[25], pins[23], pins[3]}}}
-                                   .build()}};
+    return IOMatrices{{IOMatrix::Builder{
+                           .keyGroupsOutputs{{.firstActuatedKeysContactsOutput{pins[50]}, .lastActuatedKeysContactsOutput{pins[52]}},
+                                             {.firstActuatedKeysContactsOutput{pins[46]}, .lastActuatedKeysContactsOutput{pins[48]}},
+                                             {.firstActuatedKeysContactsOutput{pins[42]}, .lastActuatedKeysContactsOutput{pins[44]}},
+                                             {.firstActuatedKeysContactsOutput{pins[38]}, .lastActuatedKeysContactsOutput{pins[40]}},
+                                             {.firstActuatedKeysContactsOutput{pins[37]}, .lastActuatedKeysContactsOutput{pins[36]}},
+                                             {.firstActuatedKeysContactsOutput{pins[32]}, .lastActuatedKeysContactsOutput{pins[34]}}},
+                           .keysInputs{{pins[53], pins[51], pins[49], pins[47], pins[45], pins[43], pins[41], pins[39]}}}
+                           .build(),
+                       IOMatrix::Builder{
+                           .keyGroupsOutputs{{.firstActuatedKeysContactsOutput{pins[28]}, .lastActuatedKeysContactsOutput{pins[30]}},
+                                             {.firstActuatedKeysContactsOutput{pins[24]}, .lastActuatedKeysContactsOutput{pins[26]}},
+                                             {.firstActuatedKeysContactsOutput{pins[2]}, .lastActuatedKeysContactsOutput{pins[22]}},
+                                             {.firstActuatedKeysContactsOutput{pins[6]}, .lastActuatedKeysContactsOutput{pins[4]}},
+                                             {.firstActuatedKeysContactsOutput{pins[5]}, .lastActuatedKeysContactsOutput{pins[7]}}},
+                           .keysInputs{{pins[35], pins[33], pins[31], pins[29], pins[27], pins[25], pins[23], pins[3]}}}
+                           .build()}};
 }
 
 MidiInterface initMidiInterface()
@@ -98,7 +97,9 @@ MidiInterface initMidiInterface()
 
 MidiInterface createMidiInterface(HardwareSerial &hardwareSerial)
 {
-    static midi::SerialMIDI<HardwareSerial> serialMidi{hardwareSerial};
+    static midi::SerialMIDI<HardwareSerial> serialMidi{hardwareSerial}; // It's used _by_reference_ by the MidiInterface 
+                                                                        // instance created below.
+                                                                        // Thus, it has to be static to be not destroyed.
 
     return MidiInterface{serialMidi};
 }

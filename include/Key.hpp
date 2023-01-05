@@ -17,7 +17,7 @@ namespace kbd
         void sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                            const uint8_t midiChannel,
                            MidiInterface &,
-                           const KeyboardMatricesIO &);
+                           const IOMatrices &);
 
     private:
         enum class State
@@ -27,9 +27,9 @@ namespace kbd
             moving = 2
         };
 
-        static inline constexpr uint8_t maxManipulationTimeMillis{250}; //TODO double check
-        static inline constexpr uint8_t minVelocity{8};                 //pppp
-        static inline constexpr uint8_t maxVelocity{127};               //ffff
+        static inline constexpr uint8_t maxManipulationTimeMillis{250}; // TODO double check
+        static inline constexpr uint8_t minVelocity{8};                 // pppp
+        static inline constexpr uint8_t maxVelocity{127};               // ffff
         static inline constexpr uint8_t defaultVelocity{64};
 
         static inline constexpr double slope{static_cast<double>(minVelocity - maxVelocity) / maxManipulationTimeMillis};

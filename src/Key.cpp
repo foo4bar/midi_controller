@@ -9,15 +9,15 @@ namespace kbd
     void Key::sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                             const uint8_t midiChannel,
                             MidiInterface &midiInterface,
-                            const KeyboardMatricesIO &keyboardMatricesIO)
+                            const IOMatrices &ioMatrices)
     {
-        this->contacts.updateStateWithDebouncing(keyboardMatricesIO);
+        this->contacts.updateStateWithDebouncing(ioMatrices);
 
         const State actualState{getActualState()};
 
         if (actualState == State::moving || this->previousState == actualState)
         {
-            //Do nothing.
+            // Do nothing.
         }
         else
         {

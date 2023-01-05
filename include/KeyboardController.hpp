@@ -7,7 +7,7 @@
 
 #include "Key.hpp"
 #include "Pedal.hpp"
-#include "KeyboardMatricesIO.hpp"
+#include "IOMatrices.hpp"
 
 namespace kbd
 {
@@ -19,16 +19,16 @@ namespace kbd
     {
     public:
         KeyboardController(const PedalsIO &,
-                           const KeyboardMatricesIO &,
+                           const IOMatrices &,
                            MidiInterface &);
 
         void sendMidiEvents();
 
     private:
-        uint8_t firstKeyMidiNoteNumber{21};
-        uint8_t midiChannel{1};
+        static inline constexpr uint8_t firstKeyMidiNoteNumber{21};
+        static inline constexpr uint8_t midiChannel{1};
         const PedalsIO &pedalsIO;
-        const KeyboardMatricesIO &keyboardMatricesIO;
+        const IOMatrices &ioMatrices;
         MidiInterface &midiInterface;
 
         std::vector<Pedal> pedals{Pedal{Pedal::Function::soft},

@@ -6,11 +6,11 @@ namespace kbd
     {
     }
 
-    void KeyContacts::updateStateWithDebouncing(const KeyboardMatricesIO &keyboardMatricesIO)
+    void KeyContacts::updateStateWithDebouncing(const IOMatrices &ioMatrices)
     {
-        const auto inputStatePair{keyboardMatricesIO.getActualInstantaneousKeyInputStates(this->number)};
-        this->firstActuated.updateStateWithDebouncing(inputStatePair.withFirstActuatedContactOutput);
-        this->lastActuated.updateStateWithDebouncing(inputStatePair.withLastActuatedContactOutput);
+        const auto inputStatePair{ioMatrices.getActualInstantaneousKeyInputStates(this->number)};
+        this->firstActuated.updateStateWithDebouncing(inputStatePair.withFirstActuatedKeyContactOutput);
+        this->lastActuated.updateStateWithDebouncing(inputStatePair.withLastActuatedKeyContactOutput);
     }
 
     unsigned long KeyContacts::getKeyPressingTimeMillis() const

@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #include "Contact.hpp"
-#include "KeyboardMatricesIO.hpp"
+#include "IOMatrices.hpp"
 
 namespace kbd
 {
@@ -13,7 +13,7 @@ namespace kbd
     public:
         explicit KeyContacts(const uint8_t number);
 
-        void updateStateWithDebouncing(const KeyboardMatricesIO &);
+        void updateStateWithDebouncing(const IOMatrices &);
 
         unsigned long getKeyPressingTimeMillis() const;
 

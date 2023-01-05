@@ -54,14 +54,14 @@ namespace arduino::digital
 
     struct KeyInputStates
     {
-        State withFirstActuatedContactOutput{State::high};
-        State withLastActuatedContactOutput{State::high};
+        State withFirstActuatedKeyContactOutput{State::high};
+        State withLastActuatedKeyContactOutput{State::high};
     };
 
     struct KeyGroupOutputs
     {
-        Pin firstActuatedContactOutput;
-        Pin lastActuatedContactOutput;
+        Pin firstActuatedKeysContactsOutput;
+        Pin lastActuatedKeysContactsOutput;
     };
 }
 

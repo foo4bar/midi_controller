@@ -3,13 +3,13 @@
 namespace kbd
 {
     KeyboardController::KeyboardController(const PedalsIO &pedalsIO,
-                                           const KeyboardMatricesIO &keyboardMatricesIO,
+                                           const IOMatrices &ioMatrices,
                                            MidiInterface &midiInterface) : pedalsIO{pedalsIO},
-                                                                           keyboardMatricesIO{keyboardMatricesIO},
+                                                                           ioMatrices{ioMatrices},
                                                                            midiInterface{midiInterface}
 
     {
-        for (uint8_t keyNumber{0}; keyNumber < keyboardMatricesIO.getNumberOfKeysBeingScanned(); ++keyNumber)
+        for (uint8_t keyNumber{0}; keyNumber < ioMatrices.getNumberOfKeysBeingScanned(); ++keyNumber)
         {
             this->keys.push_back(Key{keyNumber});
         }
@@ -29,7 +29,7 @@ namespace kbd
             key.sendMidiEvent(this->firstKeyMidiNoteNumber,
                               this->midiChannel,
                               this->midiInterface,
-                              this->keyboardMatricesIO);
+                              this->ioMatrices);
         }
     }
 }
