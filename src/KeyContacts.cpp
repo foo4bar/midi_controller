@@ -2,15 +2,10 @@
 
 namespace kbd
 {
-    KeyContacts::KeyContacts(const uint8_t number) : number{number}
+    void KeyContacts::updateStateWithDebouncing(const arduino::digital::KeyInputStates &keyInputStates)
     {
-    }
-
-    void KeyContacts::updateStateWithDebouncing(const IOMatrices &ioMatrices)
-    {
-        const auto inputStatePair{ioMatrices.getActualInstantaneousKeyInputStates(this->number)};
-        this->firstActuated.updateStateWithDebouncing(inputStatePair.withFirstActuatedKeyContactOutput);
-        this->lastActuated.updateStateWithDebouncing(inputStatePair.withLastActuatedKeyContactOutput);
+        this->firstActuated.updateStateWithDebouncing(keyInputStates.withFirstActuatedKeyContactOutput);
+        this->lastActuated.updateStateWithDebouncing(keyInputStates.withLastActuatedKeyContactOutput);
     }
 
     unsigned long KeyContacts::getKeyPressingTimeMillis() const

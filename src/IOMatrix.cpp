@@ -1,6 +1,6 @@
 #include "IOMatrix.hpp"
 
-namespace kbd
+namespace arduino::digital
 {
     IOMatrix IOMatrix::Builder::build() const
     {

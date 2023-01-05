@@ -2,18 +2,16 @@
 
 namespace kbd
 {
-    Key::Key(const uint8_t number) : number{number}, contacts{KeyContacts{number}}
+    void Key::updateContactsState(const arduino::digital::KeyInputStates &keyInputStates)
     {
+        this->contacts.updateStateWithDebouncing(keyInputStates);
     }
 
-    void Key::sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
+    void Key::sendMidiEvent(const uint8_t midiNoteNumber,
                             const uint8_t midiChannel,
-                            MidiInterface &midiInterface,
-                            const IOMatrices &ioMatrices)
+                            MidiInterface &midiInterface)
     {
-        this->contacts.updateStateWithDebouncing(ioMatrices);
-
-        const State actualState{getActualState()};
+        const auto actualState{getActualState()};
 
         if (actualState == State::moving || this->previousState == actualState)
         {
@@ -22,7 +20,7 @@ namespace kbd
         else
         {
 #if !defined(AVR_STUB_DEBUG) && !defined(CONTACT_EVENTS_DEBUG_MESSAGES)
-            doSendMidiEvent(firstKeyMidiNoteNumber,
+            doSendMidiEvent(midiNoteNumber,
                             midiChannel,
                             midiInterface,
                             actualState);
@@ -56,22 +54,20 @@ namespace kbd
         }
     }
 
-    void Key::doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
+    void Key::doSendMidiEvent(const uint8_t midiNoteNumber,
                               const uint8_t midiChannel,
                               MidiInterface &midiInterface,
                               const State actualState)
     {
-        const uint8_t noteNumber = this->number + firstKeyMidiNoteNumber;
-
         switch (actualState)
         {
         case State::depressed:
-            midiInterface.sendNoteOn(noteNumber, this->velocity, midiChannel);
+            midiInterface.sendNoteOn(midiNoteNumber, this->velocity, midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             char buffer[10];
             Serial.write("ON: note=");
-            Serial.write(itoa(noteNumber, buffer, 10));
+            Serial.write(itoa(midiNoteNumber, buffer, 10));
             Serial.write(", vel=");
             Serial.write(itoa(this->velocity, buffer, 10));
             Serial.write(", time=");
@@ -83,11 +79,11 @@ namespace kbd
             break;
 
         case State::released:
-            midiInterface.sendNoteOff(noteNumber, defaultVelocity, midiChannel);
+            midiInterface.sendNoteOff(midiNoteNumber, defaultVelocity, midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             Serial.write("OFF: note=");
-            Serial.write(itoa(noteNumber, buffer, 10));
+            Serial.write(itoa(midiNoteNumber, buffer, 10));
             Serial.write("\n");
 #endif
 

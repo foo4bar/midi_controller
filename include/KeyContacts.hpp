@@ -11,9 +11,7 @@ namespace kbd
     class KeyContacts
     {
     public:
-        explicit KeyContacts(const uint8_t number);
-
-        void updateStateWithDebouncing(const IOMatrices &);
+        void updateStateWithDebouncing(const arduino::digital::KeyInputStates &);
 
         unsigned long getKeyPressingTimeMillis() const;
 
@@ -22,11 +20,8 @@ namespace kbd
         bool isAsKeyIsReleased() const;
 
     private:
-        uint8_t number;
-
         // One of contacts is actuated first when a corresponding key is just pressed down a bit,
         // another one is actuated last when the key is almost fully depressed.
-
         Contact firstActuated{Contact{[]()
                                       {
                                           return "first, ";

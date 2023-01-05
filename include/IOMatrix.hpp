@@ -20,10 +20,8 @@
 
 #include "DigitalIO.hpp"
 
-namespace kbd
+namespace arduino::digital
 {
-    using namespace arduino::digital;
-
     class IOMatrix
     {
     public:

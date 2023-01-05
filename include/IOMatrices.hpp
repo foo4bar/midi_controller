@@ -9,7 +9,7 @@
 #include "DigitalIO.hpp"
 #include "IOMatrix.hpp"
 
-namespace kbd
+namespace arduino::digital
 {
     class IOMatrices
     {
@@ -18,11 +18,13 @@ namespace kbd
 
         uint8_t getNumberOfKeysBeingScanned() const;
 
-        arduino::digital::KeyInputStates getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const;
+        std::vector<KeyInputStates> getActualInstantaneousKeysInputStates() const;
 
     private:
         std::vector<IOMatrix> ioMatrices;
         uint8_t numberOfKeysBeingScanned;
+
+        KeyInputStates getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const;
     };
 }
 

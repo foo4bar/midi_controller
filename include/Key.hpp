@@ -12,12 +12,10 @@ namespace kbd
     class Key
     {
     public:
-        explicit Key(const uint8_t);
-
+        void updateContactsState(const arduino::digital::KeyInputStates &);
         void sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                            const uint8_t midiChannel,
-                           MidiInterface &,
-                           const IOMatrices &);
+                           MidiInterface &);
 
     private:
         enum class State
@@ -33,8 +31,6 @@ namespace kbd
         static inline constexpr uint8_t defaultVelocity{64};
 
         static inline constexpr double slope{static_cast<double>(minVelocity - maxVelocity) / maxManipulationTimeMillis};
-
-        uint8_t number;
 
         // Each key operates a pair of contacts.
         // One of them is closed first when a corresponding key starts to be pressed,

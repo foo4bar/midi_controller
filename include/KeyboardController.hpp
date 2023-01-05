@@ -7,19 +7,20 @@
 
 #include "Key.hpp"
 #include "Pedal.hpp"
+#include "Contact.hpp"
+#include "KeyContacts.hpp"
 #include "IOMatrices.hpp"
+#include "PedalsIO.hpp"
 
 namespace kbd
 {
-    class Key;
-
     using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
 
     class KeyboardController
     {
     public:
         KeyboardController(const PedalsIO &,
-                           const IOMatrices &,
+                           const arduino::digital::IOMatrices &,
                            MidiInterface &);
 
         void sendMidiEvents();
@@ -28,14 +29,17 @@ namespace kbd
         static inline constexpr uint8_t firstKeyMidiNoteNumber{21};
         static inline constexpr uint8_t midiChannel{1};
         const PedalsIO &pedalsIO;
-        const IOMatrices &ioMatrices;
+        const arduino::digital::IOMatrices &ioMatrices;
         MidiInterface &midiInterface;
 
         std::vector<Pedal> pedals{Pedal{Pedal::Function::soft},
                                   Pedal{Pedal::Function::sostenuto},
                                   Pedal{Pedal::Function::sustain}};
+        std::vector<Contact> pedalsContacts{this->pedals.size()};
 
         std::vector<Key> keys;
+
+        void updateKeysContactsState(const std::vector<KeyInputStates> &);
     };
 
 }

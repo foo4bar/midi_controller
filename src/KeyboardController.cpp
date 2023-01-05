@@ -3,16 +3,13 @@
 namespace kbd
 {
     KeyboardController::KeyboardController(const PedalsIO &pedalsIO,
-                                           const IOMatrices &ioMatrices,
+                                           const arduino::digital::IOMatrices &ioMatrices,
                                            MidiInterface &midiInterface) : pedalsIO{pedalsIO},
                                                                            ioMatrices{ioMatrices},
-                                                                           midiInterface{midiInterface}
+                                                                           midiInterface{midiInterface},
+                                                                           keys{std::vector<Key>{ioMatrices.getNumberOfKeysBeingScanned()}}
 
     {
-        for (uint8_t keyNumber{0}; keyNumber < ioMatrices.getNumberOfKeysBeingScanned(); ++keyNumber)
-        {
-            this->keys.push_back(Key{keyNumber});
-        }
     }
 
     void KeyboardController::sendMidiEvents()
@@ -24,12 +21,14 @@ namespace kbd
                                 this->pedalsIO);
         }
 
-        for (auto &key : this->keys)
+        const auto keysInputStates{this->ioMatrices.getActualInstantaneousKeysInputStates()};
+
+        for (uint8_t keyNumber{0}; keyNumber < ioMatrices.getNumberOfKeysBeingScanned(); ++keyNumber)
         {
-            key.sendMidiEvent(this->firstKeyMidiNoteNumber,
-                              this->midiChannel,
-                              this->midiInterface,
-                              this->ioMatrices);
+            this->keys[keyNumber].updateContactsState(keysInputStates[keyNumber]);
+            this->keys[keyNumber].sendMidiEvent(this->firstKeyMidiNoteNumber + keyNumber,
+                                                this->midiChannel,
+                                                this->midiInterface);
         }
     }
 }

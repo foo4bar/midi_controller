@@ -1,6 +1,6 @@
 #include "IOMatrices.hpp"
 
-namespace kbd
+namespace arduino::digital
 {
     IOMatrices::IOMatrices(const std::vector<IOMatrix> &ioMatrices) : ioMatrices{ioMatrices}
     {
@@ -17,7 +17,19 @@ namespace kbd
         return this->numberOfKeysBeingScanned;
     }
 
-    arduino::digital::KeyInputStates IOMatrices::getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const
+    std::vector<KeyInputStates> IOMatrices::getActualInstantaneousKeysInputStates() const
+    {
+        std::vector<KeyInputStates> keysInputStates;
+
+        for (uint8_t keyNumber{0}; keyNumber < this->numberOfKeysBeingScanned; ++keyNumber)
+        {
+            keysInputStates.push_back(this->getActualInstantaneousKeyInputStates(keyNumber));
+        }
+
+        return keysInputStates;
+    }
+
+    KeyInputStates IOMatrices::getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const
     {
         uint8_t numberOfKeysBeingScannedByPreviousMatrices{};
         for (const auto &ioMatrix : this->ioMatrices)
@@ -32,6 +44,6 @@ namespace kbd
             }
         }
 
-        return arduino::digital::KeyInputStates{};
+        return KeyInputStates{};
     }
 }
