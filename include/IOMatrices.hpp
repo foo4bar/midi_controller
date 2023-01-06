@@ -18,13 +18,11 @@ namespace arduino::digital
 
         uint8_t getNumberOfKeysBeingScanned() const;
 
-        std::vector<KeyInputStates> getActualInstantaneousKeysInputStates() const;
+        std::vector<KeyInputStates> getActualInstantaneousKeysInputsStates() const;
 
     private:
         std::vector<IOMatrix> ioMatrices;
         uint8_t numberOfKeysBeingScanned;
-
-        KeyInputStates getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const;
     };
 }
 

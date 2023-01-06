@@ -4,6 +4,7 @@
 #include <MIDI.h>
 
 #include "KeyContacts.hpp"
+#include "DigitalIO.hpp"
 
 namespace kbd
 {
@@ -12,10 +13,10 @@ namespace kbd
     class Key
     {
     public:
-        void updateContactsState(const arduino::digital::KeyInputStates &);
         void sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
                            const uint8_t midiChannel,
-                           MidiInterface &);
+                           MidiInterface &,
+                           const arduino::digital::KeyInputStates &);
 
     private:
         enum class State

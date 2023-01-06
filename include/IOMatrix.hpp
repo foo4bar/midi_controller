@@ -2,17 +2,21 @@
 #define IOMatrix_hpp
 
 #define NOP __asm__ __volatile__("nop\n\t")
-#define NOP_2_TIMES \
-    NOP;            \
+#define WAIT_FOR_STEADY_STATE \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
+    NOP;                      \
     NOP
-#define NOP_14_TIMES \
-    NOP_2_TIMES;     \
-    NOP_2_TIMES;     \
-    NOP_2_TIMES;     \
-    NOP_2_TIMES;     \
-    NOP_2_TIMES;     \
-    NOP_2_TIMES;     \
-    NOP_2_TIMES
 
 #include <vector>
 
@@ -34,7 +38,7 @@ namespace arduino::digital
             IOMatrix build() const;
         };
 
-        KeyInputStates getActualInstantaneousKeyInputStates(const uint8_t contactPairNumber) const;
+        std::vector<KeyInputStates> getActualInstantaneousKeysInputsStates() const;
 
         uint8_t getNumberOfKeysBeingScanned() const;
 
@@ -47,8 +51,6 @@ namespace arduino::digital
 
         IOMatrix(const std::vector<KeyGroupOutputs> &keyGroupsOutputs,
                  const std::vector<Pin> &keysInputs);
-
-        State getInputState(const Pin &outputToBounce, const Pin &inputToCheck) const;
     };
 }
 

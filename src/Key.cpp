@@ -2,15 +2,12 @@
 
 namespace kbd
 {
-    void Key::updateContactsState(const arduino::digital::KeyInputStates &keyInputStates)
-    {
-        this->contacts.updateStateWithDebouncing(keyInputStates);
-    }
-
     void Key::sendMidiEvent(const uint8_t midiNoteNumber,
                             const uint8_t midiChannel,
-                            MidiInterface &midiInterface)
+                            MidiInterface &midiInterface,
+                            const arduino::digital::KeyInputStates &keyInputStates)
     {
+        this->contacts.updateStateWithDebouncing(keyInputStates);
         const auto actualState{getActualState()};
 
         if (actualState == State::moving || this->previousState == actualState)

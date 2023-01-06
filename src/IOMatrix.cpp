@@ -8,17 +8,43 @@ namespace arduino::digital
                         this->keysInputs);
     }
 
-    KeyInputStates IOMatrix::getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const
+    std::vector<KeyInputStates> IOMatrix::getActualInstantaneousKeysInputsStates() const
     {
-        const auto outputNumber{static_cast<uint8_t>(keyNumber / this->numberOfInputs)};
-        const auto &firstClosedKeyContactOutput{this->keyGroupsOutputs[outputNumber].firstActuatedKeysContactsOutput};
-        const auto &lastClosedKeyContactOutput{this->keyGroupsOutputs[outputNumber].lastActuatedKeysContactsOutput};
+        std::vector<KeyInputStates> keysInputsStates{};
 
-        const auto inputNumber{static_cast<uint8_t>(keyNumber % this->numberOfInputs)};
-        const auto &input{this->keysInputs[inputNumber]};
+        for (const auto &keyGroupOutputs : this->keyGroupsOutputs)
+        {
+            keyGroupOutputs.firstActuatedKeysContactsOutput.setState(State::low);
+            WAIT_FOR_STEADY_STATE; // The longer wires connecting contacts with MCU are, the longer waiting time is.
 
-        return KeyInputStates{getInputState(firstClosedKeyContactOutput, input),
-                              getInputState(lastClosedKeyContactOutput, input)};
+            std::vector<State> inputsStatesWithFirstActuatedKeysContactsOutput{};
+            for (const auto &keyInput : this->keysInputs)
+            {
+                inputsStatesWithFirstActuatedKeysContactsOutput.push_back(keyInput.getState());
+            }
+
+            keyGroupOutputs.firstActuatedKeysContactsOutput.setState(State::high);
+            WAIT_FOR_STEADY_STATE;
+            keyGroupOutputs.lastActuatedKeysContactsOutput.setState(State::low);
+            WAIT_FOR_STEADY_STATE;
+
+            std::vector<State> inputsStatesWithLastActuatedKeysContactsOutput{};
+            for (const auto &keyInput : this->keysInputs)
+            {
+                inputsStatesWithLastActuatedKeysContactsOutput.push_back(keyInput.getState());
+            }
+
+            keyGroupOutputs.lastActuatedKeysContactsOutput.setState(State::high);
+            WAIT_FOR_STEADY_STATE;
+
+            for (uint8_t keyInputNumber{0}; keyInputNumber < this->numberOfInputs; ++keyInputNumber)
+            {
+                keysInputsStates.push_back({inputsStatesWithFirstActuatedKeysContactsOutput[keyInputNumber],
+                                            inputsStatesWithLastActuatedKeysContactsOutput[keyInputNumber]});
+            }
+        }
+
+        return keysInputsStates;
     }
 
     uint8_t IOMatrix::getNumberOfKeysBeingScanned() const
@@ -32,18 +58,5 @@ namespace arduino::digital
                                                              numberOfInputs{static_cast<uint8_t>(keysInputs.size())},
                                                              numberOfKeysBeingScanned{static_cast<uint8_t>(keysInputs.size() * keyGroupsOutputs.size())}
     {
-    }
-
-    State IOMatrix::getInputState(const Pin &outputToBounce, const Pin &inputToCheck) const
-    {
-        outputToBounce.setState(State::low);
-        NOP_14_TIMES;
-
-        const auto result{inputToCheck.getState()};
-
-        outputToBounce.setState(State::high);
-        NOP_14_TIMES;
-
-        return result;
     }
 }

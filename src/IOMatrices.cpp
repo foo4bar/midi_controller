@@ -17,33 +17,18 @@ namespace arduino::digital
         return this->numberOfKeysBeingScanned;
     }
 
-    std::vector<KeyInputStates> IOMatrices::getActualInstantaneousKeysInputStates() const
+    std::vector<KeyInputStates> IOMatrices::getActualInstantaneousKeysInputsStates() const
     {
-        std::vector<KeyInputStates> keysInputStates;
+        std::vector<KeyInputStates> keysInputStates{};
 
-        for (uint8_t keyNumber{0}; keyNumber < this->numberOfKeysBeingScanned; ++keyNumber)
+        for (const auto &ioMatrix : this->ioMatrices)
         {
-            keysInputStates.push_back(this->getActualInstantaneousKeyInputStates(keyNumber));
+            const auto actualInstantaneousKeysInputsStates{ioMatrix.getActualInstantaneousKeysInputsStates()};
+            keysInputStates.insert(keysInputStates.end(),
+                                   actualInstantaneousKeysInputsStates.begin(),
+                                   actualInstantaneousKeysInputsStates.end());
         }
 
         return keysInputStates;
-    }
-
-    KeyInputStates IOMatrices::getActualInstantaneousKeyInputStates(const uint8_t keyNumber) const
-    {
-        uint8_t numberOfKeysBeingScannedByPreviousMatrices{};
-        for (const auto &ioMatrix : this->ioMatrices)
-        {
-            if (keyNumber < (ioMatrix.getNumberOfKeysBeingScanned() + numberOfKeysBeingScannedByPreviousMatrices))
-            {
-                return ioMatrix.getActualInstantaneousKeyInputStates(keyNumber - numberOfKeysBeingScannedByPreviousMatrices);
-            }
-            else
-            {
-                numberOfKeysBeingScannedByPreviousMatrices += ioMatrix.getNumberOfKeysBeingScanned();
-            }
-        }
-
-        return KeyInputStates{};
     }
 }

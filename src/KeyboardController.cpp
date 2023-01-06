@@ -21,14 +21,14 @@ namespace kbd
                                 this->pedalsIO);
         }
 
-        const auto keysInputStates{this->ioMatrices.getActualInstantaneousKeysInputStates()};
+        const auto keysInputsStates{this->ioMatrices.getActualInstantaneousKeysInputsStates()};
 
         for (uint8_t keyNumber{0}; keyNumber < ioMatrices.getNumberOfKeysBeingScanned(); ++keyNumber)
         {
-            this->keys[keyNumber].updateContactsState(keysInputStates[keyNumber]);
             this->keys[keyNumber].sendMidiEvent(this->firstKeyMidiNoteNumber + keyNumber,
                                                 this->midiChannel,
-                                                this->midiInterface);
+                                                this->midiInterface,
+                                                keysInputsStates[keyNumber]);
         }
     }
 }
