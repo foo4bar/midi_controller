@@ -1,17 +1,16 @@
 #include "Pedal.hpp"
-#include "PedalsIO.hpp"
+#include "KeyboardController.hpp"
 
 namespace kbd
 {
-    Pedal::Pedal(const Function function) : function{function}
+    Pedal::Pedal(const Function function, const arduino::digital::Pin &input) : function{function},
+                                                                                input{input}
     {
     }
 
-    void Pedal::sendMidiEvent(const uint8_t midiChannel,
-                              MidiInterface &midiInterface,
-                              const PedalsIO &pedalIO)
+    void Pedal::sendMidiEvent(MidiInterface &midiInterface)
     {
-        this->contact.updateStateWithDebouncing(pedalIO.getActualInstantaneousInputState(this->function));
+        this->contact.updateStateWithDebouncing(this->input.getState());
 
         const State actualState{getActualState()};
 
@@ -22,8 +21,7 @@ namespace kbd
         else
         {
 #if !defined(AVR_STUB_DEBUG) && !defined(CONTACT_EVENTS_DEBUG_MESSAGES)
-            doSendMidiEvent(midiChannel,
-                            midiInterface,
+            doSendMidiEvent(midiInterface,
                             actualState);
 #endif
         }
@@ -41,15 +39,14 @@ namespace kbd
         }
     }
 
-    void Pedal::doSendMidiEvent(const uint8_t midiChannel,
-                                MidiInterface &midiInterface,
+    void Pedal::doSendMidiEvent(MidiInterface &midiInterface,
                                 const State actualState)
     {
 
         switch (actualState)
         {
         case State::depressed:
-            midiInterface.sendControlChange(static_cast<uint8_t>(this->function), 127, midiChannel);
+            midiInterface.sendControlChange(static_cast<uint8_t>(this->function), 127, KeyboardController::midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             char buffer[10];
@@ -62,7 +59,7 @@ namespace kbd
             break;
 
         case State::released:
-            midiInterface.sendControlChange(static_cast<uint8_t>(this->function), 0, midiChannel);
+            midiInterface.sendControlChange(static_cast<uint8_t>(this->function), 0, KeyboardController::midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             Serial.write("OFF: pedal=");

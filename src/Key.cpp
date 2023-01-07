@@ -1,9 +1,9 @@
 #include "Key.hpp"
+#include "KeyboardController.hpp"
 
 namespace kbd
 {
     void Key::sendMidiEvent(const uint8_t midiNoteNumber,
-                            const uint8_t midiChannel,
                             MidiInterface &midiInterface,
                             const arduino::digital::KeyInputStates &keyInputStates)
     {
@@ -18,7 +18,6 @@ namespace kbd
         {
 #if !defined(AVR_STUB_DEBUG) && !defined(CONTACT_EVENTS_DEBUG_MESSAGES)
             doSendMidiEvent(midiNoteNumber,
-                            midiChannel,
                             midiInterface,
                             actualState);
 #endif
@@ -34,9 +33,9 @@ namespace kbd
         else if (this->contacts.isAsKeyIsDepressed())
         {
             const auto pressingTimeMillis{this->contacts.getKeyPressingTimeMillis()};
-            if (pressingTimeMillis <= maxManipulationTimeMillis)
+            if (pressingTimeMillis <= Key::maxManipulationTimeMillis)
             {
-                this->velocity = slope * pressingTimeMillis + maxVelocity;
+                this->velocity = Key::slope * pressingTimeMillis + Key::maxVelocity;
             }
             else
             {
@@ -52,14 +51,13 @@ namespace kbd
     }
 
     void Key::doSendMidiEvent(const uint8_t midiNoteNumber,
-                              const uint8_t midiChannel,
                               MidiInterface &midiInterface,
                               const State actualState)
     {
         switch (actualState)
         {
         case State::depressed:
-            midiInterface.sendNoteOn(midiNoteNumber, this->velocity, midiChannel);
+            midiInterface.sendNoteOn(midiNoteNumber, this->velocity, KeyboardController::midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             char buffer[10];
@@ -76,7 +74,7 @@ namespace kbd
             break;
 
         case State::released:
-            midiInterface.sendNoteOff(midiNoteNumber, defaultVelocity, midiChannel);
+            midiInterface.sendNoteOff(midiNoteNumber, Key::noteOffVelocity, KeyboardController::midiChannel);
 
 #ifdef MIDI_EVENTS_DEBUG_MESSAGES
             Serial.write("OFF: note=");

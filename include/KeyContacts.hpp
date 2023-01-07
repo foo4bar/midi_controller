@@ -1,10 +1,8 @@
 #ifndef KeyContacts_hpp
 #define KeyContacts_hpp
 
-#include <stdint.h>
-
 #include "Contact.hpp"
-#include "IOMatrices.hpp"
+#include "DigitalIO.hpp"
 
 namespace kbd
 {

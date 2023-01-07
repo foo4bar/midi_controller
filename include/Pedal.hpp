@@ -6,12 +6,11 @@
 #include <MIDI.h>
 
 #include "Contact.hpp"
+#include "DigitalIO.hpp"
 
 namespace kbd
 {
     using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
-
-    class PedalsIO;
 
     class Pedal
     {
@@ -23,11 +22,11 @@ namespace kbd
             soft = 67
         };
 
-        explicit Pedal(const Function);
+        explicit Pedal(const Function, const arduino::digital::Pin &input);
 
-        void sendMidiEvent(const uint8_t midiChannel,
-                           MidiInterface &,
-                           const PedalsIO &);
+        void sendMidiEvent(MidiInterface &);
+
+        const Function function;
 
     private:
         enum class State
@@ -36,16 +35,15 @@ namespace kbd
             depressed = 1
         };
 
-        Function function;
-
         Contact contact{};
+
+        const arduino::digital::Pin input;
 
         State previousState{State::released};
 
         State getActualState();
 
-        void doSendMidiEvent(const uint8_t midiChannel,
-                             MidiInterface &midiInterface,
+        void doSendMidiEvent(MidiInterface &midiInterface,
                              const State);
     };
 }

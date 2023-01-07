@@ -15,7 +15,7 @@ namespace arduino::digital
         for (const auto &keyGroupOutputs : this->keyGroupsOutputs)
         {
             keyGroupOutputs.firstActuatedKeysContactsOutput.setState(State::low);
-            WAIT_FOR_STEADY_STATE; // The longer wires connecting contacts with MCU are, the longer waiting time is.
+            WAIT_FOR_STEADY_STATE;
 
             std::vector<State> inputsStatesWithFirstActuatedKeysContactsOutput{};
             for (const auto &keyInput : this->keysInputs)

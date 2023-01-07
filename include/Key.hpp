@@ -1,6 +1,8 @@
 #ifndef Key_hpp
 #define Key_hpp
 
+#include <stdint.h>
+
 #include <MIDI.h>
 
 #include "KeyContacts.hpp"
@@ -13,38 +15,32 @@ namespace kbd
     class Key
     {
     public:
-        void sendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
-                           const uint8_t midiChannel,
+        void sendMidiEvent(const uint8_t midiNoteNumber,
                            MidiInterface &,
                            const arduino::digital::KeyInputStates &);
 
     private:
-        enum class State
+        enum class State : uint8_t
         {
             released = 0,
             depressed = 1,
             moving = 2
         };
 
-        static inline constexpr uint8_t maxManipulationTimeMillis{250}; // TODO double check
+        static inline constexpr uint8_t maxManipulationTimeMillis{250}; // To be adjusted empirically.
         static inline constexpr uint8_t minVelocity{8};                 // pppp
         static inline constexpr uint8_t maxVelocity{127};               // ffff
-        static inline constexpr uint8_t defaultVelocity{64};
+        static inline constexpr uint8_t noteOffVelocity{64};            // It may be any as it doesn't matter for piano.
 
-        static inline constexpr double slope{static_cast<double>(minVelocity - maxVelocity) / maxManipulationTimeMillis};
+        static inline constexpr double slope{static_cast<double>(Key::minVelocity - Key::maxVelocity) / Key::maxManipulationTimeMillis};
 
-        // Each key operates a pair of contacts.
-        // One of them is closed first when a corresponding key starts to be pressed,
-        // another one is closed last when the key is fully depressed.
-        // Key state is defined by its contacts state.
         KeyContacts contacts;
 
         State previousState{State::released};
         uint8_t velocity{0};
 
         State getActualState();
-        void doSendMidiEvent(const uint8_t firstKeyMidiNoteNumber,
-                             const uint8_t midiChannel,
+        void doSendMidiEvent(const uint8_t midiNoteNumber,
                              MidiInterface &midiInterface,
                              const State);
     };
