@@ -2,12 +2,6 @@
 
 namespace arduino::digital
 {
-    IOMatrix IOMatrix::Builder::build() const
-    {
-        return IOMatrix(this->keyGroupsOutputs,
-                        this->keysInputs);
-    }
-
     std::vector<KeyInputStates> IOMatrix::getActualInstantaneousKeysInputsStates() const
     {
         std::vector<KeyInputStates> keysInputsStates{};

@@ -1,9 +1,6 @@
 #ifndef DigitalIO_hpp
 #define DigitalIO_hpp
 
-#include <map>
-#include <vector>
-
 #include <stdint.h>
 
 namespace arduino::digital
@@ -26,10 +23,11 @@ namespace arduino::digital
     {
     public:
         explicit Pin(const uint8_t arduinoPinNumber);
+        Pin(const uint8_t arduinoPinNumber, const Mode);
+        Pin(const uint8_t arduinoPinNumber, const Mode, const State);
 
         void setState(const State) const;
         State getState() const;
-        void setMode(const Mode) const;
 
     private:
         uint8_t number;
@@ -39,17 +37,8 @@ namespace arduino::digital
         volatile uint8_t *const outputRegister;
         volatile uint8_t *const modeRegister;
 
+        void setMode(const Mode) const;
         void doWithDisabledInterrupts(void (*function)(const Pin &)) const;
-    };
-
-    class Pins
-    {
-    public:
-        explicit Pins(const std::map<Mode, std::vector<uint8_t>> &modeToPinMapping);
-        Pin operator[](const uint8_t pinNumber) const;
-
-    private:
-        std::map<uint8_t, Pin> pins;
     };
 
     struct KeyInputStates

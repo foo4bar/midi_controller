@@ -13,6 +13,16 @@ namespace arduino::digital
     {
     }
 
+    Pin::Pin(const uint8_t arduinoPinNumber, const Mode mode) : Pin(arduinoPinNumber)
+    {
+        this->setMode(mode);
+    }
+
+    Pin::Pin(const uint8_t arduinoPinNumber, const Mode mode, const State initialState) : Pin(arduinoPinNumber, mode)
+    {
+        this->setState(initialState);
+    }
+
     void Pin::setState(const State state) const
     {
         switch (state)
@@ -73,29 +83,5 @@ namespace arduino::digital
         function(*this);
 
         SREG = oldSREG;
-    }
-
-    Pins::Pins(const std::map<Mode, std::vector<uint8_t>> &modeToPinMapping)
-    {
-        for (const auto &[mode, pinNumbers] : modeToPinMapping)
-        {
-            for (const uint8_t pinNumber : pinNumbers)
-            {
-                const Pin pin{pinNumber};
-                pin.setMode(mode);
-
-                if (mode == Mode::output)
-                {
-                    pin.setState(State::high);
-                }
-
-                this->pins.insert({pinNumber, pin});
-            }
-        }
-    }
-
-    Pin Pins::operator[](const uint8_t pinNumber) const
-    {
-        return this->pins.find(pinNumber)->second;
     }
 }

@@ -25,4 +25,31 @@ namespace kbd
                                                 keysInputsStates[keyNumber]);
         }
     }
+
+    std::vector<KeyGroupOutputs> KeyboardController::initKeyGroupsOutputs(const std::vector<uint8_tPair> &pinsNumbers)
+    {
+        std::vector<KeyGroupOutputs> result;
+
+        for (const auto &[first, last] : pinsNumbers)
+        {
+            const Pin firstActuatedKeyContactOutput{first, Mode::output, State::high};
+            const Pin lastActuatedKeyContactOutput{last, Mode::output, State::high};
+
+            result.push_back(KeyGroupOutputs{firstActuatedKeyContactOutput, lastActuatedKeyContactOutput});
+        }
+
+        return result;
+    }
+
+    std::vector<Pin> KeyboardController::initInputs(const std::vector<uint8_t> &pinsNumbers)
+    {
+        std::vector<Pin> result;
+
+        for (const uint8_t pinNumber : pinsNumbers)
+        {
+            result.push_back(Pin{pinNumber, Mode::inputWithInternalPullUp});
+        }
+
+        return result;
+    }
 }

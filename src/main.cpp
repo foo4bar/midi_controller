@@ -9,11 +9,9 @@
 
 #include "KeyboardController.hpp"
 
-using namespace kbd;
-
 void initAvrStubDebug();
 void attachUsbDevice();
-void sendMidiEvents(KeyboardController &);
+void loop();
 void serialEventSafeRun();
 
 int main()
@@ -21,11 +19,10 @@ int main()
     init();
     initAvrStubDebug();
     attachUsbDevice();
-
-    KeyboardController controller{};
-
-    sendMidiEvents(controller);
+    loop();
     serialEventSafeRun();
+
+    return 0;
 }
 
 void initAvrStubDebug()
@@ -43,12 +40,14 @@ void attachUsbDevice()
 #endif
 }
 
-void sendMidiEvents(KeyboardController &keyboardController)
+void loop()
 {
 #ifdef CYCLE_TIME_DEBUG_MESSAGES
     long counter{};
     char buffer[100];
 #endif
+
+    kbd::KeyboardController keyboardController;
 
     for (;;)
     {

@@ -2,6 +2,7 @@
 #define KeyboardController_hpp
 
 #include <vector>
+#include <utility>
 
 #include <stdint.h>
 
@@ -18,6 +19,7 @@ namespace kbd
 {
     using namespace arduino::digital;
     using MidiInterface = midi::MidiInterface<midi::SerialMIDI<HardwareSerial>>;
+    using uint8_tPair = std::pair<uint8_t, uint8_t>;
 
     class KeyboardController
     {
@@ -31,32 +33,27 @@ namespace kbd
     private:
         static inline constexpr uint8_t firstKeyMidiNoteNumber{21};
 
-        static inline const Pins pins{
-            {{Mode::output, {50, 52, 46, 48, 42, 44, 38, 40, 37, 36, 32, 34, 28, 30, 24, 26, 2, 22, 6, 4, 5, 7}},
-             {Mode::inputWithInternalPullUp, {53, 51, 49, 47, 45, 43, 41, 39, 35, 33, 31, 29, 27, 25, 23, 3, 8, 9, 10}}}};
+        static std::vector<KeyGroupOutputs> initKeyGroupsOutputs(const std::vector<uint8_tPair> &pinsNumbers);
+        static std::vector<Pin> initInputs(const std::vector<uint8_t> &pinsNumbers);
 
         static inline const IOMatrices ioMatrices{
-            {IOMatrix::Builder{
-                 .keyGroupsOutputs{{.firstActuatedKeysContactsOutput{pins[50]}, .lastActuatedKeysContactsOutput{pins[52]}},
-                                   {.firstActuatedKeysContactsOutput{pins[46]}, .lastActuatedKeysContactsOutput{pins[48]}},
-                                   {.firstActuatedKeysContactsOutput{pins[42]}, .lastActuatedKeysContactsOutput{pins[44]}},
-                                   {.firstActuatedKeysContactsOutput{pins[38]}, .lastActuatedKeysContactsOutput{pins[40]}},
-                                   {.firstActuatedKeysContactsOutput{pins[37]}, .lastActuatedKeysContactsOutput{pins[36]}},
-                                   {.firstActuatedKeysContactsOutput{pins[32]}, .lastActuatedKeysContactsOutput{pins[34]}}},
-                 .keysInputs{{pins[53], pins[51], pins[49], pins[47], pins[45], pins[43], pins[41], pins[39]}}}
-                 .build(),
-             IOMatrix::Builder{
-                 .keyGroupsOutputs{{.firstActuatedKeysContactsOutput{pins[28]}, .lastActuatedKeysContactsOutput{pins[30]}},
-                                   {.firstActuatedKeysContactsOutput{pins[24]}, .lastActuatedKeysContactsOutput{pins[26]}},
-                                   {.firstActuatedKeysContactsOutput{pins[2]}, .lastActuatedKeysContactsOutput{pins[22]}},
-                                   {.firstActuatedKeysContactsOutput{pins[6]}, .lastActuatedKeysContactsOutput{pins[4]}},
-                                   {.firstActuatedKeysContactsOutput{pins[5]}, .lastActuatedKeysContactsOutput{pins[7]}}},
-                 .keysInputs{{pins[35], pins[33], pins[31], pins[29], pins[27], pins[25], pins[23], pins[3]}}}
-                 .build()}};
+            {IOMatrix{{KeyboardController::initKeyGroupsOutputs({uint8_tPair{50, 52},
+                                                                 uint8_tPair{46, 48},
+                                                                 uint8_tPair{42, 44},
+                                                                 uint8_tPair{38, 40},
+                                                                 uint8_tPair{37, 36},
+                                                                 uint8_tPair{32, 34}})},
+                      {KeyboardController::initInputs({53, 51, 49, 47, 45, 43, 41, 39})}},
+             IOMatrix{{KeyboardController::initKeyGroupsOutputs({uint8_tPair{28, 30},
+                                                                 uint8_tPair{24, 26},
+                                                                 uint8_tPair{2, 22},
+                                                                 uint8_tPair{6, 4},
+                                                                 uint8_tPair{5, 7}})},
+                      {KeyboardController::initInputs({35, 33, 31, 29, 27, 25, 23, 3})}}}};
 
-        std::vector<Pedal> pedals{Pedal{Pedal::Function::soft, pins[8]},
-                                  Pedal{Pedal::Function::sostenuto, pins[9]},
-                                  Pedal{Pedal::Function::sustain, pins[10]}};
+        std::vector<Pedal> pedals{Pedal{Pedal::Function::soft, Pin{8, Mode::inputWithInternalPullUp}},
+                                  Pedal{Pedal::Function::sostenuto, Pin{9, Mode::inputWithInternalPullUp}},
+                                  Pedal{Pedal::Function::sustain, Pin{10, Mode::inputWithInternalPullUp}}};
 
         std::vector<Key> keys{std::vector<Key>{KeyboardController::ioMatrices.getNumberOfKeysBeingScanned()}};
 
